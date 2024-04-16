@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.image.domain;
 
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,10 @@ public class Image extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "charger_id")
     private Charger chargerId;
+
+    @ManyToOne
+    @JoinColumn(name = "review_image")
+    private Review reviewImage;
 
     @Column(name = "img_url")
     private String imageUrl;

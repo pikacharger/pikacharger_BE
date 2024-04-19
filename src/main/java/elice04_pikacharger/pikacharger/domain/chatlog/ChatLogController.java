@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ChatLogController {
-    private final
+//    private final
 }

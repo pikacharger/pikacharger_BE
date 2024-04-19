@@ -1,6 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.chatroom;
 
-import elice04_pikacharger.pikacharger.domain.websocket.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

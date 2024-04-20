@@ -26,12 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-<<<<<<< HEAD
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1'
-=======
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
->>>>>>> 75664ec8e80e31ba1b4407d4bc981fc09a44270a
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'

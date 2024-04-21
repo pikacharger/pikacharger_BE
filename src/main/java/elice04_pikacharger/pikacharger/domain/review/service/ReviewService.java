@@ -1,4 +1,21 @@
 package elice04_pikacharger.pikacharger.domain.review.service;
 
-public class ReviewService {
+import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
+import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
+import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
+
+import java.util.List;
+
+public interface ReviewService {
+    Long saveReview(ReviewPayload reviewDTO, Long userId);
+
+    ReviewResult findByReviewId(Long reviewId);
+
+    List<ReviewResult> findByUserId(Long userId);
+
+    List<ReviewResult> findByChargerId(Long chargerId);
+
+    Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyDTO, Long userId);
+
+    Long deleteReview(Long reviewId, Long userId);
 }

@@ -1,6 +1,5 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
-import elice04_pikacharger.pikacharger.domain.common.BassEntity;
 import elice04_pikacharger.pikacharger.domain.common.Role;
 import jakarta.persistence.*;
 import lombok.*;

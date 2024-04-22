@@ -52,9 +52,4 @@ public class Review extends BaseEntity{
         this.rating = rating;
         return this.id;
     }
-
-    public Review charger(Charger charger){
-        this.usedCharger = charger;
-        return this;
-    }
 }

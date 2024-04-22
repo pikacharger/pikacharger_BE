@@ -1,5 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
+import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
@@ -7,6 +9,8 @@ import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
 import elice04_pikacharger.pikacharger.common.mapper.ReviewMapper;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
+import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +30,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, Long userId) {
+    public Long saveReview(ReviewPayload reviewPayload) {
         //S3 이미지 저장
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
+        User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
+        Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Review review = reviewRepository.save(
                 Review.builder()
-                        .charger(chargerRepository.findById(reviewPayload.getChgr()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다")))
                         .content(reviewPayload.getContent())
                         .rating(reviewPayload.getRating())
-                        .user(user)
+                        .userId(user)
+                        .usedCharger(charger)
                         .build());
         return review.getId();
     }
@@ -74,12 +81,13 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyPayload, Long userId) {
-        if(!reviewRepository.findById(reviewId).orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."))
-                .getUserId().equals(userId)){
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
+
+        if(!review.getUserId().equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
-        Review review = reviewRepository.findById(reviewId).orElseThrow();
-        return review.update(reviewModifyPayload);
+        return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
     }
 
     @Override

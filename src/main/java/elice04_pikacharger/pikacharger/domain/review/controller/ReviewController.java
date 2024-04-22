@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
@@ -31,7 +32,7 @@ public class ReviewController {
 
     @PostMapping("")
     public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {
-        Long reviewId = reviewService.saveReview(reviewPayload, userId);
+        Long reviewId = reviewService.saveReview(reviewPayload);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
 

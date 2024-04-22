@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.image.domain;
 
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

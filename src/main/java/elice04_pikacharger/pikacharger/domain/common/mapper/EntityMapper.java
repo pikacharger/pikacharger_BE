@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.common.mapper;
+package elice04_pikacharger.pikacharger.domain.common.mapper;
 
 import java.util.List;
 

@@ -29,4 +29,10 @@ public class ChargerController {
         ChargerRequestDto chargerRequestDto = chargerService.updateCharger(chargerUpdateDto, chargerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{chargerId}")
+    public ResponseEntity<?> deleteCharger(@PathVariable Long chargerId) {
+        chargerService.deleteCharger(chargerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

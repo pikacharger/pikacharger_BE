@@ -74,4 +74,11 @@ public class ChargerServiceImpl implements ChargerService {
 
         return ChargerRequestDto.toDto(updatedCharger);
     }
+
+    @Override
+    public void deleteCharger(Long chargerId) {
+        Charger charger = chargerRepository.findById(chargerId)
+                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+        chargerRepository.delete(charger);
+    }
 }

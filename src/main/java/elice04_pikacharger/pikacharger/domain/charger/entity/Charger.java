@@ -57,6 +57,16 @@ public class Charger extends BaseEntity {
         return new Charger(chargerLocation, chargerName, chargingSpeed, latitude, longitude, content, personalPrice, user);
     }
 
+    public void updateCharger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice){
+        this.chargerLocation = chargerLocation;
+        this.chargerName = chargerName;
+        this.chargingSpeed = chargingSpeed;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.content = content;
+        this.personalPrice = personalPrice;
+    }
+
     private Charger(String chargerLocation, String chargerName, String chargingSpeed, String companyName, String chargerStatus, double latitude, double longitude){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;

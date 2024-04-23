@@ -2,6 +2,7 @@ package elice04_pikacharger.pikacharger.domain.charger.controller;
 
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerRequestDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.service.ChargerService;
 import jakarta.validation.Valid;
@@ -21,5 +22,11 @@ public class ChargerController {
     public ResponseEntity<ChargerRequestDto> createCharger(@Valid @RequestBody ChargerCreateDto chargerCreateDto){
         ChargerRequestDto chargerRequestDto = chargerService.createCharger(chargerCreateDto);
         return new ResponseEntity<>(chargerRequestDto, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/update/{chargerId}")
+    public ResponseEntity<ChargerRequestDto> updateCharger(@Valid @RequestBody ChargerUpdateDto chargerUpdateDto, @PathVariable Long chargerId) {
+        ChargerRequestDto chargerRequestDto = chargerService.updateCharger(chargerUpdateDto, chargerId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

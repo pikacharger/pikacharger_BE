@@ -2,6 +2,7 @@ package elice04_pikacharger.pikacharger.domain.charger.service;
 
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerRequestDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
@@ -38,12 +39,39 @@ public class ChargerServiceImpl implements ChargerService {
             chargerCreateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
             chargerCreateDto.setLongitude(Double.parseDouble(locations.get(1))); // 경도
         }catch (Exception e){
-            log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
+            throw new RuntimeException("예외 발생"+e.getMessage());
         }
 
         Charger charger = chargerCreateDto.toEntity(user);
         Charger savedCharger = chargerRepository.save(charger);
 
         return ChargerRequestDto.toDto(savedCharger);
+    }
+
+    @Transactional
+    @Override
+    public ChargerRequestDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId) {
+        Charger charger = chargerRepository.findById(chargerId)
+                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+        try{
+            List<String> locations = geocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
+            chargerUpdateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
+            chargerUpdateDto.setLongitude(Double.parseDouble(locations.get(1))); // 경도
+        }catch (Exception e){
+            log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
+        }
+
+        charger.updateCharger(
+                chargerUpdateDto.getChargerLocation(),
+                chargerUpdateDto.getChargerName(),
+                chargerUpdateDto.getChargingSpeed(),
+                chargerUpdateDto.getLatitude(),
+                chargerUpdateDto.getLongitude(),
+                chargerUpdateDto.getContent(),
+                chargerUpdateDto.getPersonalPrice()
+                );
+        Charger updatedCharger = chargerRepository.save(charger);
+
+        return ChargerRequestDto.toDto(updatedCharger);
     }
 }

@@ -1,7 +1,10 @@
 package elice04_pikacharger.pikacharger.domain.charger.service;
 
-import org.springframework.stereotype.Service;
+import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerRequestDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 
-@Service
-public class ChargerService {
+public interface ChargerService {
+
+    ChargerRequestDto createCharger(ChargerCreateDto chargerCreateDto);
 }

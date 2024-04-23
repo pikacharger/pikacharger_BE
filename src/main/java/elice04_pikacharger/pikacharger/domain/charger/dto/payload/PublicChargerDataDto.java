@@ -20,7 +20,7 @@ public class PublicChargerDataDto {
 
     //    따로 저장방식
     public Charger toEntity(){
-        return Charger.builder()
+        return Charger.publicChargerBuilder()
                 .chargerLocation(this.chargerLocation)
                 .chargerName(this.chargerName)
                 .chargingSpeed(this.chargingSpeed)

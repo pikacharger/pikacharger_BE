@@ -1,11 +1,14 @@
 package elice04_pikacharger.pikacharger.domain.charger.dto.payload;
 
+import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,5 +34,6 @@ public class ChargerUpdateDto {
     @Min(value = 0, message = "0원 이상 입력해주세요")
     private int personalPrice;
 
+    private List<ChargerTypeDto> chargerTypeDtoList;
 //    private List<ChargerImage> chargerImageList;
 }

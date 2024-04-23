@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.charger.dto.payload;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
+import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
 import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.validation.constraints.Min;
@@ -40,6 +41,7 @@ public class ChargerCreateDto {
     @Min(value = 0, message = "0원 이상 입력해주세요")
     private int personalPrice;
 
+    private List<ChargerTypeDto> chargerTypeDtoList;
 //    private List<ChargerImage> chargerImageList;
 
     public Charger toEntity(User user){

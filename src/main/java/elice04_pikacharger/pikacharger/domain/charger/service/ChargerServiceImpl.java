@@ -6,6 +6,9 @@ import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateD
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
+import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
+import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.PublicChargerTypeDataDto;
+import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,6 +46,13 @@ public class ChargerServiceImpl implements ChargerService {
         }
 
         Charger charger = chargerCreateDto.toEntity(user);
+        for (ChargerTypeDto chargerTypeDto : chargerCreateDto.getChargerTypeDtoList()){
+            ChargerType chargerType = ChargerType.builder()
+                    .type(chargerTypeDto.getType())
+                    .charger(charger)
+                    .build();
+            charger.getChargerTypes().add(chargerType);
+        }
         Charger savedCharger = chargerRepository.save(charger);
 
         return ChargerRequestDto.toDto(savedCharger);
@@ -70,6 +80,15 @@ public class ChargerServiceImpl implements ChargerService {
                 chargerUpdateDto.getContent(),
                 chargerUpdateDto.getPersonalPrice()
                 );
+
+        charger.getChargerTypes().clear();
+        for (ChargerTypeDto chargerTypeDto : chargerUpdateDto.getChargerTypeDtoList()){
+            ChargerType chargerType = ChargerType.builder()
+                    .type(chargerTypeDto.getType())
+                    .charger(charger)
+                    .build();
+            charger.getChargerTypes().add(chargerType);
+        }
         Charger updatedCharger = chargerRepository.save(charger);
 
         return ChargerRequestDto.toDto(updatedCharger);

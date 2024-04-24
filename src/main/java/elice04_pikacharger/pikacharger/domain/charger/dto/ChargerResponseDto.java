@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChargerRequestDto {
+public class ChargerResponseDto {
 
     private String chargerLocation;
     private String chargerName;
@@ -16,8 +16,8 @@ public class ChargerRequestDto {
     private String content;
     private int personalPrice;
 
-    public static ChargerRequestDto toDto(Charger charger){
-        return ChargerRequestDto.builder()
+    public static ChargerResponseDto toDto(Charger charger){
+        return ChargerResponseDto.builder()
                 .chargerLocation(charger.getChargerLocation())
                 .chargerName(charger.getChargerName())
                 .chargingSpeed(charger.getChargingSpeed())
@@ -29,7 +29,7 @@ public class ChargerRequestDto {
     }
 
     @Builder
-    private ChargerRequestDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice){
+    private ChargerResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

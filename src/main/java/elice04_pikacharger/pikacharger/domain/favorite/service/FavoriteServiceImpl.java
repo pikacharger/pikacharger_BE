@@ -1,8 +1,10 @@
 package elice04_pikacharger.pikacharger.domain.favorite.service;
 
+import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteCreateDto;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.favorite.repository.FavoriteRepository;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
@@ -11,6 +13,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -31,5 +36,17 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         Favorite favorite = favoriteCreateDto.toDto(user, charger);
         favoriteRepository.save(favorite);
+    }
+
+    @Override
+    public List<FavoriteResponseDto> favoriteList(Long userId) {
+        List<Favorite> favoriteList = favoriteRepository.findByUserId(userId);
+        List<FavoriteResponseDto> favoriteResponseDtoList = new ArrayList<>();
+        for (Favorite favorite : favoriteList) {
+            Charger charger = favorite.getCharger();
+            boolean favoriteCheck = favoriteRepository.existsByUserIdAndChargerId(userId, charger.getId());
+            favoriteResponseDtoList.add(FavoriteResponseDto.toDto(charger, favoriteCheck));
+        }
+        return favoriteResponseDtoList;
     }
 }

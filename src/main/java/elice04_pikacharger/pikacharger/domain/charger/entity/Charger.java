@@ -2,6 +2,7 @@ package elice04_pikacharger.pikacharger.domain.charger.entity;
 
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -46,6 +47,9 @@ public class Charger extends BaseEntity {
 
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ChargerImage> chargerImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Favorite> favorites = new ArrayList<>();
 
     @Builder(builderMethodName = "publicChargerBuilder", builderClassName = "publicChargerBuilder")
     public static Charger publicCharger(String chargerLocation, String chargerName, String chargingSpeed, String companyName, String chargerStatus, double latitude, double longitude){

@@ -18,6 +18,13 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
+    //TODO 응답 코드 작성.
+    @PostMapping("")
+    public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {
+        Long reviewId = reviewService.saveReview(reviewPayload);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
+    }
+
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResult> getReviewById(@PathVariable Long reviewId) {
         ReviewResult reviewResult = reviewService.findByReviewId(reviewId);
@@ -28,12 +35,6 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
         List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
         return ResponseEntity.ok(reviewResults);
-    }
-
-    @PostMapping("")
-    public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {
-        Long reviewId = reviewService.saveReview(reviewPayload);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
 
     @PatchMapping("/{reviewId}")

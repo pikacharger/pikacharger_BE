@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
+import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.common.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "USER_ROLE")
-public class UserRole extends BassEntity {
+public class UserRole extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

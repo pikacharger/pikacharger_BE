@@ -11,11 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
 public class ReviewController {
     private final ReviewService reviewService;
+
+    //TODO 응답 코드 작성.
+    @PostMapping("")
+    public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {
+        Long reviewId = reviewService.saveReview(reviewPayload);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
+    }
 
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResult> getReviewById(@PathVariable Long reviewId) {
@@ -27,12 +35,6 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
         List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
         return ResponseEntity.ok(reviewResults);
-    }
-
-    @PostMapping("")
-    public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {
-        Long reviewId = reviewService.saveReview(reviewPayload, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
 
     @PatchMapping("/{reviewId}")

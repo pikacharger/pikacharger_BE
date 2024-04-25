@@ -8,7 +8,7 @@ import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
-import elice04_pikacharger.pikacharger.common.mapper.ReviewMapper;
+import elice04_pikacharger.pikacharger.domain.common.mapper.ReviewMapper;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

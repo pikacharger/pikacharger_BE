@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
 
+import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "USERS")
-public class User extends BassEntity {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_id")

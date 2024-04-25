@@ -38,6 +38,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteRepository.save(favorite);
     }
 
+    @Transactional
     @Override
     public List<FavoriteResponseDto> favoriteList(Long userId) {
         List<Favorite> favoriteList = favoriteRepository.findByUserId(userId);
@@ -48,5 +49,14 @@ public class FavoriteServiceImpl implements FavoriteService {
             favoriteResponseDtoList.add(FavoriteResponseDto.toDto(charger, favoriteCheck));
         }
         return favoriteResponseDtoList;
+    }
+
+    @Transactional
+    @Override
+    public void deleteFavorite(Long favoriteId) {
+        Favorite favorite = favoriteRepository.findById(favoriteId)
+                .orElseThrow(()->new EntityNotFoundException("즐겨찾기를 찾을수 없습니다."));
+
+        favoriteRepository.delete(favorite);
     }
 }

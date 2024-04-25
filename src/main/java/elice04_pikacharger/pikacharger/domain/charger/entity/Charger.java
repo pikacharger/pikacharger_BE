@@ -91,6 +91,7 @@ public class Charger extends BaseEntity {
         this.personalPrice = personalPrice;
         this.chargerRole = ChargerRole.PERSONALCHARGER;
         this.user = user;
+        this.chargerStatus = "이용가능";
     }
 
 }

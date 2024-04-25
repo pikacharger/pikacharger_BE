@@ -27,6 +27,7 @@ public class ChargerDetailResponseDto {
 //    private List<ChargerImage> chargerImageList;
 //    private List<Review> reviewList;
     private boolean favorite;
+    private String chargerStatus;
 
     public static ChargerDetailResponseDto toDto(Charger charger, boolean favorite){
         return ChargerDetailResponseDto.builder()
@@ -43,6 +44,7 @@ public class ChargerDetailResponseDto {
                 .chargerRole(charger.getChargerRole().getMessage())
                 .favorite(favorite)
                 .chargerTypeList(charger.getChargerTypes())
+                .chargerStatus(charger.getChargerStatus())
                 .build();
     }
 
@@ -50,7 +52,7 @@ public class ChargerDetailResponseDto {
     private ChargerDetailResponseDto(String chargerLocation, String chargerName, String chargingSpeed,
                                      double latitude, double longitude, String content, double memberPrice,
                                      double nonmemberPrice, double personalPrice, double avgRate, String chargerRole,
-                                     boolean favorite, List<ChargerType> chargerTypeList)
+                                     boolean favorite, List<ChargerType> chargerTypeList, String chargerStatus)
     {
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
@@ -65,5 +67,6 @@ public class ChargerDetailResponseDto {
         this.chargerRole = chargerRole;
         this.favorite = favorite;
         this.chargerTypeList = chargerTypeList;
+        this.chargerStatus = chargerStatus;
     }
 }

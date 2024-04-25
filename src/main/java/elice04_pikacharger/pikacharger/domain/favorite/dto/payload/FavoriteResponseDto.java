@@ -23,6 +23,7 @@ public class FavoriteResponseDto {
     private String chargerRole;
     private boolean favorite;
     private double avgRate;
+    private String chargerStatus;
 
     public static FavoriteResponseDto toDto(Charger charger, boolean favorite){
         return FavoriteResponseDto.builder()
@@ -34,11 +35,12 @@ public class FavoriteResponseDto {
                 .chargerRole(charger.getChargerRole().getMessage())
                 .favorite(favorite)
                 .avgRate(charger.getAvgRate())
+                .chargerStatus(charger.getChargerStatus())
                 .build();
     }
 
     @Builder
-    private FavoriteResponseDto(String chargerLocation, String chargerName, double latitude, double longitude, List<ChargerType> chargerTypeList, String chargerRole, boolean favorite, double avgRate){
+    private FavoriteResponseDto(String chargerLocation, String chargerName, double latitude, double longitude, List<ChargerType> chargerTypeList, String chargerRole, boolean favorite, double avgRate, String chargerStatus){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.latitude = latitude;
@@ -47,6 +49,7 @@ public class FavoriteResponseDto {
         this.chargerRole = chargerRole;
         this.favorite = favorite;
         this.avgRate = avgRate;
+        this.chargerStatus = chargerStatus;
     }
 
 }

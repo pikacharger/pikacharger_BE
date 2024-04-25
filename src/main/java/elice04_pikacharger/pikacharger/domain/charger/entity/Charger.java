@@ -28,7 +28,6 @@ public class Charger extends BaseEntity {
     private String companyName;
     private double latitude;
     private double longitude;
-
     private String content;
     private double memberPrice;
     private double nonmemberPrice;
@@ -45,7 +44,7 @@ public class Charger extends BaseEntity {
     @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerType> chargerTypes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerImage> chargerImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)

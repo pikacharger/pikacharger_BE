@@ -20,7 +20,7 @@ public class ChargerDetailResponseDto {
     private double latitude;
     private double longitude;
     private String content;
-    private int personalPrice;
+    private double personalPrice;
     private List<ChargerType> chargerTypeList;
 //    private List<ChargerImage> chargerImageList;
 //    private List<Review> reviewList;
@@ -41,7 +41,7 @@ public class ChargerDetailResponseDto {
     }
 
     @Builder
-    private ChargerDetailResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice, boolean favorite, List<ChargerType> chargerTypeList){
+    private ChargerDetailResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice, boolean favorite, List<ChargerType> chargerTypeList){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

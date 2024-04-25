@@ -32,7 +32,7 @@ public class ChargerUpdateDto {
     private String content;
 
     @Min(value = 0, message = "0원 이상 입력해주세요")
-    private int personalPrice;
+    private double personalPrice;
 
     private List<ChargerTypeDto> chargerTypeDtoList;
 //    private List<ChargerImage> chargerImageList;

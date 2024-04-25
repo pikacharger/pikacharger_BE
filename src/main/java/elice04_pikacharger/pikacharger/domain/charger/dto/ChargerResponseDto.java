@@ -14,7 +14,7 @@ public class ChargerResponseDto {
     private double latitude;
     private double longitude;
     private String content;
-    private int personalPrice;
+    private double personalPrice;
 
     public static ChargerResponseDto toDto(Charger charger){
         return ChargerResponseDto.builder()
@@ -29,7 +29,7 @@ public class ChargerResponseDto {
     }
 
     @Builder
-    private ChargerResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice){
+    private ChargerResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

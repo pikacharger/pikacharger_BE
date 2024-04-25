@@ -30,9 +30,9 @@ public class Charger extends BaseEntity {
     private double longitude;
 
     private String content;
-    private int memberPrice;
-    private int nonmemberPrice;
-    private int personalPrice;
+    private double memberPrice;
+    private double nonmemberPrice;
+    private double personalPrice;
     private double avgRate;
 
     @Enumerated(EnumType.STRING)
@@ -57,11 +57,11 @@ public class Charger extends BaseEntity {
     }
 
     @Builder(builderMethodName = "personalChargerBuilder", builderClassName = "personalChargerBuilder")
-    public static Charger personalCharger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice, User user) {
+    public static Charger personalCharger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice, User user) {
         return new Charger(chargerLocation, chargerName, chargingSpeed, latitude, longitude, content, personalPrice, user);
     }
 
-    public void updateCharger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice){
+    public void updateCharger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice){
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;
@@ -82,7 +82,7 @@ public class Charger extends BaseEntity {
         this.chargerRole = ChargerRole.PUBLICCHARGE;
     }
 
-    private Charger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, int personalPrice, User user) {
+    private Charger(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice, User user) {
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

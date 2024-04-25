@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.charger.service;
 
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
@@ -108,5 +109,13 @@ public class ChargerServiceImpl implements ChargerService {
         boolean favorite = favoriteRepository.existsByChargerId(chargerId);
 
         return ChargerDetailResponseDto.toDto(charger, favorite);
+    }
+
+    @Override
+    public ChargerEditResponseDto chargerEditDetail(Long chargerId) {
+        Charger charger = chargerRepository.findById(chargerId)
+                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+
+        return ChargerEditResponseDto.toDto(charger);
     }
 }

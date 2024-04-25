@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.charger.controller;
 
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
@@ -23,6 +24,12 @@ public class ChargerController {
     public ResponseEntity<ChargerDetailResponseDto> chargerDetail(@PathVariable Long chargerId) {
         ChargerDetailResponseDto chargerDetailResponseDto = chargerService.chargerDetail(chargerId);
         return new ResponseEntity<>(chargerDetailResponseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("{chargerId}/edit")
+    public ResponseEntity<ChargerEditResponseDto> getChargerEditForm(@PathVariable Long chargerId) {
+        ChargerEditResponseDto chargerEditResponseDto = chargerService.chargerEditDetail(chargerId);
+        return new ResponseEntity<>(chargerEditResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/create")

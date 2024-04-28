@@ -3,12 +3,10 @@ package elice04_pikacharger.pikacharger.domain.review.domain;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "review")
 public class Review extends BaseEntity{
 
@@ -36,7 +36,7 @@ public class Review extends BaseEntity{
     @JoinColumn(name = "used_charger_id") //charger가 삭제되면 review도 함께 삭제
     private Charger usedCharger;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
+    @OneToMany(mappedBy = "reviewImage", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
     private List<ReviewImage> review_image = new ArrayList<>();
 
     @Builder

@@ -5,6 +5,7 @@ import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignInPayload;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignUpPayload;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
@@ -14,6 +15,7 @@ public interface UserService {
 
     String signIn(SignInPayload payload);
 
+    Boolean loginCheck(HttpServletRequest request);
 
     Boolean checkDuplicate(DuplicateCheckDto dto);
 

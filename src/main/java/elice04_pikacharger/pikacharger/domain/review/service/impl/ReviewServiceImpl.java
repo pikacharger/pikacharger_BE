@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
+import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
@@ -7,6 +8,8 @@ import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
 import elice04_pikacharger.pikacharger.common.mapper.ReviewMapper;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
+import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +35,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review review = reviewRepository.save(
                 Review.builder()
-                        .charger(chargerRepository.findById(reviewPayload.getChgr()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다")))
+                        .usedCharger(chargerRepository.findById(reviewPayload.getChgr()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다")))
                         .content(reviewPayload.getContent())
                         .rating(reviewPayload.getRating())
-                        .user(user)
+                        .userId(user)
                         .build());
         return review.getId();
     }
@@ -60,8 +63,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewResult> findByChargerId(Long chargerId) {
-        List<Review> reviews = reviewRepository.findByChargerId(chargerId);
+    public List<ReviewResult> findByChargerId(Long usedCharger) {
+        List<Review> reviews = reviewRepository.findByUserdCharger(usedCharger);
         if (reviews.isEmpty()) {
             // 해당 충전소의 리뷰가 없을 경우 빈 리스트 반환
             return Collections.emptyList();

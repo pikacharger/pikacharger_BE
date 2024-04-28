@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping("/logincheck")
     @Operation(summary = "로그인상태", description = "로그인 상태 확인")
     public ResponseEntity<Boolean> loginCheck(HttpServletRequest request) {
-        boolean result = jwtUtil.validateToken(jwtUtil.extractJwtFromRequest(request));
+        boolean result = userService.loginCheck(request);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

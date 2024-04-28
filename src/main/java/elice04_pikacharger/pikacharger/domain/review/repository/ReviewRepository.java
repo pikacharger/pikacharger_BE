@@ -2,7 +2,6 @@ package elice04_pikacharger.pikacharger.domain.review.repository;
 
 
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
-import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

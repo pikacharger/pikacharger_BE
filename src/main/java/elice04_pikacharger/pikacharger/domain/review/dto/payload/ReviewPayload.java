@@ -15,13 +15,6 @@ public class ReviewPayload { //리뷰 생성시 사용
 
     private Long chargerId; // 충전기 아이디
 
-    // 회원 정보 (필요한가?)
-    private Long id;
-    private String nickname;
-
-    // 충전소 정보 (필요한가?)
-    private String chargerName;
-
     // 리뷰 정보
     private String content;
     private Integer rating;

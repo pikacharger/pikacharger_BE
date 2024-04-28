@@ -12,7 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class CsvReader {
 
-    @Value("csvfile/chargerdata.csv")
+    @Value("${charger.csv-path}")
     private String chargerCsv;
 
     @Bean

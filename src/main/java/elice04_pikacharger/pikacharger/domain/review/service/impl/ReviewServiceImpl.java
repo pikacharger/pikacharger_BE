@@ -82,8 +82,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewResult> findByChargerId(Long chargerId) {
-        List<Review> reviews = reviewRepository.findByChargerId(chargerId);
+    public List<ReviewResult> findByChargerId(Long usedCharger) {
+        List<Review> reviews = reviewRepository.findByUserdCharger(usedCharger);
         if (reviews.isEmpty()) {
             // 해당 충전소의 리뷰가 없을 경우 빈 리스트 반환
             return Collections.emptyList();

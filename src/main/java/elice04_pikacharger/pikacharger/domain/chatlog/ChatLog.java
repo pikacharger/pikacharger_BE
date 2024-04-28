@@ -2,7 +2,7 @@ package elice04_pikacharger.pikacharger.domain.chatlog;
 
 import elice04_pikacharger.pikacharger.domain.chatroom.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
-import elice04_pikacharger.pikacharger.domain.user.User;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

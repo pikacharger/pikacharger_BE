@@ -7,7 +7,7 @@ import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import java.util.List;
 
 public interface ReviewService {
-    Long saveReview(ReviewPayload reviewDTO, Long userId);
+    Long saveReview(ReviewPayload reviewDTO);
 
     ReviewResult findByReviewId(Long reviewId);
 

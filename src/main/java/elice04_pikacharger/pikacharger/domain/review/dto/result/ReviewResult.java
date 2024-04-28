@@ -10,14 +10,9 @@ import java.util.List;
 @Data
 public class ReviewResult {
     private Long reviewId;
-
     private String chargerName;
-
     private String content;
-
     private Integer rating;
-
     private List<MultipartFile> reviewImage = new ArrayList<>();
-
     private LocalDateTime createAt;
 }

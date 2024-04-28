@@ -1,15 +1,12 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
 
-import elice04_pikacharger.pikacharger.domain.common.BassEntity;
-import elice04_pikacharger.pikacharger.domain.common.Role;
+import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -18,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "USERS")
-public class User extends BassEntity {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_id")

@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,21 +31,25 @@ public class Review extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id") //user가 삭제되면 review도 함께 삭제
-    private User userId;
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "used_charger_id") //charger가 삭제되면 review도 함께 삭제
-    private Charger usedCharger;
+    @JoinColumn(name = "charger_id") //charger가 삭제되면 review도 함께 삭제
+    private Charger charger;
 
-    @OneToMany(mappedBy = "reviewImage", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
-    private List<ReviewImage> reviewImage = new ArrayList<>();
+//    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
+//    private List<ReviewImage> imageUrl = new ArrayList<>();
+
+    @Transient
+    private List<ReviewImage> imgList = new ArrayList<>();
 
     @Builder
-    public Review(String content, Integer rating, User userId, Charger usedCharger){
+    public Review(String content, Integer rating, User user, Charger charger, List<ReviewImage> imgList){
         this.content = content;
         this.rating = rating;
-        this.userId = userId;
-        this.usedCharger = usedCharger;
+        this.user = user;
+        this.charger = charger;
+        this.imgList = imgList;
     }
 
     public Long update(String content, Integer rating){

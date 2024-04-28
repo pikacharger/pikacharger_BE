@@ -2,6 +2,8 @@ package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
+import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
+import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
@@ -14,6 +16,11 @@ import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,12 +33,19 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
     private final ChargerRepository chargerRepository;
     private final ReviewMapper reviewMapper;
+    private final S3UploaderService s3UploaderService;
 
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload) {
+    public Long saveReview(ReviewPayload reviewPayload, List<String> imgPaths) throws IOException {
         //S3 이미지 저장
+        List<MultipartFile> images = reviewPayload.getReviewImage();
+
+        List<String> imageUrls = new ArrayList<>();
+        if (images != null && !images.isEmpty()){
+            imageUrls = s3UploaderService.uploadMultipleFiles(images, "images");
+        }
 
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
@@ -41,8 +55,9 @@ public class ReviewServiceImpl implements ReviewService {
                 Review.builder()
                         .content(reviewPayload.getContent())
                         .rating(reviewPayload.getRating())
-                        .userId(user)
-                        .usedCharger(charger)
+                        .user(user)
+                        .charger(charger)
+//                        .imgList(imageUrls)
                         .build());
         return review.getId();
     }
@@ -50,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResult findByReviewId(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
         return reviewMapper.toDto(review);
     }
 
@@ -84,7 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
-        if(!review.getUserId().equals(userId)){
+        if(!review.getUser().equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
@@ -94,7 +109,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Long deleteReview(Long reviewId, Long userId) {
         if(!reviewRepository.findById((reviewId)).orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."))
-                .getUserId().equals(userId)){
+                .getUser().equals(userId)){
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         reviewRepository.deleteById(reviewId);

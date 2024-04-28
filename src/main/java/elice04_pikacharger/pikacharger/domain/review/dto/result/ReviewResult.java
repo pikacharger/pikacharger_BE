@@ -13,6 +13,6 @@ public class ReviewResult {
     private String chargerName;
     private String content;
     private Integer rating;
-    private List<MultipartFile> reviewImage = new ArrayList<>();
+//    private List<MultipartFile> reviewImage = new ArrayList<>();
     private LocalDateTime createAt;
 }

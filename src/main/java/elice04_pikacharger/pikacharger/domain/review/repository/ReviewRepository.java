@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    User findByUserId(Long userId);
+    List<Review> findByUserId(Long userId);
     List<Review> findByUserdCharger(Long usedCharger);
 
 }

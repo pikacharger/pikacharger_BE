@@ -18,10 +18,9 @@ public class ReviewImage extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "review_image")
-    private Review reviewId;
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @Column(name = "img_url")
     private String imageUrl;
-
 }

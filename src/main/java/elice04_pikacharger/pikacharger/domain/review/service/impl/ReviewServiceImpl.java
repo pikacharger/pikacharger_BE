@@ -38,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .usedCharger(chargerRepository.findById(reviewPayload.getChgr()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다")))
                         .content(reviewPayload.getContent())
                         .rating(reviewPayload.getRating())
-                        .userId(user)
+                        .user(user)
                         .build());
         return review.getId();
     }
@@ -63,8 +63,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewResult> findByChargerId(Long usedCharger) {
-        List<Review> reviews = reviewRepository.findByUserdCharger(usedCharger);
+    public List<ReviewResult> findByChargerId(Long usedChargerId) {
+        List<Review> reviews = reviewRepository.findByUsedChargerId(usedChargerId);
         if (reviews.isEmpty()) {
             // 해당 충전소의 리뷰가 없을 경우 빈 리스트 반환
             return Collections.emptyList();
@@ -78,7 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyPayload, Long userId) {
         if(!reviewRepository.findById(reviewId).orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."))
-                .getUserId().equals(userId)){
+                .getUser().getId().equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         Review review = reviewRepository.findById(reviewId).orElseThrow();
@@ -89,7 +89,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Long deleteReview(Long reviewId, Long userId) {
         if(!reviewRepository.findById((reviewId)).orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."))
-                .getUserId().equals(userId)){
+                .getUser().getId().equals(userId)){
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         reviewRepository.deleteById(reviewId);

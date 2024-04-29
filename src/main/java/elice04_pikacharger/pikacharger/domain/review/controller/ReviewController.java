@@ -23,11 +23,11 @@ public class ReviewController {
         return ResponseEntity.ok(reviewResult);
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
-        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
-        return ResponseEntity.ok(reviewResults);
-    }
+//    @GetMapping("/users/{userId}")
+//    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
+//        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
+//        return ResponseEntity.ok(reviewResults);
+//    }
 
     @PostMapping("")
     public ResponseEntity<Long> createReview(@RequestBody @Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId) {

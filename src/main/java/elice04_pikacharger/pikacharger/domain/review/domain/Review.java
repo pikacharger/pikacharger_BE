@@ -30,7 +30,7 @@ public class Review extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id") //user가 삭제되면 review도 함께 삭제
-    private User userId;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "used_charger_id") //charger가 삭제되면 review도 함께 삭제

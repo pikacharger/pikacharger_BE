@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.user.entity;
 
 import elice04_pikacharger.pikacharger.domain.common.BassEntity;
 import elice04_pikacharger.pikacharger.domain.common.Role;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
 import lombok.*;
@@ -56,6 +57,9 @@ public class User extends BassEntity {
 
     private String resignReason;
     private Boolean resign;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public void addRole(UserRole role){
         List<UserRole> list = new ArrayList<>();

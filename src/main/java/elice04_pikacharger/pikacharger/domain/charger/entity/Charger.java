@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.charger.entity;
 
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,9 +35,9 @@ public class Charger {
     @Enumerated(EnumType.STRING)
     private ChargerRole chargerRole;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ChargerType> chargerTypes = new ArrayList<>();

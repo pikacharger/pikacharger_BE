@@ -37,8 +37,11 @@ public class JwtUtil {
             "/index.html",
             "/swagger-resources",
             "/swagger-resources/**",
-            "/webjars/**"
-
+            "/webjars/**",
+            "/api/favorite/",
+            "/api/charger/",
+            "/h2-console/**",
+            "/review/**"
     };
 
     @PostConstruct

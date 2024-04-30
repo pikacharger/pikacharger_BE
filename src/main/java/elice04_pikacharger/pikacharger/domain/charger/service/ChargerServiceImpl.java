@@ -64,7 +64,10 @@ public class ChargerServiceImpl implements ChargerService {
 
     @Transactional
     @Override
-    public ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId) {
+    public ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId, Long userId) {
+        if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
+            throw new IllegalStateException("충전소 수정권한이 없습니다.");
+        }
         Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
         try{
@@ -99,7 +102,10 @@ public class ChargerServiceImpl implements ChargerService {
     }
 
     @Override
-    public void deleteCharger(Long chargerId) {
+    public void deleteCharger(Long chargerId, Long userId) {
+        if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
+            throw new IllegalStateException("충전소 삭제권한이 없습니다.");
+        }
         Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
         chargerRepository.delete(charger);

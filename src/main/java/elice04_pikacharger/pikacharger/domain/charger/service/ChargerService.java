@@ -14,9 +14,9 @@ public interface ChargerService {
 
     ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto);
 
-    ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId);
+    ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId, Long userId);
 
-    void deleteCharger(Long chargerId);
+    void deleteCharger(Long chargerId, Long userId);
 
     ChargerDetailResponseDto chargerDetail(Long chargerId);
 

@@ -21,4 +21,8 @@ public interface ChargerRepository extends JpaRepository<Charger, Long> {
             "ORDER BY distance ASC",
             nativeQuery = true)
     List<Charger> findChargersNearby(@Param("latitude") double latitude, @Param("longitude") double longitude);
+
+    boolean existsByIdAndUserId(Long chargerId, Long userId);
+
+
 }

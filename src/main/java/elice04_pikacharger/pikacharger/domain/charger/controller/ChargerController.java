@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/charger")
+@RequestMapping("/chargers")
 public class ChargerController {
 
     private final ChargerService chargerService;
@@ -30,7 +30,7 @@ public class ChargerController {
         return new ResponseEntity<>(chargerDetailResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("{chargerId}/edit")
+    @GetMapping("/{chargerId}/edit")
     public ResponseEntity<ChargerEditResponseDto> getChargerEditForm(@PathVariable Long chargerId) {
         ChargerEditResponseDto chargerEditResponseDto = chargerService.chargerEditDetail(chargerId);
         return new ResponseEntity<>(chargerEditResponseDto, HttpStatus.OK);
@@ -42,21 +42,21 @@ public class ChargerController {
         return new ResponseEntity<>(chargerSearchList, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseEntity<ChargerResponseDto> createCharger(@Valid @RequestBody ChargerCreateDto chargerCreateDto){
         ChargerResponseDto chargerResponseDto = chargerService.createCharger(chargerCreateDto);
         return new ResponseEntity<>(chargerResponseDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/update/{chargerId}")
-    public ResponseEntity<ChargerResponseDto> updateCharger(@Valid @RequestBody ChargerUpdateDto chargerUpdateDto, @PathVariable Long chargerId) {
-        ChargerResponseDto chargerResponseDto = chargerService.updateCharger(chargerUpdateDto, chargerId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PatchMapping("/{chargerId}/users/{userId}")
+    public ResponseEntity<ChargerResponseDto> updateCharger(@Valid @RequestBody ChargerUpdateDto chargerUpdateDto, @PathVariable Long chargerId, @PathVariable Long userId) {
+        ChargerResponseDto chargerResponseDto = chargerService.updateCharger(chargerUpdateDto, chargerId, userId);
+        return new ResponseEntity<>(chargerResponseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{chargerId}")
-    public ResponseEntity<?> deleteCharger(@PathVariable Long chargerId) {
-        chargerService.deleteCharger(chargerId);
+    @DeleteMapping("/{chargerId}/users/{userId}")
+    public ResponseEntity<Void> deleteCharger(@PathVariable Long chargerId, @PathVariable Long userId) {
+        chargerService.deleteCharger(chargerId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
-package elice04_pikacharger.pikacharger.domain.websocket;
+package elice04_pikacharger.pikacharger.websocket;
 
-import elice04_pikacharger.pikacharger.domain.chatlog.ChatLogDto;
+import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogDto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

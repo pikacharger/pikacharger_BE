@@ -14,6 +14,7 @@ import elice04_pikacharger.pikacharger.exceptional.InvalidPasswordException;
 import elice04_pikacharger.pikacharger.security.JwtUtil;
 import elice04_pikacharger.pikacharger.security.MyTokenPayload;
 import jakarta.persistence.EntityExistsException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,13 +51,23 @@ public class UserServiceImpl implements UserService{
                         .profileImage(payload.getProfileImage())
                         .build()
         );
-        saved.addRole(UserRole.builder().user(saved).role(roleRepository.findById(payload.getRoleId()).orElseThrow()).build());
+        saved.addRole(UserRole.builder().
+                user(saved).role(roleRepository
+                        .findById(payload.getRoleId())
+                        .orElseThrow()).build());
         return saved.getId();
+    }
+
+    @Override
+    public Boolean loginCheck(HttpServletRequest request){
+        boolean result = jwtUtil.validateToken(jwtUtil.extractJwtFromRequest(request));
+        return result;
     }
 
     @Override
     public Long updateUser(String email,UserEditPayload payload){
         User user = userRepository.findByEmail(email);
+
         if(user == null){
             throw new IllegalArgumentException("???????? 되겠냐고");
         }

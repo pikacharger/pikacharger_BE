@@ -33,9 +33,9 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ChargerRepository chargerRepository;
-    private final ReviewMapper reviewMapper;
     private final ReviewImageRepository reviewImageRepository;
     private final S3UploaderService s3UploaderService;
+    private final ReviewResult reviewResult;
 
 
     @Override
@@ -83,7 +83,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
 
-        return reviewMapper.toDto(review);
+        return reviewResult.toDto(review);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
             return Collections.emptyList();
         }
         return reviews.stream()
-                .map(reviewMapper::toDto)
+                .map(ReviewResult::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -106,7 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
             return Collections.emptyList();
         }
         return reviews.stream()
-                .map(reviewMapper::toDto)
+                .map(ReviewResult::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -116,7 +116,8 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
-        if(!review.getUser().equals(userId)){
+        Long reviewerId = review.getUser().getId();
+        if(!reviewerId.equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
@@ -125,8 +126,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Long deleteReview(Long reviewId, Long userId) {
-        if(!reviewRepository.findById((reviewId)).orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."))
-                .getUser().equals(userId)){
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."));
+
+        Long reviewerId = review.getUser().getId();
+        if (!reviewerId.equals(userId)) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         reviewRepository.deleteById(reviewId);

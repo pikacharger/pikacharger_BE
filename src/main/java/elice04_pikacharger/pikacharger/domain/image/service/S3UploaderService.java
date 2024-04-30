@@ -58,20 +58,6 @@ public class S3UploaderService {
         }
     }
 
-        // stream 활용.
-//    public List<String> uploadFiles(List<MultipartFile> multipartFiles, String dirName) throws IOException {
-//        return multipartFiles.stream()
-//                .map(file -> {
-//                    try {
-//                        return uploadSingleFile(file, dirName);
-//                    } catch (IOException e) {
-//                        log.error("이미지 업로드 중 오류 발생: {}", e.getMessage());
-//                        throw new RuntimeException("이미지 업로드 중 오류 발생", e);
-//                    }
-//                })
-//                .collect(Collectors.toList());
-//    }
-
 
     private File convert(MultipartFile file) throws IOException {
         String originalFileName = file.getOriginalFilename();

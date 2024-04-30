@@ -31,4 +31,8 @@ public class ReviewImage extends BaseEntity {
         this.imageUrl = imageUrl;
         this.review = review;
     }
+
+    public String getImageUrl(){
+        return this.imageUrl;
+    }
 }

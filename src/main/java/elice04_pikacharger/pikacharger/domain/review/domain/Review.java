@@ -34,9 +34,8 @@ public class Review extends BaseEntity{
     @JoinColumn(name = "charger_id") //charger가 삭제되면 review도 함께 삭제
     private Charger charger;
 
-//    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
-    @Transient
-    //private List<Img> imgList = new ArrayList<>();
+//    @Transient
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewImage> imgList = new ArrayList<>();
 
     @Builder
@@ -52,4 +51,5 @@ public class Review extends BaseEntity{
         this.rating = rating;
         return this.id;
     }
+
 }

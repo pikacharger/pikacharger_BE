@@ -44,7 +44,7 @@ public class Charger extends BaseEntity {
     @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerType> chargerTypes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "chargerId", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerImage> chargerImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)

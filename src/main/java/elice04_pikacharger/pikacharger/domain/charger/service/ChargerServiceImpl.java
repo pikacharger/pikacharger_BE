@@ -3,8 +3,10 @@ package elice04_pikacharger.pikacharger.domain.charger.service;
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerSearchResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.payload.LocationNameDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -117,5 +120,19 @@ public class ChargerServiceImpl implements ChargerService {
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
 
         return ChargerEditResponseDto.toDto(charger);
+    }
+
+    @Override
+    public List<ChargerSearchResponseDto> chargerSearch(String location) {
+        try{
+            List<String> locations = geocodingAPI.coordinatePairs(location);
+            List<Charger> chargerList = chargerRepository.findChargersNearby(Double.parseDouble(locations.get(0)),Double.parseDouble(locations.get(1)));
+            return chargerList.stream()
+                    .map(ChargerSearchResponseDto::toDto)
+                    .toList();
+        }catch (Exception e){
+            log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
+        }
+        return null;
     }
 }

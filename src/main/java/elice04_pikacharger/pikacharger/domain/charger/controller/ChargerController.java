@@ -32,9 +32,9 @@ public class ChargerController {
     }
 
     @Operation(summary = "충전소 수정폼 데이터 조회", description = "충전소 수정시 폼안에 들어갈 데이터 반환")
-    @GetMapping("/{chargerId}/edit")
-    public ResponseEntity<ChargerEditResponseDto> getChargerEditForm(@PathVariable Long chargerId) {
-        ChargerEditResponseDto chargerEditResponseDto = chargerService.chargerEditDetail(chargerId);
+    @GetMapping("/{chargerId}/users/{userId}")
+    public ResponseEntity<ChargerEditResponseDto> getChargerEditForm(@PathVariable Long chargerId, @PathVariable Long userId) {
+        ChargerEditResponseDto chargerEditResponseDto = chargerService.chargerEditDetail(chargerId, userId);
         return new ResponseEntity<>(chargerEditResponseDto, HttpStatus.OK);
     }
 

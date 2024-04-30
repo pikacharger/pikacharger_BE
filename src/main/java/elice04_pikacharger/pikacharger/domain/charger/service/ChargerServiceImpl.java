@@ -119,7 +119,10 @@ public class ChargerServiceImpl implements ChargerService {
     }
 
     @Override
-    public ChargerEditResponseDto chargerEditDetail(Long chargerId) {
+    public ChargerEditResponseDto chargerEditDetail(Long chargerId, Long userId) {
+        if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
+            throw new IllegalStateException("충전소 수정권한이 없습니다.");
+        }
         Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
 

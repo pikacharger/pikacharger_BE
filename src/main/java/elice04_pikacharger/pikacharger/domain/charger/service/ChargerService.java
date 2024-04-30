@@ -17,7 +17,7 @@ public interface ChargerService {
 
     ChargerDetailResponseDto chargerDetail(Long chargerId);
 
-    ChargerEditResponseDto chargerEditDetail(Long chargerId);
+    ChargerEditResponseDto chargerEditDetail(Long chargerId, Long userId);
 
     List<GroupedChargerResponseDto> chargerSearch(String location);
 }

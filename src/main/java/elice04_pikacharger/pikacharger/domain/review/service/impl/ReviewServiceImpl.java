@@ -38,17 +38,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, List<String> imgPaths) throws IOException {
+    public Long saveReview(ReviewPayload reviewPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException {
         //S3 이미지 저장
-        List<MultipartFile> images = reviewPayload.getReviewImage();
-
-        List<String> imageUrls = new ArrayList<>();
-        if (images != null && !images.isEmpty()){
-            imageUrls = s3UploaderService.uploadMultipleFiles(images, "images");
+        //List<MultipartFile> images = reviewPayload.getReviewImage();
+        List<String> imgPaths = new ArrayList<>();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
         }
 
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
-
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Review review = reviewRepository.save(
@@ -57,10 +55,16 @@ public class ReviewServiceImpl implements ReviewService {
                         .rating(reviewPayload.getRating())
                         .user(user)
                         .charger(charger)
-//                        .imgList(imageUrls)
+                        .imgList(imgPaths)
                         .build());
         return review.getId();
     }
+
+//    private void postBlankCheck(List<String> imgPaths) {
+//        if(imgPaths == null || imgPaths.isEmpty()){ //.isEmpty()도 되는지 확인해보기
+//            throw new PrivateException(Code.WRONG_INPUT_IMAGE);
+//        }
+//    }
 
     @Override
     public ReviewResult findByReviewId(Long reviewId) {

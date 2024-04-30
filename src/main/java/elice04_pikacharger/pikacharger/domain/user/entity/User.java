@@ -69,6 +69,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    public User update(String profileImage){
+        this.profileImage = profileImage;
+        return this;
+    }
+
 
 //    @OneToMany(mappedBy = "user")
 //    private List<Favorite> favorites = new ArrayList<>();

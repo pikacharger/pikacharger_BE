@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.review.service.impl;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
+import elice04_pikacharger.pikacharger.domain.image.repository.ReviewImageRepository;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
@@ -33,18 +34,13 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
     private final ChargerRepository chargerRepository;
     private final ReviewMapper reviewMapper;
+    private final ReviewImageRepository reviewImageRepository;
     private final S3UploaderService s3UploaderService;
 
 
     @Override
     @Transactional
     public Long saveReview(ReviewPayload reviewPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException {
-        //S3 이미지 저장
-        //List<MultipartFile> images = reviewPayload.getReviewImage();
-        List<String> imgPaths = new ArrayList<>();
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
-        }
 
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
@@ -55,8 +51,24 @@ public class ReviewServiceImpl implements ReviewService {
                         .rating(reviewPayload.getRating())
                         .user(user)
                         .charger(charger)
-                        .imgList(imgPaths)
+                        //.imgList(imgPaths)
                         .build());
+
+
+        //S3 이미지 저장
+        //List<MultipartFile> images = reviewPayload.getReviewImage();
+        List<String> imgPaths = new ArrayList<>();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
+        }
+
+        List<String> imgList = new ArrayList<>();
+        for (String imgUrl : imgPaths) {
+            ReviewImage img = new ReviewImage(imgUrl, review);
+            reviewImageRepository.save(img);
+            imgList.add(img.getImageUrl());
+        }
+
         return review.getId();
     }
 
@@ -70,6 +82,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResult findByReviewId(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+
         return reviewMapper.toDto(review);
     }
 

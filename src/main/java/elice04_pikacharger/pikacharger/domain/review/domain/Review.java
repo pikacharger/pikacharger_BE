@@ -35,18 +35,16 @@ public class Review extends BaseEntity{
     private Charger charger;
 
 //    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
-//    private List<ReviewImage> imageUrl = new ArrayList<>();
-
     @Transient
-    private List<String> imgList = new ArrayList<>();
+    //private List<Img> imgList = new ArrayList<>();
+    private final List<ReviewImage> imgList = new ArrayList<>();
 
     @Builder
-    public Review(String content, Integer rating, User user, Charger charger, List<String> imgList){
+    public Review(String content, Integer rating, User user, Charger charger){
         this.content = content;
         this.rating = rating;
         this.user = user;
         this.charger = charger;
-        this.imgList = imgList;
     }
 
     public Long update(String content, Integer rating){

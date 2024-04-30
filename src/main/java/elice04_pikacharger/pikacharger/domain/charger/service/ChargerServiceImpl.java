@@ -1,12 +1,8 @@
 package elice04_pikacharger.pikacharger.domain.charger.service;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerSearchResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.payload.LocationNameDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
@@ -21,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -129,13 +127,31 @@ public class ChargerServiceImpl implements ChargerService {
     }
 
     @Override
-    public List<ChargerSearchResponseDto> chargerSearch(String location) {
+    public List<GroupedChargerResponseDto> chargerSearch(String location) {
         try{
             List<String> locations = geocodingAPI.coordinatePairs(location);
             List<Charger> chargerList = chargerRepository.findChargersNearby(Double.parseDouble(locations.get(0)),Double.parseDouble(locations.get(1)));
-            return chargerList.stream()
+            List<ChargerSearchResponseDto> chargerSearchResponseDtoList = chargerList.stream()
                     .map(ChargerSearchResponseDto::toDto)
                     .toList();
+
+            Map<String, List<ChargerSearchResponseDto>> groupedByLocation = chargerSearchResponseDtoList.stream()
+                    .collect(Collectors.groupingBy(dto -> dto.getChargerLocation() + "|" + dto.getChargerName()));
+
+            List<GroupedChargerResponseDto> groupedDtoList = new ArrayList<>();
+            for (var entry : groupedByLocation.entrySet()) {
+                String[] keyParts = entry.getKey().split("\\|", -1);
+                String chargerLocation = keyParts[0];
+                String chargerName = keyParts[1];
+
+                GroupedChargerResponseDto groupedChargerResponseDto = new GroupedChargerResponseDto();
+                groupedChargerResponseDto.setChargerLocation(chargerLocation);
+                groupedChargerResponseDto.setChargerName(chargerName);
+                groupedChargerResponseDto.setChargers(entry.getValue());
+                groupedDtoList.add(groupedChargerResponseDto);
+            }
+
+            return groupedDtoList;
         }catch (Exception e){
             log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
         }

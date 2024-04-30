@@ -1,9 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.charger.controller;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerSearchResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.LocationNameDto;
@@ -37,9 +34,9 @@ public class ChargerController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ChargerSearchResponseDto>> getChargerSearchList(@RequestParam String location) {
-        List<ChargerSearchResponseDto> chargerSearchList = chargerService.chargerSearch(location);
-        return new ResponseEntity<>(chargerSearchList, HttpStatus.OK);
+    public ResponseEntity<List<GroupedChargerResponseDto>> getChargerSearchList(@RequestParam String location) {
+        List<GroupedChargerResponseDto> groupedChargerResponseDtoList = chargerService.chargerSearch(location);
+        return new ResponseEntity<>(groupedChargerResponseDtoList, HttpStatus.OK);
     }
 
     @PostMapping("")

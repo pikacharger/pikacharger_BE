@@ -1,9 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.charger.service;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerDetailResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerEditResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerSearchResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.LocationNameDto;
@@ -22,5 +19,5 @@ public interface ChargerService {
 
     ChargerEditResponseDto chargerEditDetail(Long chargerId);
 
-    List<ChargerSearchResponseDto> chargerSearch(String location);
+    List<GroupedChargerResponseDto> chargerSearch(String location);
 }

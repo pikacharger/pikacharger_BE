@@ -54,16 +54,15 @@ public class GeocodingAPI {
         JSONArray addresses = responseObject.getJSONArray("addresses");
         List<String> locations = new ArrayList<>();
 
-        if (addresses.length() > 0) {
-            JSONObject firstAddress = addresses.getJSONObject(0);
-            String x = firstAddress.getString("x"); // 경도
-            String y = firstAddress.getString("y"); // 위도
-            locations.add(y);
-            locations.add(x);
-
-        } else {
+        if (addresses.length() == 0) {
             log.debug("주소 정보를 찾을 수 없습니다.");
+            return locations;
         }
+        JSONObject firstAddress = addresses.getJSONObject(0);
+        String x = firstAddress.getString("x"); // 경도
+        String y = firstAddress.getString("y"); // 위도
+        locations.add(y);
+        locations.add(x);
 
         return locations;
     }

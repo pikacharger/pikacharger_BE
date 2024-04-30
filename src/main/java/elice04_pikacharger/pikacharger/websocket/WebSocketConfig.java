@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.domain.websocket;
+package elice04_pikacharger.pikacharger.websocket;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -59,20 +57,6 @@ public class S3UploaderService {
             return uploadedImageUrls;
         }
     }
-
-        // stream 활용.
-//    public List<String> uploadFiles(List<MultipartFile> multipartFiles, String dirName) throws IOException {
-//        return multipartFiles.stream()
-//                .map(file -> {
-//                    try {
-//                        return uploadSingleFile(file, dirName);
-//                    } catch (IOException e) {
-//                        log.error("이미지 업로드 중 오류 발생: {}", e.getMessage());
-//                        throw new RuntimeException("이미지 업로드 중 오류 발생", e);
-//                    }
-//                })
-//                .collect(Collectors.toList());
-//    }
 
 
     private File convert(MultipartFile file) throws IOException {

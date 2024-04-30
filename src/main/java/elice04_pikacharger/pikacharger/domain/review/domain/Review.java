@@ -5,10 +5,7 @@ import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,19 +34,16 @@ public class Review extends BaseEntity{
     @JoinColumn(name = "charger_id") //charger가 삭제되면 review도 함께 삭제
     private Charger charger;
 
-//    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) //review 삭제시 관련 image도 함께 삭제
-//    private List<ReviewImage> imageUrl = new ArrayList<>();
-
-    @Transient
-    private List<ReviewImage> imgList = new ArrayList<>();
+//    @Transient
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<ReviewImage> imgList = new ArrayList<>();
 
     @Builder
-    public Review(String content, Integer rating, User user, Charger charger, List<ReviewImage> imgList){
+    public Review(String content, Integer rating, User user, Charger charger){
         this.content = content;
         this.rating = rating;
         this.user = user;
         this.charger = charger;
-        this.imgList = imgList;
     }
 
     public Long update(String content, Integer rating){
@@ -57,4 +51,5 @@ public class Review extends BaseEntity{
         this.rating = rating;
         return this.id;
     }
+
 }

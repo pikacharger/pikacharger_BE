@@ -38,10 +38,10 @@ public class Review extends BaseEntity{
 //    private List<ReviewImage> imageUrl = new ArrayList<>();
 
     @Transient
-    private List<ReviewImage> imgList = new ArrayList<>();
+    private List<String> imgList = new ArrayList<>();
 
     @Builder
-    public Review(String content, Integer rating, User user, Charger charger, List<ReviewImage> imgList){
+    public Review(String content, Integer rating, User user, Charger charger, List<String> imgList){
         this.content = content;
         this.rating = rating;
         this.user = user;

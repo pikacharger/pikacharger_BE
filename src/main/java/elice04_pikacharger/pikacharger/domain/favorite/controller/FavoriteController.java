@@ -12,12 +12,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/favorite")
+@RequestMapping("/favorites")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseEntity<?> createFavorite(@RequestBody FavoriteCreateDto favoriteCreateDto) {
         favoriteService.createFavorite(favoriteCreateDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -29,9 +29,9 @@ public class FavoriteController {
         return new ResponseEntity<>(favoriteResponseDtoList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{favoriteId}")
-    public ResponseEntity<?> deleteFavorite(@PathVariable Long favoriteId) {
-        favoriteService.deleteFavorite(favoriteId);
+    @DeleteMapping("/{favoriteId}/users/{userId}")
+    public ResponseEntity<?> deleteFavorite(@PathVariable Long favoriteId, @PathVariable Long userId) {
+        favoriteService.deleteFavorite(favoriteId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

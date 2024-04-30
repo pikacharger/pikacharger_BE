@@ -17,7 +17,7 @@ public class ReviewModifyPayload {
 
     private Integer rating;
 
-    private List<MultipartFile> reviewImage = new ArrayList<>();
+//    private List<MultipartFile> reviewImage = new ArrayList<>();
 
     private LocalDateTime lastModifiedDate;
 }

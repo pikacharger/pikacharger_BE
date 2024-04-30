@@ -7,9 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "review_image")
 public class ReviewImage extends BaseEntity {
 
@@ -17,10 +17,10 @@ public class ReviewImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "img_url")
-    private String img_url;
-
     @ManyToOne
-    @JoinColumn(name = "review_image")
-    private Review reviewImage;
+    @JoinColumn(name = "review_id")
+    private Review review;
+
+    @Column(name = "img_url")
+    private String imageUrl;
 }

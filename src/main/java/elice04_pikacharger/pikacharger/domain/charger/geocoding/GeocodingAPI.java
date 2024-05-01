@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -38,9 +37,9 @@ public class GeocodingAPI {
 
         int responseCode = con.getResponseCode();
         BufferedReader br;
-        if(responseCode==200) { // 정상 호출
+        if(responseCode==200) {
             br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-        } else {  // 에러 발생
+        } else {
             br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
         }
         String inputLine;

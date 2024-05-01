@@ -20,4 +20,10 @@ public class ChargerImage extends BaseEntity{
 
     @Column(name = "img_url")
     private String imageUrl;
+
+    @Builder
+    public ChargerImage(Charger charger, String imageUrl){
+        this.charger = charger;
+        this.imageUrl = imageUrl;
+    }
 }

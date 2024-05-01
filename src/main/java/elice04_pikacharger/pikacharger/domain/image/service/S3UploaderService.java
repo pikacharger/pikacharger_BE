@@ -96,7 +96,7 @@ public class S3UploaderService {
             // URL 디코딩을 통해 원래의 파일 이름을 가져옴
             String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
             log.info("Deleting file from S3: " + decodedFileName);
-            amazonS3.deleteObject(bucket, decodedFileName);
+            amazonS3.deleteObject(this.bucket, decodedFileName.substring(59));
         } catch (UnsupportedEncodingException e) {
             log.error("Error while decoding the file name: {}", e.getMessage());
         }

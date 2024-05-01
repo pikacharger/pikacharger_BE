@@ -26,10 +26,8 @@ public class ReviewController {
 
     //TODO 응답 코드 작성.
     @PostMapping("")
-    public ResponseEntity<Long> createReview(@Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId, @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
-//        List<String> imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
-//        System.out.println("IMG 경로들 : " + imgPaths);
-        Long reviewId = reviewService.saveReview(reviewPayload, userId, multipartFiles);
+    public ResponseEntity<Long> createReview(@Valid ReviewPayload reviewPayload, @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
+        Long reviewId = reviewService.saveReview(reviewPayload, multipartFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
 

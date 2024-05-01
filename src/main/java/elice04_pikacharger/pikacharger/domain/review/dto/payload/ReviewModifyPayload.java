@@ -9,8 +9,6 @@ import java.util.List;
 
 @Data
 public class ReviewModifyPayload {
-    private Long reviewId;
-
     private String content;
 
     private String chargerName;

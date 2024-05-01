@@ -29,6 +29,8 @@ public class JwtUtil {
     private SecretKey secretKey;
 
     public final String[] allowedUrls = {
+            "/favorites/**",
+            "/chargers/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/",

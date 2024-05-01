@@ -39,11 +39,11 @@ public class ReviewController {
         return ResponseEntity.ok(reviewResult);
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
-        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
-        return ResponseEntity.ok(reviewResults);
-    }
+//    @GetMapping("/users/{userId}")
+//    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
+//        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
+//        return ResponseEntity.ok(reviewResults);
+//    }
 
     @GetMapping("/charger/{chargerId}")
     public ResponseEntity<List<ReviewResult>> getReviewsByChargerId(@PathVariable Long chargerId){

@@ -2,16 +2,15 @@ package elice04_pikacharger.pikacharger.domain.charger.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
-import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
-public class ChargerSearchResponseDto {
+@Setter
+public class MyChargerResponseDto {
 
     private Long chargerId;
     private String chargerLocation;
@@ -22,10 +21,9 @@ public class ChargerSearchResponseDto {
     private String chargerRole;
     private double avgRate;
     private String chargerStatus;
-    private String chargingSpeed;
 
-    public static ChargerSearchResponseDto toDto(Charger charger){
-        return ChargerSearchResponseDto.builder()
+    public static MyChargerResponseDto toDto(Charger charger){
+        return MyChargerResponseDto.builder()
                 .chargerId(charger.getId())
                 .chargerLocation(charger.getChargerLocation())
                 .chargerName(charger.getChargerName())
@@ -35,12 +33,11 @@ public class ChargerSearchResponseDto {
                 .chargerRole(charger.getChargerRole().getMessage())
                 .avgRate(charger.getAvgRate())
                 .chargerStatus(charger.getChargerStatus())
-                .chargingSpeed(charger.getChargingSpeed())
                 .build();
     }
 
     @Builder
-    private ChargerSearchResponseDto(Long chargerId, String chargerLocation, String chargerName, double latitude, double longitude, List<ChargerType> chargerTypeList, String chargerRole, double avgRate, String chargerStatus, String chargingSpeed){
+    private MyChargerResponseDto(Long chargerId, String chargerLocation, String chargerName, double latitude, double longitude, List<ChargerType> chargerTypeList, String chargerRole, double avgRate, String chargerStatus){
         this.chargerId = chargerId;
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
@@ -50,6 +47,5 @@ public class ChargerSearchResponseDto {
         this.chargerRole = chargerRole;
         this.avgRate = avgRate;
         this.chargerStatus = chargerStatus;
-        this.chargingSpeed = chargingSpeed;
     }
 }

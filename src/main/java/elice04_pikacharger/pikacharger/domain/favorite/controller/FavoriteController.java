@@ -28,7 +28,7 @@ public class FavoriteController {
     }
 
     @Operation(summary = "즐겨찾기 조회", description = "유저 id를 이용해 자신이 등록한 즐겨찾기 목록 조회")
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<FavoriteResponseDto>> favoriteList(@PathVariable Long userId) {
         List<FavoriteResponseDto> favoriteResponseDtoList = favoriteService.favoriteList(userId);
         return new ResponseEntity<>(favoriteResponseDtoList, HttpStatus.OK);

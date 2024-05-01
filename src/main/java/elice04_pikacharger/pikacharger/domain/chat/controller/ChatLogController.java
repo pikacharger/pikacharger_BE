@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 public class ChatLogController {
-    private final ChatLogService chatLogService;
+//    private final ChatLogService chatLogService;
 
 //    @Operation(summary = "메시지 전송", description = "메시지를 해당 채팅방에 전송한다", tags = { "Chat" })
 //    @ApiResponses(value = {

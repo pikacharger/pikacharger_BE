@@ -24,5 +24,6 @@ public interface ChargerRepository extends JpaRepository<Charger, Long> {
 
     boolean existsByIdAndUserId(Long chargerId, Long userId);
 
+    List<Charger> findByUserId(Long userId);
 
 }

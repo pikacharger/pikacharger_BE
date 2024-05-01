@@ -72,12 +72,6 @@ public class ReviewServiceImpl implements ReviewService {
         return review.getId();
     }
 
-//    private void postBlankCheck(List<String> imgPaths) {
-//        if(imgPaths == null || imgPaths.isEmpty()){ //.isEmpty()도 되는지 확인해보기
-//            throw new PrivateException(Code.WRONG_INPUT_IMAGE);
-//        }
-//    }
-
     @Override
     public ReviewResult findByReviewId(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)

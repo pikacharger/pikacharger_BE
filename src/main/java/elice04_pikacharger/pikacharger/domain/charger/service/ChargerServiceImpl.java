@@ -10,7 +10,6 @@ import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTyp
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.favorite.repository.FavoriteRepository;
 import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
-import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
@@ -41,8 +40,8 @@ public class ChargerServiceImpl implements ChargerService {
 
     @Transactional
     @Override
-    public ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles) throws IOException{
-        User user = userRepository.findById(chargerCreateDto.getUserId())
+    public ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles, Long userId) throws IOException{
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
 
         try{
@@ -53,8 +52,6 @@ public class ChargerServiceImpl implements ChargerService {
             throw new RuntimeException("예외 발생"+e.getMessage());
         }
 
-
-
         Charger charger = chargerCreateDto.toEntity(user);
         for (ChargerTypeDto chargerTypeDto : chargerCreateDto.getChargerTypeDtoList()){
             ChargerType chargerType = ChargerType.builder()
@@ -64,31 +61,7 @@ public class ChargerServiceImpl implements ChargerService {
             charger.getChargerTypes().add(chargerType);
         }
 
-        List<String> imgPaths = new ArrayList<>();
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
-        }
-
-        for (String imgUrl : imgPaths) {
-            ChargerImage image = ChargerImage.builder()
-                    .charger(charger)
-                    .imageUrl(imgUrl)
-                    .build();
-            charger.getChargerImages().add(image);
-        }
-
-//        List<String> imgPaths = new ArrayList<>();
-//        if (chargerCreateDto.getMultipartFiles() != null && !chargerCreateDto.getMultipartFiles().isEmpty()) {
-//            imgPaths = s3UploaderService.uploadMultipleFiles(chargerCreateDto.getMultipartFiles(), "images");
-//        }
-//
-//        for (String imgUrl : imgPaths) {
-//            ChargerImage image = ChargerImage.builder()
-//                    .charger(charger)
-//                    .imageUrl(imgUrl)
-//                    .build();
-//            charger.getChargerImages().add(image);
-//        }
+        chargerImgUpload(charger, multipartFiles);
 
         Charger savedCharger = chargerRepository.save(charger);
 
@@ -97,12 +70,11 @@ public class ChargerServiceImpl implements ChargerService {
 
     @Transactional
     @Override
-    public ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, Long chargerId, Long userId) {
+    public ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto, List<MultipartFile> multipartFiles, Long chargerId, Long userId) throws IOException{
         if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
             throw new IllegalStateException("충전소 수정권한이 없습니다.");
         }
-        Charger charger = chargerRepository.findById(chargerId)
-                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+        Charger charger = getCharger(chargerId);
         try{
             List<String> locations = geocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
             chargerUpdateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
@@ -129,6 +101,10 @@ public class ChargerServiceImpl implements ChargerService {
                     .build();
             charger.getChargerTypes().add(chargerType);
         }
+
+        charger.getChargerImages().clear();
+        chargerImgUpload(charger, multipartFiles);
+
         Charger updatedCharger = chargerRepository.save(charger);
 
         return ChargerResponseDto.toDto(updatedCharger);
@@ -139,16 +115,15 @@ public class ChargerServiceImpl implements ChargerService {
         if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
             throw new IllegalStateException("충전소 삭제권한이 없습니다.");
         }
-        Charger charger = chargerRepository.findById(chargerId)
-                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+        Charger charger = getCharger(chargerId);
         chargerRepository.delete(charger);
     }
 
     @Override
-    public ChargerDetailResponseDto chargerDetail(Long chargerId) {
+    public ChargerDetailResponseDto chargerDetail(Long chargerId, Long userId) {
         Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
-        boolean favorite = favoriteRepository.existsByChargerId(chargerId);
+        boolean favorite = favoriteRepository.existsByChargerIdAndUserId(chargerId, userId);
 
         return ChargerDetailResponseDto.toDto(charger, favorite);
     }
@@ -158,8 +133,7 @@ public class ChargerServiceImpl implements ChargerService {
         if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
             throw new IllegalStateException("충전소 수정권한이 없습니다.");
         }
-        Charger charger = chargerRepository.findById(chargerId)
-                .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
+        Charger charger = getCharger(chargerId);
 
         return ChargerEditResponseDto.toDto(charger);
     }
@@ -195,4 +169,32 @@ public class ChargerServiceImpl implements ChargerService {
         }
         return null;
     }
+
+    @Override
+    public List<MyChargerResponseDto> myChargers(Long userId) {
+        return chargerRepository.findByUserId(userId).stream()
+                .map(MyChargerResponseDto::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private void chargerImgUpload(Charger charger, List<MultipartFile> multipartFiles) throws IOException {
+        List<String> imgPaths = new ArrayList<>();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
+        }
+
+        for (String imgUrl : imgPaths) {
+            ChargerImage image = ChargerImage.builder()
+                    .charger(charger)
+                    .imageUrl(imgUrl)
+                    .build();
+            charger.getChargerImages().add(image);
+        }
+    }
+
+    private Charger getCharger(Long chargerId) {
+        return chargerRepository.findById(chargerId)
+                .orElseThrow(()->new EntityNotFoundException("충전소가 존재하지 않습니다."));
+    }
+
 }

@@ -101,7 +101,6 @@ public class S3UploaderService {
             log.error("Error while decoding the file name: {}", e.getMessage());
         }
     }
-
     public List<String> updateFiles(List<MultipartFile> newFiles, List<String> oldFileNames, String dirName) throws IOException {
         List<String> updatedImageUrls = new ArrayList<>();
         for (int i = 0; i < newFiles.size(); i++) {

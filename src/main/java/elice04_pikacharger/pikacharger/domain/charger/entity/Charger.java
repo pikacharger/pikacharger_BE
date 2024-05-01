@@ -4,6 +4,7 @@ import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,11 +45,14 @@ public class Charger extends BaseEntity {
     @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerType> chargerTypes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chargerId", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ChargerImage> chargerImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
+
+    @OneToMany(mappedBy = "charger")
+    private List<Review> Reviews = new ArrayList<>();
 
     @Builder(builderMethodName = "publicChargerBuilder", builderClassName = "publicChargerBuilder")
     public static Charger publicCharger(String chargerLocation, String chargerName, String chargingSpeed, String companyName, String chargerStatus, double latitude, double longitude){

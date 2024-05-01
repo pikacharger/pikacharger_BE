@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ChargerCreateDto {
     private double personalPrice;
 
     private List<ChargerTypeDto> chargerTypeDtoList;
-//    private List<ChargerImage> chargerImageList;
+//    private List<MultipartFile> multipartFiles;
 
     public Charger toEntity(User user){
         return Charger.personalChargerBuilder()

@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -47,8 +49,8 @@ public class ChargerController {
 
     @Operation(summary = "충전소 등록", description = "충전소 등록")
     @PostMapping("")
-    public ResponseEntity<ChargerResponseDto> createCharger(@Valid @RequestBody ChargerCreateDto chargerCreateDto){
-        ChargerResponseDto chargerResponseDto = chargerService.createCharger(chargerCreateDto);
+    public ResponseEntity<ChargerResponseDto> createCharger(@Valid ChargerCreateDto chargerCreateDto, @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
+        ChargerResponseDto chargerResponseDto = chargerService.createCharger(chargerCreateDto, multipartFiles);
         return new ResponseEntity<>(chargerResponseDto, HttpStatus.CREATED);
     }
 

@@ -9,6 +9,9 @@ import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerReposito
 import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.favorite.repository.FavoriteRepository;
+import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
+import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
+import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +36,15 @@ public class ChargerServiceImpl implements ChargerService {
     private final UserRepository userRepository;
     private final GeocodingAPI geocodingAPI;
     private final FavoriteRepository favoriteRepository;
+    private final S3UploaderService s3UploaderService;
 
 
     @Transactional
     @Override
-    public ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto) {
+    public ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles) throws IOException{
         User user = userRepository.findById(chargerCreateDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
-        /** Todo 1.이미지 저장 추가 */
+
         try{
             List<String> locations = geocodingAPI.coordinatePairs(chargerCreateDto.getChargerLocation());
             chargerCreateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
@@ -46,6 +52,8 @@ public class ChargerServiceImpl implements ChargerService {
         }catch (Exception e){
             throw new RuntimeException("예외 발생"+e.getMessage());
         }
+
+
 
         Charger charger = chargerCreateDto.toEntity(user);
         for (ChargerTypeDto chargerTypeDto : chargerCreateDto.getChargerTypeDtoList()){
@@ -55,6 +63,33 @@ public class ChargerServiceImpl implements ChargerService {
                     .build();
             charger.getChargerTypes().add(chargerType);
         }
+
+        List<String> imgPaths = new ArrayList<>();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
+        }
+
+        for (String imgUrl : imgPaths) {
+            ChargerImage image = ChargerImage.builder()
+                    .charger(charger)
+                    .imageUrl(imgUrl)
+                    .build();
+            charger.getChargerImages().add(image);
+        }
+
+//        List<String> imgPaths = new ArrayList<>();
+//        if (chargerCreateDto.getMultipartFiles() != null && !chargerCreateDto.getMultipartFiles().isEmpty()) {
+//            imgPaths = s3UploaderService.uploadMultipleFiles(chargerCreateDto.getMultipartFiles(), "images");
+//        }
+//
+//        for (String imgUrl : imgPaths) {
+//            ChargerImage image = ChargerImage.builder()
+//                    .charger(charger)
+//                    .imageUrl(imgUrl)
+//                    .build();
+//            charger.getChargerImages().add(image);
+//        }
+
         Charger savedCharger = chargerRepository.save(charger);
 
         return ChargerResponseDto.toDto(savedCharger);

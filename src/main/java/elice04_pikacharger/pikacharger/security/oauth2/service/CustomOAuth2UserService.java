@@ -1,8 +1,10 @@
 package elice04_pikacharger.pikacharger.security.oauth2.service;
 
+import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import elice04_pikacharger.pikacharger.security.oauth2.OauthUser.OAuth2UserInfo;
 import elice04_pikacharger.pikacharger.security.oauth2.OauthUser.OAuth2UserInfoFactory;
 import elice04_pikacharger.pikacharger.security.oauth2.exception.OAuth2AuthenticationProcessingException;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +18,9 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+    private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {

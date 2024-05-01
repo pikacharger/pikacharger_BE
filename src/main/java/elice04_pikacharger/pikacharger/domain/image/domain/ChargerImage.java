@@ -16,8 +16,14 @@ public class ChargerImage extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "charger_id")
-    private Charger chargerId;
+    private Charger charger; //이름 관련 찾아보기
 
     @Column(name = "img_url")
     private String imageUrl;
+
+    @Builder
+    public ChargerImage(Charger charger, String imageUrl){
+        this.charger = charger;
+        this.imageUrl = imageUrl;
+    }
 }

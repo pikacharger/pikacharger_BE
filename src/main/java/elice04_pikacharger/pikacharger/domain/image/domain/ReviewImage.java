@@ -6,10 +6,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "review_image")
 public class ReviewImage extends BaseEntity {
 
@@ -17,10 +19,20 @@ public class ReviewImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "img_url")
-    private String img_url;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Review review;
 
-    @ManyToOne
-    @JoinColumn(name = "review_image")
-    private Review reviewImage;
+    @Column(name = "img_url", nullable = false)
+    private String imageUrl;
+
+    public ReviewImage(String imageUrl, Review review) {
+        this.imageUrl = imageUrl;
+        this.review = review;
+    }
+
+    public String getImageUrl(){
+        return this.imageUrl;
+    }
 }

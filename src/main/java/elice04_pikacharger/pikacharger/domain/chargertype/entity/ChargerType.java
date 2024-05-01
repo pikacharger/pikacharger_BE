@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.chargertype.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class ChargerType {
 
     @ManyToOne
     @JoinColumn(name = "charger_id")
+    @JsonBackReference
     private Charger charger;
 
     @Builder

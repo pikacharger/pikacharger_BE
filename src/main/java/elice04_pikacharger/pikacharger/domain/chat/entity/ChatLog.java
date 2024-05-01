@@ -1,9 +1,7 @@
-package elice04_pikacharger.pikacharger.domain.chatlog;
+package elice04_pikacharger.pikacharger.domain.chat.entity;
 
-import elice04_pikacharger.pikacharger.domain.chatroom.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +29,4 @@ public class ChatLog extends BaseEntity {
     private User sender;
 
     private String messageContents;
-    // 수정필요
 }

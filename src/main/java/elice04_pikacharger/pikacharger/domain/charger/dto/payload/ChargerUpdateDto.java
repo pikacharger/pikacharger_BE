@@ -35,5 +35,4 @@ public class ChargerUpdateDto {
     private double personalPrice;
 
     private List<ChargerTypeDto> chargerTypeDtoList;
-//    private List<ChargerImage> chargerImageList;
 }

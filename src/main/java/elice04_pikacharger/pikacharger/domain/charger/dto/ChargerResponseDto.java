@@ -1,7 +1,10 @@
 package elice04_pikacharger.pikacharger.domain.charger.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

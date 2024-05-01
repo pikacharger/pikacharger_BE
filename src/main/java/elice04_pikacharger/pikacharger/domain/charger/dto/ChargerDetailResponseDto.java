@@ -2,6 +2,8 @@ package elice04_pikacharger.pikacharger.domain.charger.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
+import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +26,8 @@ public class ChargerDetailResponseDto {
     private double avgRate;
     private String chargerRole;
     private List<ChargerType> chargerTypeList;
-//    private List<ChargerImage> chargerImageList;
-//    private List<Review> reviewList;
+    private List<ChargerImage> chargerImageList;
+    private List<Review> reviewList;
     private boolean favorite;
     private String chargerStatus;
 
@@ -45,6 +47,8 @@ public class ChargerDetailResponseDto {
                 .favorite(favorite)
                 .chargerTypeList(charger.getChargerTypes())
                 .chargerStatus(charger.getChargerStatus())
+                .chargerImageList(charger.getChargerImages())
+                .reviewList(charger.getReviews())
                 .build();
     }
 
@@ -52,7 +56,8 @@ public class ChargerDetailResponseDto {
     private ChargerDetailResponseDto(String chargerLocation, String chargerName, String chargingSpeed,
                                      double latitude, double longitude, String content, double memberPrice,
                                      double nonmemberPrice, double personalPrice, double avgRate, String chargerRole,
-                                     boolean favorite, List<ChargerType> chargerTypeList, String chargerStatus)
+                                     boolean favorite, List<ChargerType> chargerTypeList, String chargerStatus,
+                                     List<ChargerImage> chargerImageList, List<Review> reviewList)
     {
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
@@ -68,5 +73,7 @@ public class ChargerDetailResponseDto {
         this.favorite = favorite;
         this.chargerTypeList = chargerTypeList;
         this.chargerStatus = chargerStatus;
+        this.chargerImageList = chargerImageList;
+        this.reviewList = reviewList;
     }
 }

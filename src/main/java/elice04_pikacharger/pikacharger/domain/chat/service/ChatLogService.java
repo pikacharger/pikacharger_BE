@@ -19,8 +19,8 @@ import java.util.Date;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ChatLogService {
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatLogRepository chatLogRepository;
+//    private final ChatRoomRepository chatRoomRepository;
+//    private final ChatLogRepository chatLogRepository;
 
     //메시지 조회
 //    @Transactional

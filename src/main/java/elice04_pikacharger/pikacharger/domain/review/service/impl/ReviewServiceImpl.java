@@ -1,18 +1,22 @@
 package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
+import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
+import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.image.repository.ReviewImageRepository;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
+import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewDetailResult;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .rating(reviewPayload.getRating())
                         .user(user)
                         .charger(charger)
-                        //.imgList(imgPaths)
                         .build());
-
 
         //S3 이미지 저장
         List<String> imgPaths = new ArrayList<>();
@@ -61,6 +63,10 @@ public class ReviewServiceImpl implements ReviewService {
             ReviewImage img = new ReviewImage(imgUrl, review);
             reviewImageRepository.save(img);
         }
+
+        // 평균 별점 계산 호출
+        calculateAvgStar(review.getId(), charger.getId());
+
         return review.getId();
     }
 
@@ -71,6 +77,14 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
 
         return reviewResult.toDto(review);
+    }
+
+    @Override
+    public ReviewDetailResult findByDetailToReviewId(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+
+        return ReviewDetailResult.toDto(review);
     }
 
     @Override
@@ -99,7 +113,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyPayload, Long userId) {
+    public Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
@@ -107,7 +121,26 @@ public class ReviewServiceImpl implements ReviewService {
         if(!reviewerId.equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
+
+        review.getImgList().clear();
+        imageImgUpload(review, multipartFiles);
+
         return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
+    }
+
+    private void imageImgUpload(Review review, List<MultipartFile> multipartFiles) throws IOException {
+        List<String> imgPaths = new ArrayList<>();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
+        }
+
+        for (String imgUrl : imgPaths) {
+            ReviewImage image = ReviewImage.builder()
+                    .review(review)
+                    .imageUrl(imgUrl)
+                    .build();
+            review.getImgList().add(image);
+        }
     }
 
     @Override
@@ -126,9 +159,25 @@ public class ReviewServiceImpl implements ReviewService {
             String imagePath = reviewImage.getImageUrl();
             s3UploaderService.deleteFile(imagePath);
         }
-
         reviewRepository.deleteById(reviewId);
         return reviewId;
+    }
+
+    @Override
+    public void calculateAvgStar(Long reviewId, Long chargerId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new EntityNotFoundException("Review not found with id: " + reviewId));
+        Charger charger = chargerRepository.findById(chargerId)
+                .orElseThrow(() -> new EntityNotFoundException("Charger not found with id: " + chargerId));
+
+        List<Review> reviewsForCharger = reviewRepository.findByChargerId(chargerId);
+
+        int reviewCount = reviewsForCharger.size();
+        float totalStars = (float) reviewsForCharger.stream().mapToInt(Review::getRating).sum();
+
+        float avgRate = reviewCount > 0 ? totalStars / reviewCount : 0;
+
+        charger.updateAvgRate(avgRate);
     }
 
 //    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

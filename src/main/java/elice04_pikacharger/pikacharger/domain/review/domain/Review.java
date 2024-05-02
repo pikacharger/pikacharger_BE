@@ -36,7 +36,6 @@ public class Review extends BaseEntity{
     @JsonBackReference
     private Charger charger;
 
-//    @Transient
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewImage> imgList = new ArrayList<>();
 

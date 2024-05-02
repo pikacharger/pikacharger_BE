@@ -28,21 +28,21 @@ public class ReviewResult {
                 .chargerName(review.getCharger().getChargerName())
                 .content(review.getContent())
                 .rating(review.getRating())
+                .createAt(review.getCreateDate())
+                .imageUrls(review.getImgList().stream()
+                        .map(ReviewImage::getImageUrl)
+                        .collect(Collectors.toList()))
                 .build();
-
-        List<String> imageUrls = review.getImgList().stream()
-                .map(ReviewImage::getImageUrl)
-                .collect(Collectors.toList());
-        result.setImageUrls(imageUrls);
         return result;
     }
 
     @Builder
-    private ReviewResult(Long reviewId, String chargerName, String content, Integer rating, List<String> imageUrls){
+    protected ReviewResult(Long reviewId, String chargerName, String content, Integer rating, List<String> imageUrls, LocalDateTime createAt){
         this.reviewId = reviewId;
         this.chargerName = chargerName;
         this.content = content;
         this.rating = rating;
         this.imageUrls = imageUrls;
+        this.createAt = createAt;
     }
 }

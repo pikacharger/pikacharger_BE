@@ -19,8 +19,8 @@ import java.util.Date;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ChatLogService {
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatLogRepository chatLogRepository;
+//    private final ChatRoomRepository chatRoomRepository;
+//    private final ChatLogRepository chatLogRepository;
 
     //메시지 조회
 //    @Transactional
@@ -31,13 +31,13 @@ public class ChatLogService {
 //    } //ChatLodResponseDto 주석처리로 인한 오류
 
     //메시지 생성
-    @Transactional
-    public Long save(final Long chatRoomId, final ChatLogRequestDto requestDto) {
-        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
-                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
-//        requestDto.setChatRoom(chatRoomEntity);
-        return this.chatLogRepository.save(requestDto.toEntity()).getId();
-    }
+//    @Transactional
+//    public Long save(final Long chatRoomId, final ChatLogRequestDto requestDto) {
+//        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
+//                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
+////        requestDto.setChatRoom(chatRoomEntity);
+//        return this.chatLogRepository.save(requestDto.toEntity()).getId();
+//    }
 
     //메시지 삭제 (필요시 사용)
 //    @Transactional

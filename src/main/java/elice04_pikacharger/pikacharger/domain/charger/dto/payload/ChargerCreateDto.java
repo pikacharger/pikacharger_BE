@@ -2,11 +2,9 @@ package elice04_pikacharger.pikacharger.domain.charger.dto.payload;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
-import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChargerCreateDto {
-
-    @NotNull
-    private Long userId;
 
     @NotBlank(message = "주소를 입력해주세요")
     private String chargerLocation;
@@ -42,7 +37,6 @@ public class ChargerCreateDto {
     private double personalPrice;
 
     private List<ChargerTypeDto> chargerTypeDtoList;
-//    private List<ChargerImage> chargerImageList;
 
     public Charger toEntity(User user){
         return Charger.personalChargerBuilder()

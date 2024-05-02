@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ChatRoomRequestDto {
-    private String id;
+    private Long id;
 
     @Builder
-    public ChatRoomRequestDto(String roomId) {
+    public ChatRoomRequestDto(Long roomId) {
         this.id = roomId;
     }
 
     public ChatRoom toEntity() {
         return ChatRoom.builder()
-//                .id(this.id)
+                .id(this.id)
                 .build();
     }
 }

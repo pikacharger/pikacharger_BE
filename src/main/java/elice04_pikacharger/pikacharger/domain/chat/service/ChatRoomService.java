@@ -1,23 +1,22 @@
 package elice04_pikacharger.pikacharger.domain.chat.service;
 
+import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
-import elice04_pikacharger.pikacharger.domain.chat.repository.ChatRoomRepository;
-import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
+import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class ChatRoomService {
-    private final ChatRoomRepository chatRoomRepository;
-    private ChatRoomService chatRoomService;
+public interface ChatRoomService {
+    @Transactional
+    ChatRoomResponseDto findByRoomId(Long id);
 
+    //채팅방 생성
+    @Transactional
+    Long save(ChatRoomRequestDto requestDto);
+
+    //TODO: 채팅방 삭제
+//    void delete(Long id);
+
+    //TODO: 마지막 메시지 조회
 //    @Transactional
-//    public ChatRoomResponseDto findById(final Long id) {
-//        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
-//        return new ChatRoomResponseDto(entity);
-//    }
-    //TODO : service와 serviceImpl로 나누기
+//    ChatLog getLastChatLog(Long chatRoomId);
 }

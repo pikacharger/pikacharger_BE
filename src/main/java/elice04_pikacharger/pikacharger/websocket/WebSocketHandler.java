@@ -32,6 +32,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
         sessions.add(session);
     }
 
+    //TODO: ChatLogDto를 ChatLogResponseDto와 ChatLogRequestDto로 나누었음, 해당부분 수정 필요 -> import도 수정해야함
+
     // 메시지 전송 부분
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

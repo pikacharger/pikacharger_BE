@@ -10,12 +10,12 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 public class ChatLogResponseDto {
-    private Long id;
-    private Long chatRoomId;
-    private Long sender;
-    private String messageContents;
-    private String createdDate;
-    private String lastModifiedDate;
+//    private Long id;
+//    private Long chatRoomId;
+//    private Long sender;
+//    private String messageContents;
+//    private String createdDate;
+//    private String lastModifiedDate;
 
 //    public ChatLogResponseDto(ChatLog entity) {
 //        this.id = entity.getId();

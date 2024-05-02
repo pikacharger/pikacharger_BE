@@ -38,6 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
 
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Review review = reviewRepository.save(

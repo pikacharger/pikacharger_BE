@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    boolean existsByChargerId(Long chargerId);
-
     boolean existsByUserIdAndChargerId(Long userId, Long chargerId);
     List<Favorite> findByUserId(Long userId);
+
+    boolean existsByIdAndUserId(Long favoriteId, Long userId);
+
+    boolean existsByChargerIdAndUserId(Long chargerId, Long userId);
 }

@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.review.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
@@ -32,6 +33,7 @@ public class Review extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "charger_id") //charger가 삭제되면 review도 함께 삭제
+    @JsonBackReference
     private Charger charger;
 
 //    @Transient

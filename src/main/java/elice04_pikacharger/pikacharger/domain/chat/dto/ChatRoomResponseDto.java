@@ -12,9 +12,9 @@ import java.time.format.DateTimeFormatter;
 @Builder
 @AllArgsConstructor
 public class ChatRoomResponseDto extends BaseEntity{
-    private Long id;
-    private String createdDate;
-    private String lastModifiedDate;
+//    private Long id;
+//    private String createdDate;
+//    private String lastModifiedDate;
 
 //    public ChatRoomResponseDto(ChatRoom entity) {
 //        this.id = entity.getId();

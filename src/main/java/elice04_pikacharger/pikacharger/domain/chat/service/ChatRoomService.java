@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
-    private final ChatRoomRepository chatRoomRepository;
-    private ChatRoomService chatRoomService;
+//    private final ChatRoomRepository chatRoomRepository;
+//    private ChatRoomService chatRoomService;
 
 //    @Transactional
 //    public ChatRoomResponseDto findById(final Long id) {
@@ -19,5 +19,4 @@ public class ChatRoomService {
 //                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 //        return new ChatRoomResponseDto(entity);
 //    }
-    //TODO : service와 serviceImpl로 나누기
 }

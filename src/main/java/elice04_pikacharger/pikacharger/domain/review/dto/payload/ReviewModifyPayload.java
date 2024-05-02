@@ -14,8 +14,4 @@ public class ReviewModifyPayload {
     private String chargerName;
 
     private Integer rating;
-
-    private List<MultipartFile> reviewImage = new ArrayList<>();
-
-    private LocalDateTime lastModifiedDate;
 }

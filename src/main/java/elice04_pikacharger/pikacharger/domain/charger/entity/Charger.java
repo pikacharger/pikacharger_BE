@@ -101,4 +101,8 @@ public class Charger extends BaseEntity {
         this.chargerStatus = "이용가능";
     }
 
+    public void updateAvgRate(double avgRate){
+        this.avgRate = avgRate;
+    }
+
 }

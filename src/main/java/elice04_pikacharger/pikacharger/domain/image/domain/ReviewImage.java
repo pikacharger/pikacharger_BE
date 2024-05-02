@@ -1,9 +1,11 @@
 package elice04_pikacharger.pikacharger.domain.image.domain;
 
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -34,5 +36,11 @@ public class ReviewImage extends BaseEntity {
 
     public String getImageUrl(){
         return this.imageUrl;
+    }
+
+    @Builder
+    public ReviewImage(Review review, String imageUrl){
+        this.review = review;
+        this.imageUrl = imageUrl;
     }
 }

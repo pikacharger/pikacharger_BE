@@ -1,6 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
+//import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 
 import jakarta.persistence.*;

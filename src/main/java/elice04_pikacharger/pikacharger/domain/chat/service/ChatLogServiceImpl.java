@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ChatLogServiceImpl implements ChatLogService {
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatLogRepository chatLogRepository;
+    private ChatRoomRepository chatRoomRepository;
+    private ChatLogRepository chatLogRepository;
 
     //메시지 조회
     @Override
@@ -36,7 +36,7 @@ public class ChatLogServiceImpl implements ChatLogService {
         return this.chatLogRepository.save(requestDto.toEntity()).getId();
     }
 
-//    TODO: 메시지 삭제
+    //TODO: 메시지 삭제
 //    @Override
 //    @Transactional
 //    public void deleteChatLog(final Long chatMessageId) {

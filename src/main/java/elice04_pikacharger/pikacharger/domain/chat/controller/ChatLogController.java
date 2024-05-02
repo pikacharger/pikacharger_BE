@@ -3,6 +3,9 @@ package elice04_pikacharger.pikacharger.domain.chat.controller;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatLogService;
+import elice04_pikacharger.pikacharger.util.ApiResult;
+import elice04_pikacharger.pikacharger.util.ApiUtils;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,9 +24,10 @@ public class ChatLogController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatLogResponseDto.class)))
     })
+
     @PostMapping("/{chatRoomId}/chatlogs")
     public ApiResult<ChatLogResponseDto> createChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {
-        ChatLogResponseDto chatLogResponseDto = chatLogService.save(chatRoomId, chatLogRequestDto);
-        return ApiUtils.success(chatLogResponseDto);
+        ChatLogRequestDto chatLogRequestDto = chatLogService.save(chatRoomId, chatLogRequestDto);
+        return ApiUtils.success(chatLogRequestDto);
     }
 }

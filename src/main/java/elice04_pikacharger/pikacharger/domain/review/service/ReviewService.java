@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {
-    Long saveReview(ReviewPayload reviewPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException;
+    Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException;
 
     ReviewResult findByReviewId(Long reviewId);
 

@@ -5,10 +5,12 @@ import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPay
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.bytecode.internal.bytebuddy.PrivateAccessorException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,11 +27,12 @@ public class ReviewController {
     private final S3UploaderService s3UploaderService;
 
     //TODO 응답 코드 작성.
-    @PostMapping("")
-    public ResponseEntity<Long> createReview(@Valid ReviewPayload reviewPayload, @RequestParam("userId") Long userId, @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
-//        List<String> imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
-//        System.out.println("IMG 경로들 : " + imgPaths);
-        Long reviewId = reviewService.saveReview(reviewPayload, userId, multipartFiles);
+    @Operation(summary = "리뷰 등록", description = "리뷰를 등록합니다.")
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> createReview(
+            @Valid @RequestPart("reviewPayload") ReviewPayload reviewPayload,
+            @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
+        Long reviewId = reviewService.saveReview(reviewPayload, multipartFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
 
@@ -39,11 +42,11 @@ public class ReviewController {
         return ResponseEntity.ok(reviewResult);
     }
 
-//    @GetMapping("/users/{userId}")
-//    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
-//        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
-//        return ResponseEntity.ok(reviewResults);
-//    }
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
+        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
+        return ResponseEntity.ok(reviewResults);
+    }
 
     @GetMapping("/charger/{chargerId}")
     public ResponseEntity<List<ReviewResult>> getReviewsByChargerId(@PathVariable Long chargerId){

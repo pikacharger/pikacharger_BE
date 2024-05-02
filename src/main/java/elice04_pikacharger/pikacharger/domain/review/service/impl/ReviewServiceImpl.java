@@ -11,7 +11,6 @@ import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
-import elice04_pikacharger.pikacharger.domain.common.mapper.ReviewMapper;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +35,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException {
+    public Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
 
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Review review = reviewRepository.save(
@@ -56,21 +52,18 @@ public class ReviewServiceImpl implements ReviewService {
 
 
         //S3 이미지 저장
-        //List<MultipartFile> images = reviewPayload.getReviewImage();
         List<String> imgPaths = new ArrayList<>();
         if (multipartFiles != null && !multipartFiles.isEmpty()) {
             imgPaths = s3UploaderService.uploadMultipleFiles(multipartFiles, "images");
         }
 
-        List<String> imgList = new ArrayList<>();
         for (String imgUrl : imgPaths) {
             ReviewImage img = new ReviewImage(imgUrl, review);
             reviewImageRepository.save(img);
-            imgList.add(img.getImageUrl());
         }
-
         return review.getId();
     }
+
 
     @Override
     public ReviewResult findByReviewId(Long reviewId) {
@@ -127,6 +120,13 @@ public class ReviewServiceImpl implements ReviewService {
         if (!reviewerId.equals(userId)) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
+
+        List<ReviewImage> reviewImages = reviewImageRepository.findByReviewId(reviewId);
+        for (ReviewImage reviewImage : reviewImages) {
+            String imagePath = reviewImage.getImageUrl();
+            s3UploaderService.deleteFile(imagePath);
+        }
+
         reviewRepository.deleteById(reviewId);
         return reviewId;
     }

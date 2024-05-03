@@ -29,8 +29,9 @@ public class JwtUtil {
     private SecretKey secretKey;
 
     public final String[] allowedUrls = {
-            "/favorites/**",
-            "/chargers/**",
+            "/review/detail/**",
+            "/review/charger/**",
+            "/chargers",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/",
@@ -40,10 +41,6 @@ public class JwtUtil {
             "/swagger-resources",
             "/swagger-resources/**",
             "/webjars/**",
-            "/api/favorite/",
-            "/api/charger/",
-            "/h2-console/**",
-            "/review/**"
     };
 
     @PostConstruct

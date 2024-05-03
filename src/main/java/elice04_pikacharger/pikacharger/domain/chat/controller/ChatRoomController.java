@@ -4,6 +4,8 @@ import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatRoomService;
+import elice04_pikacharger.pikacharger.exceptional.CustomException;
+import elice04_pikacharger.pikacharger.exceptional.ErrorCode;
 import elice04_pikacharger.pikacharger.security.JwtProvider;
 import elice04_pikacharger.pikacharger.util.ApiResult;
 import elice04_pikacharger.pikacharger.util.ApiUtils;
@@ -36,7 +38,7 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom() throws Exception {
 
-        //토큰 유효기간 파악
+        //토큰 유효기간 확인
         try {
             Date current = new Date(System.currentTimeMillis());
             if(current.after(jwtProvider.getExp())){
@@ -70,7 +72,7 @@ public class ChatRoomController {
     })
     @PostMapping("")
     public ApiResult<ChatRoomResponseDto> createChatRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto) throws Exception {
-        //토큰 유효기간 파악
+        //토큰 유효기간 확인
         try {
             Date current = new Date(System.currentTimeMillis());
             if(current.after(jwtProvider.getExp())){

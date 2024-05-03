@@ -7,7 +7,6 @@ import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +28,7 @@ public class Review extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id") //user가 삭제되면 review도 함께 삭제
+    @JsonBackReference
     private User user;
 
     @ManyToOne

@@ -49,7 +49,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 상세페이지 정보 조회", description = "리뷰 상세 페이지를 출력할 때 필요한 정보를 조회하는 api.")
-    @GetMapping("/deatil/{reviewId}")
+    @GetMapping("/detail/{reviewId}")
     public ResponseEntity<ReviewResult> getReviewDetailById(@PathVariable Long reviewId) {
         ReviewResult reviewResult = reviewService.findByDetailToReviewId(reviewId);
         return ResponseEntity.ok(reviewResult);

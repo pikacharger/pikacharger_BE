@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.image.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
@@ -24,6 +25,7 @@ public class ReviewImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Review review;
 
     @Column(name = "img_url", nullable = false)

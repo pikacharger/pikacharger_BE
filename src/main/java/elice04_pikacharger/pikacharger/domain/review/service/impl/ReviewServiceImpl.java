@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -175,12 +177,15 @@ public class ReviewServiceImpl implements ReviewService {
         int reviewCount = reviewsForCharger.size();
         int totalStars = reviewsForCharger.stream().mapToInt(Review::getRating).sum();
 
+
+        // 그냥 계산을 
         double avgRate = reviewCount > 0 ? (double) totalStars / reviewCount : 0;
 
-        // 평균 평점을 소수점 한 자리까지 반올림하여 계산
-        avgRate = Math.round(avgRate * 10.0f) / 10.0f;
+        BigDecimal avgRateDecimal = BigDecimal.valueOf(avgRate)
+                .setScale(1, RoundingMode.HALF_UP);
+        double roundedAvgRate = avgRateDecimal.doubleValue();
 
-        charger.updateAvgRate(avgRate);
+        charger.updateAvgRate(roundedAvgRate);
     }
 
 //    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

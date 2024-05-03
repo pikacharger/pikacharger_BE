@@ -14,34 +14,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Service
+@Service
 @Slf4j
-public class GeocodingAPI {
+public class KakaoGeocodingAPI {
 
-    @Value("${charger.geocoding.id}")
-    private String clientId;
+
 
     @Value("${charger.geocoding.key}")
     private String clientKey;
 
-
     public List<String> coordinatePairs(String address) throws Exception {
-
-        String apiURL = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + java.net.URLEncoder.encode(address, "UTF-8");
+        String apiURL = "https://dapi.kakao.com/v2/local/search/address.json?query=" + java.net.URLEncoder.encode(address, "UTF-8");
 
         URL url = new URL(apiURL);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
-        con.setRequestProperty("X-NCP-APIGW-API-KEY", clientKey);
+        con.setRequestProperty("Authorization", clientKey);
 
-        int responseCode = con.getResponseCode();
+
         BufferedReader br;
-        if(responseCode==200) {
-            br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-        } else {
-            br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-        }
+        br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+
         String inputLine;
         StringBuilder response = new StringBuilder();
         while ((inputLine = br.readLine()) != null) {
@@ -50,7 +42,7 @@ public class GeocodingAPI {
         br.close();
 
         JSONObject responseObject = new JSONObject(response.toString());
-        JSONArray addresses = responseObject.getJSONArray("addresses");
+        JSONArray addresses = responseObject.getJSONArray("documents");
         List<String> locations = new ArrayList<>();
 
         if (addresses.length() == 0) {

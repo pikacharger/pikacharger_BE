@@ -4,7 +4,7 @@ import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
+import elice04_pikacharger.pikacharger.domain.charger.geocoding.KakaoGeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
@@ -33,7 +33,7 @@ public class ChargerServiceImpl implements ChargerService {
 
     private final ChargerRepository chargerRepository;
     private final UserRepository userRepository;
-    private final GeocodingAPI geocodingAPI;
+    private final KakaoGeocodingAPI kakaoGeocodingAPI;
     private final FavoriteRepository favoriteRepository;
     private final S3UploaderService s3UploaderService;
 
@@ -45,7 +45,7 @@ public class ChargerServiceImpl implements ChargerService {
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
 
         try{
-            List<String> locations = geocodingAPI.coordinatePairs(chargerCreateDto.getChargerLocation());
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(chargerCreateDto.getChargerLocation());
             double latitude = Double.parseDouble(locations.get(0)); // 위도
             double Longitude = Double.parseDouble(locations.get(1)); // 경도
 
@@ -78,7 +78,7 @@ public class ChargerServiceImpl implements ChargerService {
         try{
             Charger charger = getCharger(chargerId);
 
-            List<String> locations = geocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
             double latitude = Double.parseDouble(locations.get(0)); // 위도
             double Longitude = Double.parseDouble(locations.get(1)); // 경도
 
@@ -143,7 +143,7 @@ public class ChargerServiceImpl implements ChargerService {
     @Override
     public List<GroupedChargerResponseDto> chargerSearch(String location) {
         try{
-            List<String> locations = geocodingAPI.coordinatePairs(location);
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(location);
             List<Charger> chargerList = chargerRepository.findChargersNearby(Double.parseDouble(locations.get(0)),Double.parseDouble(locations.get(1)));
             List<ChargerSearchResponseDto> chargerSearchResponseDtoList = chargerList.stream()
                     .map(ChargerSearchResponseDto::toDto)

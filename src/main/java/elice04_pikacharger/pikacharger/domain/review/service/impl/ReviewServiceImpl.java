@@ -173,9 +173,12 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviewsForCharger = reviewRepository.findByChargerId(chargerId);
 
         int reviewCount = reviewsForCharger.size();
-        float totalStars = (float) reviewsForCharger.stream().mapToInt(Review::getRating).sum();
+        int totalStars = reviewsForCharger.stream().mapToInt(Review::getRating).sum();
 
-        float avgRate = reviewCount > 0 ? totalStars / reviewCount : 0;
+        double avgRate = reviewCount > 0 ? (double) totalStars / reviewCount : 0;
+
+        // 평균 평점을 소수점 한 자리까지 반올림하여 계산
+        avgRate = Math.round(avgRate * 10.0f) / 10.0f;
 
         charger.updateAvgRate(avgRate);
     }

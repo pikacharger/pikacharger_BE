@@ -167,6 +167,8 @@ public class ReviewServiceImpl implements ReviewService {
         int reviewCount = reviewsForCharger.size();
         int totalStars = reviewsForCharger.stream().mapToInt(Review::getRating).sum();
 
+
+        // 그냥 계산을 
         double avgRate = reviewCount > 0 ? (double) totalStars / reviewCount : 0;
 
         BigDecimal avgRateDecimal = BigDecimal.valueOf(avgRate)

@@ -9,15 +9,9 @@ import java.util.List;
 
 @Data
 public class ReviewModifyPayload {
-    private Long reviewId;
-
     private String content;
 
     private String chargerName;
 
     private Integer rating;
-
-    private List<MultipartFile> reviewImage = new ArrayList<>();
-
-    private LocalDateTime lastModifiedDate;
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomFieldSetMapper implements FieldSetMapper<PublicChargerDataDto> {
+    public static final int COORDINATE_PAIRS_COUNT = 2; // 좌표 쌍의 개수 2개
 
     @Override
     public PublicChargerDataDto mapFieldSet(FieldSet fieldSet) throws BindException {
@@ -18,7 +19,7 @@ public class CustomFieldSetMapper implements FieldSetMapper<PublicChargerDataDto
 
         String mapLocation = fieldSet.readString("mapLocation");
         String[] locationParts = mapLocation.split(",");
-        if (locationParts.length == 2) {
+        if (locationParts.length == COORDINATE_PAIRS_COUNT) {
             double latitude = Double.parseDouble(locationParts[0].trim());
             double longitude = Double.parseDouble(locationParts[1].trim());
             publicChargerDataDto.setLatitude(latitude);

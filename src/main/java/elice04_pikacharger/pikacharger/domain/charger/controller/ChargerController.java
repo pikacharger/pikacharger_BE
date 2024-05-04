@@ -1,12 +1,12 @@
 package elice04_pikacharger.pikacharger.domain.charger.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.service.ChargerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,20 +55,14 @@ public class ChargerController {
 
     @Operation(summary = "충전소 등록", description = "충전소 등록")
     @PostMapping(value = "/users/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChargerResponseDto> createCharger(@RequestPart("charger") String chargerJson, @RequestPart("imgUrl") List<MultipartFile> multipartFiles, @PathVariable Long userId) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ChargerCreateDto chargerCreateDto = objectMapper.readValue(chargerJson, ChargerCreateDto.class);
-
+    public ResponseEntity<ChargerResponseDto> createCharger(@Valid @RequestPart("chargerCreate") ChargerCreateDto chargerCreateDto, @RequestPart(value = "imgUrl", required = false) List<MultipartFile> multipartFiles, @PathVariable Long userId) throws IOException {
         ChargerResponseDto chargerResponseDto = chargerService.createCharger(chargerCreateDto, multipartFiles, userId);
         return new ResponseEntity<>(chargerResponseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "충전소 수정", description = "충전소 id와 유저 id를 이용해 자신이 만든 충전소일 경우 수정")
     @PatchMapping(value = "/{chargerId}/users/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChargerResponseDto> updateCharger(@RequestPart("charger") String chargerJson, @RequestPart("imgUrl") List<MultipartFile> multipartFiles, @PathVariable Long chargerId, @PathVariable Long userId) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ChargerUpdateDto chargerUpdateDto = objectMapper.readValue(chargerJson, ChargerUpdateDto.class);
-
+    public ResponseEntity<ChargerResponseDto> updateCharger(@Valid @RequestPart("chargerUpdate") ChargerUpdateDto chargerUpdateDto, @RequestPart(value = "imgUrl", required = false) List<MultipartFile> multipartFiles, @PathVariable Long chargerId, @PathVariable Long userId) throws IOException {
         ChargerResponseDto chargerResponseDto = chargerService.updateCharger(chargerUpdateDto, multipartFiles, chargerId, userId);
         return new ResponseEntity<>(chargerResponseDto, HttpStatus.OK);
     }

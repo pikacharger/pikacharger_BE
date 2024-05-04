@@ -4,7 +4,7 @@ import elice04_pikacharger.pikacharger.domain.charger.dto.*;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerCreateDto;
 import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import elice04_pikacharger.pikacharger.domain.charger.geocoding.GeocodingAPI;
+import elice04_pikacharger.pikacharger.domain.charger.geocoding.KakaoGeocodingAPI;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 import elice04_pikacharger.pikacharger.domain.chargertype.dto.payload.ChargerTypeDto;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
@@ -33,7 +33,7 @@ public class ChargerServiceImpl implements ChargerService {
 
     private final ChargerRepository chargerRepository;
     private final UserRepository userRepository;
-    private final GeocodingAPI geocodingAPI;
+    private final KakaoGeocodingAPI kakaoGeocodingAPI;
     private final FavoriteRepository favoriteRepository;
     private final S3UploaderService s3UploaderService;
 
@@ -45,27 +45,28 @@ public class ChargerServiceImpl implements ChargerService {
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
 
         try{
-            List<String> locations = geocodingAPI.coordinatePairs(chargerCreateDto.getChargerLocation());
-            chargerCreateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
-            chargerCreateDto.setLongitude(Double.parseDouble(locations.get(1))); // 경도
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(chargerCreateDto.getChargerLocation());
+            double latitude = Double.parseDouble(locations.get(0)); // 위도
+            double Longitude = Double.parseDouble(locations.get(1)); // 경도
+
+            Charger charger = chargerCreateDto.toEntity(user, latitude, Longitude);
+            for (ChargerTypeDto chargerTypeDto : chargerCreateDto.getChargerTypeDtoList()){
+                ChargerType chargerType = ChargerType.builder()
+                        .type(chargerTypeDto.getType())
+                        .charger(charger)
+                        .build();
+                charger.getChargerTypes().add(chargerType);
+            }
+
+            chargerImgUpload(charger, multipartFiles);
+
+            Charger savedCharger = chargerRepository.save(charger);
+
+            return ChargerResponseDto.toDto(savedCharger);
         }catch (Exception e){
             throw new RuntimeException("예외 발생"+e.getMessage());
         }
 
-        Charger charger = chargerCreateDto.toEntity(user);
-        for (ChargerTypeDto chargerTypeDto : chargerCreateDto.getChargerTypeDtoList()){
-            ChargerType chargerType = ChargerType.builder()
-                    .type(chargerTypeDto.getType())
-                    .charger(charger)
-                    .build();
-            charger.getChargerTypes().add(chargerType);
-        }
-
-        chargerImgUpload(charger, multipartFiles);
-
-        Charger savedCharger = chargerRepository.save(charger);
-
-        return ChargerResponseDto.toDto(savedCharger);
     }
 
     @Transactional
@@ -74,40 +75,41 @@ public class ChargerServiceImpl implements ChargerService {
         if (!chargerRepository.existsByIdAndUserId(chargerId, userId)){
             throw new IllegalStateException("충전소 수정권한이 없습니다.");
         }
-        Charger charger = getCharger(chargerId);
         try{
-            List<String> locations = geocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
-            chargerUpdateDto.setLatitude(Double.parseDouble(locations.get(0))); // 위도
-            chargerUpdateDto.setLongitude(Double.parseDouble(locations.get(1))); // 경도
+            Charger charger = getCharger(chargerId);
+
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(chargerUpdateDto.getChargerLocation());
+            double latitude = Double.parseDouble(locations.get(0)); // 위도
+            double Longitude = Double.parseDouble(locations.get(1)); // 경도
+
+            charger.updateCharger(
+                    chargerUpdateDto.getChargerLocation(),
+                    chargerUpdateDto.getChargerName(),
+                    chargerUpdateDto.getChargingSpeed(),
+                    latitude,
+                    Longitude,
+                    chargerUpdateDto.getContent(),
+                    chargerUpdateDto.getPersonalPrice()
+            );
+
+            charger.getChargerTypes().clear();
+            for (ChargerTypeDto chargerTypeDto : chargerUpdateDto.getChargerTypeDtoList()){
+                ChargerType chargerType = ChargerType.builder()
+                        .type(chargerTypeDto.getType())
+                        .charger(charger)
+                        .build();
+                charger.getChargerTypes().add(chargerType);
+            }
+
+            charger.getChargerImages().clear();
+            chargerImgUpload(charger, multipartFiles);
+
+            Charger updatedCharger = chargerRepository.save(charger);
+
+            return ChargerResponseDto.toDto(updatedCharger);
         }catch (Exception e){
-            log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
+            throw new RuntimeException("예외 발생"+e.getMessage());
         }
-
-        charger.updateCharger(
-                chargerUpdateDto.getChargerLocation(),
-                chargerUpdateDto.getChargerName(),
-                chargerUpdateDto.getChargingSpeed(),
-                chargerUpdateDto.getLatitude(),
-                chargerUpdateDto.getLongitude(),
-                chargerUpdateDto.getContent(),
-                chargerUpdateDto.getPersonalPrice()
-                );
-
-        charger.getChargerTypes().clear();
-        for (ChargerTypeDto chargerTypeDto : chargerUpdateDto.getChargerTypeDtoList()){
-            ChargerType chargerType = ChargerType.builder()
-                    .type(chargerTypeDto.getType())
-                    .charger(charger)
-                    .build();
-            charger.getChargerTypes().add(chargerType);
-        }
-
-        charger.getChargerImages().clear();
-        chargerImgUpload(charger, multipartFiles);
-
-        Charger updatedCharger = chargerRepository.save(charger);
-
-        return ChargerResponseDto.toDto(updatedCharger);
     }
 
     @Override
@@ -141,7 +143,7 @@ public class ChargerServiceImpl implements ChargerService {
     @Override
     public List<GroupedChargerResponseDto> chargerSearch(String location) {
         try{
-            List<String> locations = geocodingAPI.coordinatePairs(location);
+            List<String> locations = kakaoGeocodingAPI.coordinatePairs(location);
             List<Charger> chargerList = chargerRepository.findChargersNearby(Double.parseDouble(locations.get(0)),Double.parseDouble(locations.get(1)));
             List<ChargerSearchResponseDto> chargerSearchResponseDtoList = chargerList.stream()
                     .map(ChargerSearchResponseDto::toDto)
@@ -150,6 +152,7 @@ public class ChargerServiceImpl implements ChargerService {
             Map<String, List<ChargerSearchResponseDto>> groupedByLocation = chargerSearchResponseDtoList.stream()
                     .collect(Collectors.groupingBy(dto -> dto.getChargerLocation() + "|" + dto.getChargerName()));
 
+            int groupId = 1;
             List<GroupedChargerResponseDto> groupedDtoList = new ArrayList<>();
             for (var entry : groupedByLocation.entrySet()) {
                 String[] keyParts = entry.getKey().split("\\|", -1);
@@ -157,6 +160,7 @@ public class ChargerServiceImpl implements ChargerService {
                 String chargerName = keyParts[1];
 
                 GroupedChargerResponseDto groupedChargerResponseDto = new GroupedChargerResponseDto();
+                groupedChargerResponseDto.setChargerGroupId(groupId++);
                 groupedChargerResponseDto.setChargerLocation(chargerLocation);
                 groupedChargerResponseDto.setChargerName(chargerName);
                 groupedChargerResponseDto.setChargers(entry.getValue());
@@ -165,9 +169,8 @@ public class ChargerServiceImpl implements ChargerService {
 
             return groupedDtoList;
         }catch (Exception e){
-            log.debug("좌표를 받아올수 없습니다. 오류 코드: "+ e.getMessage());
+            throw new RuntimeException("예외 발생"+e.getMessage());
         }
-        return null;
     }
 
     @Override

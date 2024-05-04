@@ -16,7 +16,7 @@ public interface ChargerRepository extends JpaRepository<Charger, Long> {
             "        point(longitude, latitude), " +
             "        point(:longitude, :latitude)" +
             "    ) / 1000) AS distance " +
-            "FROM Charger " +
+            "FROM charger " +
             "HAVING distance < 2 " +
             "ORDER BY distance ASC",
             nativeQuery = true)

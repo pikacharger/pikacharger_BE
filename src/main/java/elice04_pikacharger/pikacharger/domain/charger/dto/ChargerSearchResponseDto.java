@@ -2,7 +2,6 @@ package elice04_pikacharger.pikacharger.domain.charger.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
-import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

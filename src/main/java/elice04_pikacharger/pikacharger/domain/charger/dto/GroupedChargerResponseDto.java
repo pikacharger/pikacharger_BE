@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class GroupedChargerResponseDto {
 
+    private int chargerGroupId;
     private String chargerLocation;
     private String chargerName;
     private List<ChargerSearchResponseDto> chargers;

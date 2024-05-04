@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 public class ChatLogController {
-    private final ChatLogService chatLogService;
+//    private final ChatLogService chatLogService;
+//
+//    @Operation(summary = "메시지 전송", description = "메시지를 해당 채팅방에 전송한다", tags = { "Chat" })
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatLogResponseDto.class)))
+//    })
 
-    @Operation(summary = "메시지 전송", description = "메시지를 해당 채팅방에 전송한다", tags = { "Chat" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatLogResponseDto.class)))
-    })
-
-    @PostMapping("/{chatRoomId}/chatlogs")
-    public ApiResult<ChatLogResponseDto> createChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {
-        ChatLogRequestDto chatLogRequestDto = chatLogService.save(chatRoomId, chatLogRequestDto);
-        return ApiUtils.success(chatLogRequestDto);
-    }
+//    @PostMapping("/{chatRoomId}/chatlogs")
+//    public ApiResult<ChatLogResponseDto> createChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {
+//        ChatLogRequestDto chatLogRequestDto = chatLogService.save(chatRoomId, chatLogRequestDto);
+//        return ApiUtils.success(chatLogRequestDto);
+//    }
 }

@@ -1,11 +1,9 @@
-package elice04_pikacharger.pikacharger.security;
+package elice04_pikacharger.pikacharger.security.jwt;
 
+import elice04_pikacharger.pikacharger.domain.user.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -13,5 +11,5 @@ import java.util.List;
 public class MyTokenPayload {
     private String email;
     private String name;
-    private List<String> roles = new ArrayList<>();
+    private Role role;
 }

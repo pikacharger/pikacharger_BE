@@ -5,7 +5,9 @@ import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.context.annotation.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class User extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "user_id")
+    @Column(name = "user_seq")
     private Long id;
 
     @Column(nullable = false, updatable = false)
@@ -28,7 +30,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String nickname;
 
     @Column(nullable = false)
@@ -40,30 +42,35 @@ public class User extends BaseEntity {
     @Column
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<UserRole> roles = new ArrayList<>();
 
-    @Column
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String chargerType;
 
     @Column
     private String profileImage;
-
     private String resignReason;
     private Boolean resign;
+    private String refreshToken;
+    private ProviderType providerType;
+    private String socialId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-    public void addRole(UserRole role){
-        List<UserRole> list = new ArrayList<>();
-        list.add(role);
-        this.roles = list;
-        this.role = role.getRole().getName();
+    public User(String username, String email, String nickname, Role role, ProviderType providerType){
+        this.username = username;
+        this.email = email != null ? email : "NO_EMAIL";
+        this.nickname = nickname;
+        this.password = "NO_PASS";
+        this.profileImage = profileImage != null ? profileImage : "NO_IMAGE";
+        this.role = role;
+        this.providerType = providerType;
+
     }
+
 
     public void editNickname(UserEditPayload payload){
         this.nickname = payload.getNickname();
@@ -73,9 +80,22 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public User update(String profileImage){
+    public User updateImage(String profileImage){
         this.profileImage = profileImage;
         return this;
+    }
+
+    public User updateNickname(String nickname){
+        this.nickname = nickname;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
     }
 
 

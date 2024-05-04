@@ -152,6 +152,7 @@ public class ChargerServiceImpl implements ChargerService {
             Map<String, List<ChargerSearchResponseDto>> groupedByLocation = chargerSearchResponseDtoList.stream()
                     .collect(Collectors.groupingBy(dto -> dto.getChargerLocation() + "|" + dto.getChargerName()));
 
+            int groupId = 1;
             List<GroupedChargerResponseDto> groupedDtoList = new ArrayList<>();
             for (var entry : groupedByLocation.entrySet()) {
                 String[] keyParts = entry.getKey().split("\\|", -1);
@@ -159,6 +160,7 @@ public class ChargerServiceImpl implements ChargerService {
                 String chargerName = keyParts[1];
 
                 GroupedChargerResponseDto groupedChargerResponseDto = new GroupedChargerResponseDto();
+                groupedChargerResponseDto.setChargerGroupId(groupId++);
                 groupedChargerResponseDto.setChargerLocation(chargerLocation);
                 groupedChargerResponseDto.setChargerName(chargerName);
                 groupedChargerResponseDto.setChargers(entry.getValue());

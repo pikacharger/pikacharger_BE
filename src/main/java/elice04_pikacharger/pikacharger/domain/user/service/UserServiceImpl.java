@@ -1,18 +1,13 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
-import elice04_pikacharger.pikacharger.domain.common.repository.RoleRepository;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.DuplicateCheckDto;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignInPayload;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignUpPayload;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
+import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
-import elice04_pikacharger.pikacharger.domain.user.entity.UserRole;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import elice04_pikacharger.pikacharger.exceptional.InvalidPasswordException;
-import elice04_pikacharger.pikacharger.security.JwtUtil;
-import elice04_pikacharger.pikacharger.security.MyTokenPayload;
+import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
+import elice04_pikacharger.pikacharger.security.jwt.MyTokenPayload;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Member;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,14 +25,13 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RoleRepository roleRepository;
 
     @Transactional
     @Override
-    public Long save(SignUpPayload payload){
-        if(userRepository.existsByEmail(payload.getEmail())){
-            throw new EntityExistsException("이메일 중복입니다.");
-        }
+    public AuthResponseDto save(SignUpPayload payload){
+        userRepository.findByEmail(payload.getEmail()).ifPresent(e->{
+            throw new EntityExistsException();
+        });
 
         User saved = userRepository.save(
                 User.builder()
@@ -47,15 +41,11 @@ public class UserServiceImpl implements UserService{
                         .email(payload.getEmail())
                         .address(payload.getAddress())
                         .phoneNumber(payload.getPhoneNumber())
-                        .chargerType(payload.getChargerType())
-                        .profileImage(payload.getProfileImage())
+                        .role(payload.getRole())
                         .build()
         );
-        saved.addRole(UserRole.builder().
-                user(saved).role(roleRepository
-                        .findById(payload.getRoleId())
-                        .orElseThrow()).build());
-        return saved.getId();
+
+        return new AuthResponseDto(saved.getEmail(),null,saved.getRole());
     }
 
     @Override
@@ -66,23 +56,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Long updateUser(String email,UserEditPayload payload){
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         if(user == null){
             throw new IllegalArgumentException("???????? 되겠냐고");
         }
-        user.editNickname(payload);
-        return user.getId();
+        return user.get().getId();
     }
 
     @Override
-    public String signIn(SignInPayload payload){
-        User user = userRepository.findByEmail(payload.getEmail());
-        if(user == null || !passwordEncoder.matches(payload.getPassword(), user.getPassword())){
+    public AuthResponseDto signIn(SignInPayload payload){
+        User user = userRepository.findByEmail(payload.getEmail())
+                .orElseThrow(() -> new SecurityException());
+        if(!passwordEncoder.matches(payload.getPassword(), user.getPassword())){
             throw new IllegalArgumentException("입력된 정보를 확인해 주세요.");
         }
-        return jwtUtil.generateToken(new MyTokenPayload(user.getEmail(), user.getUsername(),user.getRoles().stream().map(ur->ur.getRole().getName()).toList()));
-
+        return new AuthResponseDto(
+                user.getEmail(),
+                jwtUtil.generateToken(new MyTokenPayload(user.getEmail(), user.getUsername(),user.getRole())),
+                user.getRole());
     }
 
 
@@ -114,11 +106,15 @@ public class UserServiceImpl implements UserService{
     }
 
     public User validatePassword(String email, String password){
-        User user = userRepository.findByEmail(email);
-        if(!passwordEncoder.matches(password, user.getPassword())){
+        Optional<User> user = userRepository.findByEmail(email);
+        if(!passwordEncoder.matches(password, user.get().getPassword())){
             throw new InvalidPasswordException("INVALID PASSWORD");
         }
-        return user;
+        return user.get();
+    }
+
+    public User getUser(Long id){
+        return userRepository.findById(id).get();
     }
 
 

@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 public class ChargerDetailResponseDto {
 
+    private Long chargerId;
     private String chargerLocation;
     private String chargerName;
     private String chargingSpeed;
@@ -33,6 +34,7 @@ public class ChargerDetailResponseDto {
 
     public static ChargerDetailResponseDto toDto(Charger charger, boolean favorite){
         return ChargerDetailResponseDto.builder()
+                .chargerId(charger.getId())
                 .chargerLocation(charger.getChargerLocation())
                 .chargerName(charger.getChargerName())
                 .chargingSpeed(charger.getChargingSpeed())
@@ -53,12 +55,13 @@ public class ChargerDetailResponseDto {
     }
 
     @Builder
-    private ChargerDetailResponseDto(String chargerLocation, String chargerName, String chargingSpeed,
+    private ChargerDetailResponseDto(Long chargerId, String chargerLocation, String chargerName, String chargingSpeed,
                                      double latitude, double longitude, String content, double memberPrice,
                                      double nonmemberPrice, double personalPrice, double avgRate, String chargerRole,
                                      boolean favorite, List<ChargerType> chargerTypeList, String chargerStatus,
                                      List<ChargerImage> chargerImageList, List<Review> reviewList)
     {
+        this.chargerId = chargerId;
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

@@ -1,10 +1,11 @@
 package elice04_pikacharger.pikacharger.domain.favorite.service;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
+import elice04_pikacharger.pikacharger.domain.charger.dto.GroupedChargerResponseDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.GroupedFavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteCreateDto;
-import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.FavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.favorite.repository.FavoriteRepository;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +43,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Transactional
     @Override
-    public List<FavoriteResponseDto> favoriteList(Long userId) {
+    public List<GroupedFavoriteResponseDto> favoriteList(Long userId) {
         List<Favorite> favoriteList = favoriteRepository.findByUserId(userId);
         List<FavoriteResponseDto> favoriteResponseDtoList = new ArrayList<>();
         for (Favorite favorite : favoriteList) {
@@ -48,7 +51,25 @@ public class FavoriteServiceImpl implements FavoriteService {
             boolean favoriteCheck = favoriteRepository.existsByUserIdAndChargerId(userId, charger.getId());
             favoriteResponseDtoList.add(FavoriteResponseDto.toDto(charger, favoriteCheck));
         }
-        return favoriteResponseDtoList;
+
+        Map<String, List<FavoriteResponseDto>> groupedByLocation = favoriteResponseDtoList.stream()
+                .collect(Collectors.groupingBy(dto -> dto.getChargerLocation() + "|" + dto.getChargerName()));
+
+        int groupId = 1;
+        List<GroupedFavoriteResponseDto> groupedDtoList = new ArrayList<>();
+        for (var entry : groupedByLocation.entrySet()) {
+            String[] keyParts = entry.getKey().split("\\|", -1);
+            String chargerLocation = keyParts[0];
+            String chargerName = keyParts[1];
+
+            GroupedFavoriteResponseDto groupedFavoriteResponseDto = new GroupedFavoriteResponseDto();
+            groupedFavoriteResponseDto.setFavoriteGroupId(groupId++);
+            groupedFavoriteResponseDto.setChargerLocation(chargerLocation);
+            groupedFavoriteResponseDto.setChargerName(chargerName);
+            groupedFavoriteResponseDto.setChargers(entry.getValue());
+            groupedDtoList.add(groupedFavoriteResponseDto);
+        }
+        return groupedDtoList;
     }
 
     @Transactional

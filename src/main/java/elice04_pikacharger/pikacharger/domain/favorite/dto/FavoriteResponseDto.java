@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.domain.charger.dto;
+package elice04_pikacharger.pikacharger.domain.favorite.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
@@ -8,47 +8,51 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
-public class ChargerSearchResponseDto {
+@Setter
+public class FavoriteResponseDto {
 
     private Long chargerId;
     private String chargerLocation;
     private String chargerName;
     private double latitude;
     private double longitude;
+    private String chargingSpeed;
     private List<ChargerType> chargerTypeList;
     private String chargerRole;
+    private boolean favorite;
     private double avgRate;
     private String chargerStatus;
-    private String chargingSpeed;
 
-    public static ChargerSearchResponseDto toDto(Charger charger){
-        return ChargerSearchResponseDto.builder()
+    public static FavoriteResponseDto toDto(Charger charger, boolean favorite){
+        return FavoriteResponseDto.builder()
                 .chargerId(charger.getId())
                 .chargerLocation(charger.getChargerLocation())
                 .chargerName(charger.getChargerName())
                 .latitude(charger.getLatitude())
                 .longitude(charger.getLongitude())
+                .chargingSpeed(charger.getChargingSpeed())
                 .chargerTypeList(charger.getChargerTypes())
                 .chargerRole(charger.getChargerRole().getMessage())
+                .favorite(favorite)
                 .avgRate(charger.getAvgRate())
                 .chargerStatus(charger.getChargerStatus())
-                .chargingSpeed(charger.getChargingSpeed())
                 .build();
     }
 
     @Builder
-    private ChargerSearchResponseDto(Long chargerId, String chargerLocation, String chargerName, double latitude, double longitude, List<ChargerType> chargerTypeList, String chargerRole, double avgRate, String chargerStatus, String chargingSpeed){
+    private FavoriteResponseDto(Long chargerId, String chargerLocation, String chargerName, double latitude, double longitude, String chargingSpeed, List<ChargerType> chargerTypeList, String chargerRole, boolean favorite, double avgRate, String chargerStatus){
         this.chargerId = chargerId;
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chargingSpeed = chargingSpeed;
         this.chargerTypeList = chargerTypeList;
         this.chargerRole = chargerRole;
+        this.favorite = favorite;
         this.avgRate = avgRate;
         this.chargerStatus = chargerStatus;
-        this.chargingSpeed = chargingSpeed;
     }
+
 }

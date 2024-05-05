@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.security.jwt;
 
 
+import elice04_pikacharger.pikacharger.domain.user.entity.Role;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -24,9 +27,12 @@ public class MyTokenAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional.ofNullable(payload.getRole()) // Role이 null이 아닌지 확인
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+        Set<Role> roles = payload.getRoles();
+        if(roles == null) {
+            return Collections.emptyList();
+        }
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getKey()))
                 .collect(Collectors.toList());
     }
 

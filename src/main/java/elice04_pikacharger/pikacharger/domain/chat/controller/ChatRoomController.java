@@ -6,7 +6,7 @@ import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatRoomService;
 import elice04_pikacharger.pikacharger.exceptional.CustomException;
 import elice04_pikacharger.pikacharger.exceptional.ErrorCode;
-import elice04_pikacharger.pikacharger.security.JwtProvider;
+import elice04_pikacharger.pikacharger.security.jwt.JwtProvider;
 import elice04_pikacharger.pikacharger.util.ApiResult;
 import elice04_pikacharger.pikacharger.util.ApiUtils;
 

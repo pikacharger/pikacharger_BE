@@ -1,9 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
-import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.image.repository.ReviewImageRepository;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
@@ -18,6 +16,9 @@ import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,28 +90,17 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDetailResult.toDto(review);
     }
 
+    //TODO 유저 리뷰정보 반환 DTO 생성하기(리팩토링)
     @Override
-    public List<ReviewResult> findByUserId(Long userId) {
-        List<Review> reviews = reviewRepository.findByUserId(userId);
-        if (reviews.isEmpty()) {
-            // 해당 사용자의 리뷰가 없을 경우 빈 리스트 반환
-            return Collections.emptyList();
-        }
-        return reviews.stream()
-                .map(ReviewResult::toDto)
-                .collect(Collectors.toList());
+    public List<ReviewResult> findByUserId(Long userId, PageRequest pageRequest) {
+        Page<Review> reviewsPage = reviewRepository.findByUserId(userId, pageRequest);
+        return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 
     @Override
-    public List<ReviewResult> findByChargerId(Long chargerId) {
-        List<Review> reviews = reviewRepository.findByChargerId(chargerId);
-        if (reviews.isEmpty()) {
-            // 해당 충전소의 리뷰가 없을 경우 빈 리스트 반환
-            return Collections.emptyList();
-        }
-        return reviews.stream()
-                .map(ReviewResult::toDto)
-                .collect(Collectors.toList());
+    public List<ReviewResult> findByChargerId(Long chargerId, PageRequest pageRequest) {
+        Page<Review> reviewsPage = reviewRepository.findReviewByChargerId(chargerId, pageRequest);
+        return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 
     @Override
@@ -177,8 +167,6 @@ public class ReviewServiceImpl implements ReviewService {
         int reviewCount = reviewsForCharger.size();
         int totalStars = reviewsForCharger.stream().mapToInt(Review::getRating).sum();
 
-
-        // 그냥 계산을 
         double avgRate = reviewCount > 0 ? (double) totalStars / reviewCount : 0;
 
         BigDecimal avgRateDecimal = BigDecimal.valueOf(avgRate)
@@ -187,6 +175,17 @@ public class ReviewServiceImpl implements ReviewService {
 
         charger.updateAvgRate(roundedAvgRate);
     }
+
+    // 유저의 총 리뷰 개수 반환
+    public Long getTotalReviewsByUserId(Long userId) {
+        return reviewRepository.countByUserId(userId);
+    }
+
+    // 충전소의 총 리뷰 개수 반환
+    public Long getTotalReviewsByChargerId(Long chargerId) {
+        return reviewRepository.countByChargerId(chargerId);
+    }
+
 
 //    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 //    public void deleteImage(ReviewDeletedEvent event) {

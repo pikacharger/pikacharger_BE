@@ -9,8 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.context.annotation.Profile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -21,7 +20,7 @@ import java.util.List;
 public class User extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "user_seq")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false, updatable = false)
@@ -42,9 +41,9 @@ public class User extends BaseEntity {
     @Column
     private String phoneNumber;
 
-
+    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Set<Role> roles = new HashSet<>();
 
     @Column(length = 50)
     private String chargerType;
@@ -60,17 +59,16 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-    public User(String username, String email, String nickname, Role role, ProviderType providerType){
+    public User(String username, String email, String nickname, ProviderType providerType){
         this.username = username;
         this.email = email != null ? email : "NO_EMAIL";
         this.nickname = nickname;
         this.password = "NO_PASS";
         this.profileImage = profileImage != null ? profileImage : "NO_IMAGE";
-        this.role = role;
+        this.roles = new HashSet<>();
         this.providerType = providerType;
 
     }
-
 
     public void editNickname(UserEditPayload payload){
         this.nickname = payload.getNickname();
@@ -90,12 +88,16 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public String getRoleKey() {
-        return this.role.getKey();
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public String getNickName() {
+        return nickname;
     }
 
 

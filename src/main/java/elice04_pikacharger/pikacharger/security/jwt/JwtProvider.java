@@ -17,7 +17,7 @@ public class JwtProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        log.debug("authenticate");
+
         if(supports(authentication.getClass())){
             MyTokenPayload verified = jwtUtil.verify(((MyTokenAuthentication) authentication).getToken());
             authentication.setAuthenticated(true);

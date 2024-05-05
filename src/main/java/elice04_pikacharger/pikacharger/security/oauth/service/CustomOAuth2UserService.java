@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,14 +41,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes extractAttributes = OAuthAttributes.of(providerType, userNameAttributeName,attributes);
 
         User createdUser = getUser(extractAttributes, providerType);
-
+        Set<SimpleGrantedAuthority> authorities = createdUser.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getKey())).collect(Collectors.toSet());
         return new CustomOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(createdUser.getRoleKey())),
+                authorities,
                 attributes,
                 extractAttributes.getNameAttributeKey(),
                 createdUser.getEmail(),
                 createdUser.getUsername(),
-                createdUser.getRole()
+                createdUser.getRoles()
         );
     }
 

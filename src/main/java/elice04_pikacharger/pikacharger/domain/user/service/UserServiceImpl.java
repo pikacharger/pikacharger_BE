@@ -3,11 +3,13 @@ package elice04_pikacharger.pikacharger.domain.user.service;
 
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
+import elice04_pikacharger.pikacharger.domain.user.entity.Role;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import elice04_pikacharger.pikacharger.exceptional.InvalidPasswordException;
 import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
 import elice04_pikacharger.pikacharger.security.jwt.MyTokenPayload;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -41,11 +44,11 @@ public class UserServiceImpl implements UserService{
                         .email(payload.getEmail())
                         .address(payload.getAddress())
                         .phoneNumber(payload.getPhoneNumber())
-                        .role(payload.getRole())
+                        .roles(Collections.singleton(Role.USER))
                         .build()
         );
 
-        return new AuthResponseDto(saved.getEmail(),null,saved.getRole());
+        return new AuthResponseDto(saved.getEmail(),null,null,saved.getRoles());
     }
 
     @Override
@@ -73,8 +76,9 @@ public class UserServiceImpl implements UserService{
         }
         return new AuthResponseDto(
                 user.getEmail(),
-                jwtUtil.generateToken(new MyTokenPayload(user.getEmail(), user.getUsername(),user.getRole())),
-                user.getRole());
+                jwtUtil.generateToken(new MyTokenPayload(user.getId(),user.getEmail(), user.getUsername(),user.getRoles())),
+                jwtUtil.generateRefreshToken(),
+                user.getRoles());
     }
 
 
@@ -116,6 +120,58 @@ public class UserServiceImpl implements UserService{
     public User getUser(Long id){
         return userRepository.findById(id).get();
     }
+
+    public User findUser(Long id){
+        User findUser = userRepository.findById(id).orElseThrow();
+        return findUser;
+    }
+
+    public String deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow();
+        userRepository.deleteById(id);
+
+        return user.getEmail();
+    }
+
+    public String retrieveUserEmail(String phoneNumber) {
+        User foundUser = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow();
+
+        return foundUser.getEmail();
+    }
+
+    public UserResponseDto findUserById(Long id){
+        User findUser = userRepository.findById(id).orElseThrow();
+        return new UserResponseDto(findUser);
+    }
+
+    @Transactional
+    public String logoutUser(String refreshToken){
+        if(jwtUtil.validateToken(refreshToken)){
+            String userEmail = jwtUtil.extractEmail(refreshToken).orElseThrow();
+            return jwtUtil.deleteRefreshByEmail(userEmail);
+        }
+        return null;
+    }
+
+    @Override
+    public String createAccessByRefresh(String refreshToken) {
+
+        Claims claims = jwtUtil.parseClaims(refreshToken);
+        MyTokenPayload tokenPayload = MyTokenPayload.builder()
+                .userId(claims.get("userId", Long.class))
+                .name(claims.get("username", String.class))
+                .email(claims.get("email", String.class))
+                .build();
+
+        return jwtUtil.generateToken(tokenPayload);
+    }
+
+
+
+
+
+
 
 
 

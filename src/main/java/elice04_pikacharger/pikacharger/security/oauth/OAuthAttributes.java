@@ -9,7 +9,9 @@ import elice04_pikacharger.pikacharger.security.oauth.info.OAuth2UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -47,13 +49,15 @@ public class OAuthAttributes {
     }
 
     public User toEntity(ProviderType providerType, OAuth2UserInfo userInfo){
+        Set<Role> initialRoles = new HashSet<>();
+        initialRoles.add(Role.GUEST);
         return User.builder()
                 .providerType(providerType)
                 .socialId(userInfo.getId())
                 .email(UUID.randomUUID() + "@socalUser.com")
                 .nickname(oauth2UserInfo.getNickname())
                 .profileImage(oauth2UserInfo.getImageUrl())
-                .role(Role.GUEST)
+                .roles(initialRoles)
                 .build();
     }
 

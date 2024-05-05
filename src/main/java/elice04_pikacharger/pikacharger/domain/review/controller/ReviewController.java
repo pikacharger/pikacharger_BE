@@ -3,7 +3,9 @@ package elice04_pikacharger.pikacharger.domain.review.controller;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
+import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewSortFiled;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
+import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResultToUser;
 import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.bytecode.internal.bytebuddy.PrivateAccessorException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,16 +62,44 @@ public class ReviewController {
 
     @Operation(summary = "유저 리뷰 정보 조회", description = "userId로 리뷰 정보를 조회하는 api.")
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<ReviewResult>> getReviewsByUserId(@PathVariable Long userId) {
-        List<ReviewResult> reviewResults = reviewService.findByUserId(userId);
-        return ResponseEntity.ok(reviewResults);
+    public ResponseEntity<ReviewResultToUser> getReviewsByUserId(
+            @PathVariable Long userId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "5", required = false) int size,
+            @RequestParam(name = "sort", defaultValue = "DESC", required = false) String sort) {
+
+        Sort orderBy = sort.equals("ASC") ?
+                Sort.by(Sort.Direction.ASC, ReviewSortFiled.CREATED_DATE.getValue()) : Sort.by(Sort.Direction.DESC, ReviewSortFiled.CREATED_DATE.getValue());
+
+        PageRequest pageRequest = PageRequest.of(page, size, orderBy);
+
+        List<ReviewResult> reviewDtos = reviewService.findByUserId(userId, pageRequest);
+        Long totalReviews = reviewService.getTotalReviewsByUserId(userId);
+
+        ReviewResultToUser response = new ReviewResultToUser(reviewDtos, totalReviews, page, size);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "충전소 리뷰 정보 조회", description = "충전소에 등록되어있는 리뷰 정보를 조회하는 api.")
     @GetMapping("/charger/{chargerId}")
-    public ResponseEntity<List<ReviewResult>> getReviewsByChargerId(@PathVariable Long chargerId){
-        List<ReviewResult> reviewResults = reviewService.findByChargerId(chargerId);
-        return ResponseEntity.ok(reviewResults);
+    public ResponseEntity<ReviewResultToUser> getReviewsByChargerId(
+            @PathVariable Long chargerId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "5", required = false) int size,
+            @RequestParam(name = "sort", defaultValue = "DESC", required = false) String sort){
+
+        Sort orderBy = sort.equals("ASC") ?
+                Sort.by(Sort.Direction.ASC, ReviewSortFiled.CREATED_DATE.getValue()) : Sort.by(Sort.Direction.DESC, ReviewSortFiled.CREATED_DATE.getValue());
+
+        PageRequest pageRequest = PageRequest.of(page, size, orderBy);
+
+        List<ReviewResult> reviewDtos = reviewService.findByChargerId(chargerId, pageRequest);
+        Long totalReviews = reviewService.getTotalReviewsByChargerId(chargerId);
+
+        ReviewResultToUser response = new ReviewResultToUser(reviewDtos, totalReviews, page, size);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "리뷰 수정", description = "리뷰를 수정합니다.")

@@ -17,13 +17,17 @@ public class FileReaderConfig {
 
     private final CsvReader csvReader;
     private final CsvWriter csvWriter;
+    private final SQLWriter sqlWriter;
+    private final SQLReader sqlReader;
 
-    @Bean
-    public Job publicChargerDataLoadJob(JobRepository jobRepository, Step publicChargerDataLoadStep){
-        return new JobBuilder("publicChargerDataLoadJob", jobRepository)
-                .start(publicChargerDataLoadStep)
-                .build();
-    }
+//     배치 연결 끊기
+//    @Bean
+//    public Job publicChargerDataLoadJob(JobRepository jobRepository, Step publicChargerDataLoadStep, Step executeSqlScriptStep){
+//        return new JobBuilder("publicChargerDataLoadJob", jobRepository)
+//                .start(publicChargerDataLoadStep)
+//                .next(executeSqlScriptStep)
+//                .build();
+//    }
 
     @Bean
     public Step publicChargerDataLoadStep(JobRepository jobRepository, PlatformTransactionManager ptm){
@@ -31,6 +35,16 @@ public class FileReaderConfig {
                 .<PublicChargerDataDto, PublicChargerDataDto>chunk(100, ptm)
                 .reader(csvReader.csvChargerReader())
                 .writer(csvWriter)
+//                .allowStartIfComplete(true) // step 재 실행
+                .build();
+    }
+
+    @Bean
+    public Step executeSqlScriptStep(JobRepository jobRepository, PlatformTransactionManager ptm){
+        return new StepBuilder("executeSqlScriptStep", jobRepository)
+                .<String, String>chunk(1, ptm)
+                .reader(sqlReader.sqlFileReader())
+                .writer(sqlWriter)
 //                .allowStartIfComplete(true) // step 재 실행
                 .build();
     }

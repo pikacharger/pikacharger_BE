@@ -31,8 +31,6 @@ public class ChatRoomController {
     private final ChatLogService chatLogService;
     private final JwtUtil jwtUtil;
 
-    // TODO: joo_feature 브랜치 코드 받아와야지 JetUtil 변경사항 들어올 것 같다.
-
     //채팅방 목록 받기
     @Operation(summary = "채팅방 목록 조회", description = "사용자의 채팅방 목록을 조회한다", tags = { "Chat" })
     @ApiResponses(value = {

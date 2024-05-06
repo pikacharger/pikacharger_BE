@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,15 +18,15 @@ public class ChatLogResponseDto{
     private User sender;
     private ChatRoom chatRoom;
     private String messageContents;
-    private String createdDate;
-    private String lastModifiedDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastModifiedDate;
 
     public ChatLogResponseDto(ChatLog entity) {
         this.id = entity.getId();
         this.sender = entity.getSender();
         this.chatRoom = entity.getChatRoom();
         this.messageContents = entity.getMessageContents();
-        this.createdDate = entity.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        this.lastModifiedDate = entity.getLastModifiedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+        this.createDate = entity.getCreateDate();
+        this.lastModifiedDate = entity.getLastModifiedDate();
     }
 }

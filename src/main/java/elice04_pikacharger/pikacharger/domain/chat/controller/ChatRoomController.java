@@ -26,7 +26,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ChatRoomController {
-    private final ChatRoomResponseDto chatRoomResponseDto;
     private final ChatRoomService chatRoomService;
     private final ChatLogService chatLogService;
     private final JwtUtil jwtUtil;
@@ -37,7 +36,7 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatRoomResponseDto.class))))
     })
     @GetMapping("/rooms")
-    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@RequestHeader("Authorization") String token) throws Exception {
+    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@RequestHeader("Authorization") String token){
 
         // 토큰 유효기간 확인
         try {
@@ -60,7 +59,7 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatLogResponseDto.class))))
     })
     @GetMapping("/{chatRoomId}/logs")
-    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestHeader("Authorization") String token) throws Exception {
+    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.extractUserIdFromToken(token);
         List<ChatLogResponseDto> chatLogs = chatLogService.getAllChatLog(chatRoomId);
         return ApiUtils.success(chatLogs);
@@ -72,7 +71,7 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatRoomResponseDto.class)))
     })
     @PostMapping("")
-    public ApiResult<ChatRoomResponseDto> createChatRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto, @RequestHeader("Authorization") String token) throws Exception {
+    public ApiResult<ChatRoomResponseDto> createChatRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto, @RequestHeader("Authorization") String token) {
         // 토큰 유효기간 확인
         try {
             Date current = new Date(System.currentTimeMillis());
@@ -82,9 +81,9 @@ public class ChatRoomController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Long chatRoomId = chatRoomRequestDto.getId();
-        Long receiverId = jwtUtil.extractUserIdFromToken(token);
-        Long savedChatRoomId = chatRoomService.save(chatRoomRequestDto);
+        Long chargerId = chatRoomRequestDto.getCharger().getId();
+        Long senderId = jwtUtil.extractUserIdFromToken(token);
+        ChatRoomResponseDto chatRoomResponseDto = chatRoomService.save(chargerId,senderId);
 
         return ApiUtils.success(chatRoomResponseDto);
     }

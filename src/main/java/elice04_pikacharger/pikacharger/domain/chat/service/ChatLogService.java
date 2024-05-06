@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ChatLogService {
-    @Transactional
-    ChatLogResponseDto findChatLogById(Long chatLogId);
 
     // 전체 메시지 조회
     List<ChatLogResponseDto> getAllChatLog(Long chatRoomId);

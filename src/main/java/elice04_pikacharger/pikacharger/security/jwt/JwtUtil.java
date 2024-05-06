@@ -51,6 +51,11 @@ public class JwtUtil {
     private final UserRepository userRepository;
 
     public final String[] allowedUrls = {
+            "/hc",
+            "/env",
+            "/review/detail/**",
+            "/review/charger/**",
+            "/chargers",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/",
@@ -59,8 +64,8 @@ public class JwtUtil {
             "/index.html",
             "/swagger-resources",
             "/swagger-resources/**",
-            "/webjars/**"
-
+            "/webjars/**",
+            "/login"
     };
 
     @PostConstruct

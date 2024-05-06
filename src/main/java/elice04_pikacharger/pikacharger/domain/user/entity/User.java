@@ -83,9 +83,9 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public User updateNickname(String nickname){
-        this.nickname = nickname;
-        return this;
+    public void updateUser(UserEditPayload userEditPayload){
+        this.nickname = userEditPayload.getNickname();
+        this.profileImage = userEditPayload.getProfileImage();
     }
 
     public Set<Role> getRoles() {

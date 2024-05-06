@@ -141,11 +141,12 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-//    @PatchMapping("/")
-//    @Operation(summary = "사용자 정보 업데이트")
-//    public ResponseEntity<UserResponseDto> updateUser(@RequestPart(value = "file", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateDto") UserEditPayload updateDto, @AuthenticationPrincipal CustomUserDetails tokenUser) throws IOException{
-//        User user = userService.updateUser(tokenUser.getUser().getEmail(), multipartFile, updateDto)
-//    }
+    @PatchMapping("/updateUser")
+    @Operation(summary = "사용자 정보 업데이트")
+    public ResponseEntity<UserResponseDto> updateUser(@RequestPart(value = "file", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateDto") UserEditPayload updateDto, @AuthenticationPrincipal CustomUserDetails tokenUser) throws IOException{
+        User user = userService.updateUser(tokenUser.getMyTokenPayload().getUserId(),multipartFile ,updateDto);
+        return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
+    }
 
     private void setRefreshCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("refreshToken", token);
@@ -157,6 +158,20 @@ public class UserController {
         cookie.setPath("/");
         response.addCookie(cookie);
     }
+
+    @DeleteMapping
+    @Operation(summary = "유저 삭제", description = "유저 삭제")
+    public ResponseEntity<Long> deleteUser(@AuthenticationPrincipal Long userId) {
+        return new ResponseEntity<>(userService.deleteByUserId(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/check/nickname/{nickname}")
+    @Operation(summary = "닉네임 중복체크")
+    public ResponseEntity<Boolean> checkDuplicateNickname(@PathVariable("nickname") String nickname) {
+        return new ResponseEntity<>(userService.checkDuplicateNickname(nickname), HttpStatus.OK);
+    }
+
+
 
 
 

@@ -6,4 +6,5 @@ import lombok.Data;
 public class UserEditPayload {
 
     private String nickname;
+    private String profileImage;
 }

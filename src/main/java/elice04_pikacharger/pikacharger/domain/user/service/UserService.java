@@ -4,13 +4,14 @@ import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
 
     AuthResponseDto save(SignUpPayload payload);
 
-    Long updateUser(String email,UserEditPayload payload);
+    User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload);
 
     AuthResponseDto signIn(SignInPayload payload);
 
@@ -33,4 +34,8 @@ public interface UserService {
 
 
     String createAccessByRefresh(String refreshToken);
+
+    Long deleteByUserId(Long userId);
+
+    Boolean checkDuplicateNickname(String nickname);
 }

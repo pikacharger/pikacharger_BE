@@ -6,6 +6,8 @@ import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 public interface ChatRoomService {
     @Transactional
     ChatRoomResponseDto findByRoomId(Long id);
@@ -13,6 +15,10 @@ public interface ChatRoomService {
     //채팅방 생성
     @Transactional
     Long save(ChatRoomRequestDto requestDto);
+
+    // 전체 채팅방 조회
+    @Transactional
+    List<ChatRoomResponseDto> findAllChatRoom(Long userId);
 
     //TODO: 채팅방 삭제
 //    void delete(Long id);

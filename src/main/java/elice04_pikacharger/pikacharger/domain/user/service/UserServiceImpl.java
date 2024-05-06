@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.Role;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -58,13 +60,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Long updateUser(String email,UserEditPayload payload){
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if(user == null){
-            throw new IllegalArgumentException("???????? 되겠냐고");
-        }
-        return user.get().getId();
+    @Transactional
+    public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload){
+        User user = userRepository.findById(userId).orElseThrow();
+        user.updateUser(payload);
+        return user;
     }
 
     @Override
@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService{
     public void updatePassword(String email, String currentPassword, String newPassword) {
         User user = validatePassword(email, currentPassword);
         user.updatePassword(passwordEncoder.encode((newPassword)));
+        userRepository.saveAndFlush(user);
     }
 
     public User validatePassword(String email, String password){
@@ -166,6 +167,21 @@ public class UserServiceImpl implements UserService{
 
         return jwtUtil.generateToken(tokenPayload);
     }
+
+    @Override
+    public Long deleteByUserId(Long userId){
+        userRepository.findById(userId).orElseThrow();
+        userRepository.deleteById(userId);
+
+        return userId;
+    }
+
+    @Override
+    public Boolean checkDuplicateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+
 
 
 

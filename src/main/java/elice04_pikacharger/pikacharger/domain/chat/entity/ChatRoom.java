@@ -6,10 +6,13 @@ import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Table(name="chatroom")
 @Entity
 @Data
 @Builder
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +21,13 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chatroom_id")
     private Long id;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChatLog> chatLogs;
+
+    public List<ChatLog> getChatLogs() {
+        return this.chatLogs;
+    }
 
     //TODO: 마지막 메시지 조회
 //    @OneToOne(fetch = FetchType.LAZY)

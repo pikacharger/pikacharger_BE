@@ -76,11 +76,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResult findByReviewId(Long reviewId) {
+    public ReviewResult findByReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        return reviewResult.toDto(review);
+        boolean userIdMatch = review.getUser().getId().equals(userId);
+
+        return ReviewDetailResult.toDto(review, userIdMatch);
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,9 +40,10 @@ public class ReviewController {
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록합니다.")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> createReview(
+            @AuthenticationPrincipal Long userId,
             @Valid @RequestPart("reviewPayload") ReviewPayload reviewPayload,
             @RequestPart(name = "imgUrl", required = false) List<MultipartFile> multipartFiles) throws IOException {
-        Long reviewId = reviewService.saveReview(reviewPayload, multipartFiles);
+        Long reviewId = reviewService.saveReview(userId, reviewPayload, multipartFiles);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
@@ -61,9 +63,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "유저 리뷰 정보 조회", description = "userId로 리뷰 정보를 조회하는 api.")
-    @GetMapping("/users/{userId}")
+    @GetMapping("/users/info")
     public ResponseEntity<ReviewResultToUser> getReviewsByUserId(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "5", required = false) int size,
             @RequestParam(name = "sort", defaultValue = "DESC", required = false) String sort) {
@@ -106,7 +108,7 @@ public class ReviewController {
     @PatchMapping(value = "/{reviewId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> updateReview(@PathVariable Long reviewId,
                                              @RequestPart @Valid ReviewModifyPayload reviewModifyPayload,
-                                             @RequestParam("userId") Long userId,
+                                             @AuthenticationPrincipal Long userId,
                                              @RequestPart(name = "imgUrl", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Long updatedReviewId = reviewService.modifiedReview(reviewId, reviewModifyPayload, userId, multipartFiles);
         return ResponseEntity.ok(updatedReviewId);
@@ -114,7 +116,7 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 삭제", description = "리뷰 삭제 api.")
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Long> deleteReview(@PathVariable Long reviewId, @RequestParam("userId") Long userId) {
+    public ResponseEntity<Long> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal Long userId) {
         Long deletedReviewId = reviewService.deleteReview(reviewId, userId);
         return ResponseEntity.ok(deletedReviewId);
     }

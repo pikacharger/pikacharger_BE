@@ -40,9 +40,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
+    public Long saveReview(Long userId, ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
 
-        User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
@@ -72,7 +72,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 평균 별점 계산 호출
         calculateAvgStar(review.getId(), charger.getId());
-
         return review.getId();
     }
 

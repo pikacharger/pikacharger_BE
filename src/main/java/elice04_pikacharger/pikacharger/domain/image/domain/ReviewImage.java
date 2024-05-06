@@ -36,13 +36,13 @@ public class ReviewImage extends BaseEntity {
         this.review = review;
     }
 
-    public String getImageUrl(){
-        return this.imageUrl;
-    }
-
     @Builder
     public ReviewImage(Review review, String imageUrl){
         this.review = review;
         this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl(){
+        return this.imageUrl;
     }
 }

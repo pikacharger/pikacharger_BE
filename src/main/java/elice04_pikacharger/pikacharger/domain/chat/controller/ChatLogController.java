@@ -23,7 +23,7 @@ public class ChatLogController {
 
     @Operation(summary = "메시지 전송", description = "메시지를 해당 채팅방에 전송한다", tags = { "Chat" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatLogResponseDto.class)))
+            @ApiResponse(responseCode = "200", description = "successful operation")
     })
     @PostMapping("/{chatRoomId}/chatlogs")
     public ApiResult<Long> createChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {

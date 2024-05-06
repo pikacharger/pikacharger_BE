@@ -15,10 +15,14 @@ import java.time.LocalDateTime;
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoomResponseDto{
+public class ChatRoomResponseDto {
     private Long id;
     private LocalDateTime createDate;
     private LocalDateTime lastModifiedDate;
+
+    public ChatRoomResponseDto(Long id) {
+        this.id = id;
+    }
 
     public ChatRoomResponseDto(ChatRoom entity) {
         this.id = entity.getId();

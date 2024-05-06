@@ -1,34 +1,29 @@
 package elice04_pikacharger.pikacharger.domain.chat.service;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.repository.ChatRoomRepository;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
+import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
-
-    // 채팅방 조회
-    @Override
-    @Transactional
-    public ChatRoomResponseDto findByRoomId(final Long id) {
-        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
-        return new ChatRoomResponseDto(entity);
-    }
+    private final ChargerRepository chargerRepository;
 
     // 전체 채팅방 조회
     @Override
@@ -37,7 +32,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        List<ChatRoom> chatRooms = chatRoomRepository.findAllChatRoom(user, user);
+        List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
         for (ChatRoom chatRoom : chatRooms) {
@@ -49,8 +44,25 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // 채팅방 생성
     @Override
     @Transactional
-    public Long save(final ChatRoomRequestDto requestDto) {
-        return this.chatRoomRepository.save(requestDto.toEntity()).getId();
+    public ChatRoomResponseDto save(Long chargerId, Long senderId) {
+        Charger charger = chargerRepository.findById(chargerId)
+                .orElseThrow(() -> {
+                    log.error("해당 충전기가 존재하지 않습니다");
+                    return new IllegalArgumentException("해당 충전기가 존재하지 않습니다");
+                });
+        User receiver = charger.getUser();
+        User sender = userRepository.findById(senderId)
+                .orElseThrow(() -> {
+                    log.error("해당 유저가 존재하지 않습니다");
+                    return new IllegalArgumentException("해당 유저가 존재하지 않습니다");
+                });
+        ChatRoom chatRoom = ChatRoom.builder()
+                .charger(charger)
+                .receiver(receiver)
+                .sender(sender)
+                .build();
+        chatRoomRepository.save(chatRoom);
+        return new ChatRoomResponseDto(chatRoom);
     }
 
     //TODO: 마지막 메시지 조회

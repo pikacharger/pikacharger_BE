@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ChatLogRepository extends JpaRepository<ChatLog, Long> {
-    List<ChatLog> findAllByChatRoom(ChatRoom chatRoom);
+    List<ChatLog> getAllChatLog(ChatRoom chatRoom);
 }

@@ -195,6 +195,22 @@ public class JwtUtil {
     }
 
 
+// 토큰 만료일 받아오는 거랑, 유저 아이디 뽑아오는 거 따로따로
+    public Long extractUserIdFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKey).build()
+                .parseClaimsJws(token).getBody();
+
+        return claims.get("userId", Long.class);
+    }
+
+    public Date extractExpirationDateFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token).getBody();
+        return claims.getExpiration();  // 만료 시간 반환
+    }
+
 
     public String extractJwtFromRequest(HttpServletRequest request) {
         // Extract JWT from the Authorization header

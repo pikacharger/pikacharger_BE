@@ -9,12 +9,10 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface ChatRoomService {
-    @Transactional
-    ChatRoomResponseDto findByRoomId(Long id);
 
     //채팅방 생성
     @Transactional
-    Long save(ChatRoomRequestDto requestDto);
+    ChatRoomResponseDto save(Long chaegerId, Long senderId);
 
     // 전체 채팅방 조회
     @Transactional

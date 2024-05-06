@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    ChatRoom findByRoomId(Long id);
-
-    List<ChatRoom> findAllByUserId(Long id);
+    Optional<ChatRoom> findByRoomId(Long id);
 
     List<ChatRoom> findAllChatRoom(User sender, User receiver);
 }

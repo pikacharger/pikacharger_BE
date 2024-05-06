@@ -21,25 +21,16 @@ public class ChatLogServiceImpl implements ChatLogService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatLogRepository chatLogRepository;
 
-    //메시지 조회
-    @Override
-    @Transactional
-    public ChatLogResponseDto findChatLogById(final Long chatLogId) {
-        ChatLog chatLogEntity = this.chatLogRepository.findById(chatLogId).orElseThrow(
-                () -> new IllegalArgumentException("메시지가 존재하지 않습니다."));
-        return new ChatLogResponseDto(chatLogEntity);
-    }
-
     // 전체 메시지 조회
     @Override
     public List<ChatLogResponseDto> getAllChatLog(Long chatRoomId) {
-        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
+        ChatRoom chatRoomEntity = this.chatRoomRepository.findByRoomId(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-        List<ChatLog> chatMessages = chatRoomEntity.getChatLogs();
+        List<ChatLog> chatLogs = chatLogRepository.getAllChatLog(chatRoomEntity);
         List<ChatLogResponseDto> chatLogResponseList = new ArrayList<>();
 
-        for (ChatLog chatLog : chatMessages) {
+        for (ChatLog chatLog : chatLogs) {
             ChatLogResponseDto chatLogResponseDto = ChatLogResponseDto.builder()
                     .id(chatLog.getId())
                     .chatRoom(chatRoomEntity)
@@ -56,7 +47,7 @@ public class ChatLogServiceImpl implements ChatLogService {
     @Override
     @Transactional
     public Long save(final Long chatRoomId, final ChatLogRequestDto requestDto) {
-        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
+        ChatRoom chatRoomEntity = this.chatRoomRepository.findByRoomId(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
         requestDto.setChatRoom(chatRoomEntity);
         return this.chatLogRepository.save(requestDto.toEntity()).getId();
@@ -65,9 +56,9 @@ public class ChatLogServiceImpl implements ChatLogService {
     //TODO: 메시지 삭제
 //    @Override
 //    @Transactional
-//    public void deleteChatLog(final Long chatMessageId) {
-//        ChatLog chatMessageEntity = this.chatLogRepository.findById(chatMessageId).orElseThrow(
+//    public void deleteChatLog(final Long chatLogId) {
+//        ChatLog chatLogEntity = this.chatLogRepository.findById(chatLogId).orElseThrow(
 //                () -> new IllegalArgumentException("해당 메시지가 존재하지 않습니다."));
-//        this.chatLogRepository.delete(chatMessageEntity);
+//        this.chatLogRepository.delete(chatLogEntity);
 //    }
 }

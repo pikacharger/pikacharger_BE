@@ -18,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +45,11 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
+
+        int rating = reviewPayload.getRating();
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("평점은 1에서 5 사이의 정수여야 합니다.");
+        }
 
         Review review = reviewRepository.save(
                 Review.builder()
@@ -109,6 +112,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
+        // 판단 값 boolean으로 함께 보내기!
         Long reviewerId = review.getUser().getId();
         if(!reviewerId.equals(userId)){
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");

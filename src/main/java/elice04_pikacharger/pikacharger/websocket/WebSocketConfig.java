@@ -14,7 +14,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // endpoint 설정 : /api/v1/chat/{postId}
         registry.addHandler(webSocketHandler, "/ws/chatlog").setAllowedOrigins("*");
     }
 }

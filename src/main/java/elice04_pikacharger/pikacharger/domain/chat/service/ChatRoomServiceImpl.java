@@ -42,7 +42,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 채팅방 생성
-    // 채팅방 생성
     @Override
     @Transactional
     public ChatRoomResponseDto save(Long chargerId, Long senderId) {

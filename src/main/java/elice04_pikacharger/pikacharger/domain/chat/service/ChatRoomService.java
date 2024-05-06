@@ -1,6 +1,5 @@
 package elice04_pikacharger.pikacharger.domain.chat.service;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 //import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 

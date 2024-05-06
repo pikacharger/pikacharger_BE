@@ -36,6 +36,8 @@ public class Review extends BaseEntity{
     @JsonBackReference
     private Charger charger;
 
+    private boolean userIdMatch;
+
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewImage> imgList = new ArrayList<>();
 
@@ -47,9 +49,10 @@ public class Review extends BaseEntity{
         this.charger = charger;
     }
 
-    public Long update(String content, Integer rating){
+    public Long update(String content, Integer rating, Boolean userIdMatch){
         this.content = content;
         this.rating = rating;
+        this.userIdMatch = userIdMatch;
         return this.id;
     }
 

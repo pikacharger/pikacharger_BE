@@ -126,8 +126,9 @@ public class ChargerServiceImpl implements ChargerService {
         Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("충전소가 존재하지 않습니다."));
         boolean favorite = favoriteRepository.existsByChargerIdAndUserId(chargerId, userId);
+        boolean myChargerCheck = chargerRepository.existsByIdAndUserId(chargerId, userId);
 
-        return ChargerDetailResponseDto.toDto(charger, favorite);
+        return ChargerDetailResponseDto.toDto(charger, favorite, myChargerCheck);
     }
 
     @Override

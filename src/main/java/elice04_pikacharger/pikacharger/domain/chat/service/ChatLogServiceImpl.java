@@ -24,10 +24,10 @@ public class ChatLogServiceImpl implements ChatLogService {
     // 전체 메시지 조회
     @Override
     public List<ChatLogResponseDto> getAllChatLog(Long chatRoomId) {
-        ChatRoom chatRoomEntity = this.chatRoomRepository.findByRoomId(chatRoomId).orElseThrow(
+        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
-        List<ChatLog> chatLogs = chatLogRepository.getAllChatLog(chatRoomEntity);
+        List<ChatLog> chatLogs = chatLogRepository.findAllByChatRoom(chatRoomEntity);
         List<ChatLogResponseDto> chatLogResponseList = new ArrayList<>();
 
         for (ChatLog chatLog : chatLogs) {
@@ -47,7 +47,7 @@ public class ChatLogServiceImpl implements ChatLogService {
     @Override
     @Transactional
     public Long save(final Long chatRoomId, final ChatLogRequestDto requestDto) {
-        ChatRoom chatRoomEntity = this.chatRoomRepository.findByRoomId(chatRoomId).orElseThrow(
+        ChatRoom chatRoomEntity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
         requestDto.setChatRoom(chatRoomEntity);
         return this.chatLogRepository.save(requestDto.toEntity()).getId();

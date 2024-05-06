@@ -32,7 +32,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        List<ChatRoom> chatRooms = chatRoomRepository.findAllChatRoom(user, user);
+        List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
         for (ChatRoom chatRoom : chatRooms) {

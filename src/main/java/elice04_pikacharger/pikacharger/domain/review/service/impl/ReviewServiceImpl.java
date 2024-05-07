@@ -108,7 +108,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResult> findByChargerId(Long chargerId, PageRequest pageRequest) {
+        Optional<Charger> charger = chargerRepository.findById(chargerId);
         Page<Review> reviewsPage = reviewRepository.findReviewByChargerId(chargerId, pageRequest);
+
+        if(reviewsPage.isEmpty()){
+            return Collections.singletonList(new ReviewResult(charger.get().getChargerName()));
+        }
         return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 

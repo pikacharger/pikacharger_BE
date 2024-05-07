@@ -16,8 +16,9 @@ public class CustomOAuth2User extends DefaultOAuth2User {
     private String name;
     private Set<Role> roles;
 
-    public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String nameAttributeKey, String email, String name , Set<Role> roles){
+    public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String nameAttributeKey,Long userId ,String email, String name , Set<Role> roles){
         super(authorities, attributes, nameAttributeKey);
+        this.userId = userId;
         this.email = email;
         this.name = name;
         this.roles = roles;

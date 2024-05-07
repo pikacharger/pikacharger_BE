@@ -65,7 +65,9 @@ public class JwtUtil {
             "/swagger-resources",
             "/swagger-resources/**",
             "/webjars/**",
-            "/login"
+            "/login",
+            "mailauthCheck",
+            "mailSend"
     };
 
     @PostConstruct

@@ -45,8 +45,11 @@ public class SecurityConfig implements WebMvcConfigurer {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(request ->
                         request
+                                .requestMatchers(antMatcher("/oauth2/**")).permitAll()
+                                .requestMatchers(antMatcher("/login/oauth2/**")).permitAll()
                                 .requestMatchers(jwtUtil.allowedUrls).permitAll()
                                 .requestMatchers(antMatcher(HttpMethod.GET, "/chargers/{chargerId}/users/{userId}")).permitAll()
                                 .anyRequest().authenticated())

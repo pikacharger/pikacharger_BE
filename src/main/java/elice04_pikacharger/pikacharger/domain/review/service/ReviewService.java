@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {
-    Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException;
+    Long saveReview(Long userId, ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException;
 
-    ReviewResult findByReviewId(Long reviewId);
+    ReviewResult findByReviewId(Long reviewId, Long userId);
 
-    ReviewDetailResult findByDetailToReviewId(Long reviewId);
+    ReviewDetailResult findByDetailToReviewId(Long reviewId, Long userId);
 
     List<ReviewResult> findByUserId(Long userId, PageRequest pageRequest);
 

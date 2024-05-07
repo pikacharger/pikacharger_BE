@@ -13,22 +13,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Service
-public class S3UploaderService {
+public class S3Uploader {
     private final AmazonS3 amazonS3;
     private final String bucket;
 
-    public S3UploaderService(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
+    public S3Uploader(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
     }
-    public String uploadSingleFile(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
         // 파일 이름에서 공백을 제거한 새로운 파일 이름 생성
         String originalFileName = multipartFile.getOriginalFilename();
 
@@ -44,20 +41,6 @@ public class S3UploaderService {
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
-
-    public List<String> uploadMultipleFiles(List<MultipartFile> multipartFiles, String dirName) throws IOException {
-        if (multipartFiles.size() == 1){
-            return Collections.singletonList(uploadSingleFile(multipartFiles.get(0), dirName));
-        }else {
-            List<String> uploadedImageUrls = new ArrayList<>();
-            for (MultipartFile file : multipartFiles) {
-                String imageUrl = uploadSingleFile(file, dirName);
-                uploadedImageUrls.add(imageUrl);
-            }
-            return uploadedImageUrls;
-        }
-    }
-
 
     private File convert(MultipartFile file) throws IOException {
         String originalFileName = file.getOriginalFilename();
@@ -83,7 +66,6 @@ public class S3UploaderService {
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
-    // TODO 파일이 삭제 되었는지, 삭제되지 못했는지만 로그로 남기고 메서드는 삭제.
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
@@ -97,24 +79,17 @@ public class S3UploaderService {
             // URL 디코딩을 통해 원래의 파일 이름을 가져옴
             String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
             log.info("Deleting file from S3: " + decodedFileName);
-            amazonS3.deleteObject(this.bucket, decodedFileName.substring(59));
+            amazonS3.deleteObject(bucket, decodedFileName);
         } catch (UnsupportedEncodingException e) {
             log.error("Error while decoding the file name: {}", e.getMessage());
         }
     }
-    public List<String> updateFiles(List<MultipartFile> newFiles, List<String> oldFileNames, String dirName) throws IOException {
-        List<String> updatedImageUrls = new ArrayList<>();
-        for (int i = 0; i < newFiles.size(); i++) {
-            String oldFileName = oldFileNames.get(i);
-            // 기존 파일 삭제
-            log.info("S3 oldFileName: " + oldFileName);
-            deleteFile(oldFileName);
-            // 새 파일 업로드
-            MultipartFile newFile = newFiles.get(i);
-            String updatedImageUrl = uploadSingleFile(newFile, dirName);
-            updatedImageUrls.add(updatedImageUrl);
-        }
-        return updatedImageUrls;
-    }
 
+    public String updateFile(MultipartFile newFile, String oldFileName, String dirName) throws IOException {
+        // 기존 파일 삭제
+        log.info("S3 oldFileName: " + oldFileName);
+        deleteFile(oldFileName);
+        // 새 파일 업로드
+        return upload(newFile, dirName);
+    }
 }

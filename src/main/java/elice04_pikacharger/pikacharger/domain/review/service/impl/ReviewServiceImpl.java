@@ -40,9 +40,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
+    public Long saveReview(Long userId, ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
 
-        User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
@@ -72,25 +72,31 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 평균 별점 계산 호출
         calculateAvgStar(review.getId(), charger.getId());
-
         return review.getId();
     }
 
-
     @Override
-    public ReviewResult findByReviewId(Long reviewId) {
+    public ReviewResult findByReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        return reviewResult.toDto(review);
+        boolean userIdMatch = review.getUser().getId().equals(userId);
+
+        return ReviewDetailResult.toDto(review, userIdMatch);
     }
 
     @Override
-    public ReviewDetailResult findByDetailToReviewId(Long reviewId) {
+    public ReviewDetailResult findByDetailToReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        return ReviewDetailResult.toDto(review);
+        boolean userIdMatch = review.getUser().getId().equals(userId);
+
+        return ReviewDetailResult.toDto(review, userIdMatch);
     }
 
     //TODO 유저 리뷰정보 반환 DTO 생성하기(리팩토링)
@@ -102,7 +108,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResult> findByChargerId(Long chargerId, PageRequest pageRequest) {
+        Optional<Charger> charger = chargerRepository.findById(chargerId);
         Page<Review> reviewsPage = reviewRepository.findReviewByChargerId(chargerId, pageRequest);
+
+        if(reviewsPage.isEmpty()){
+            return Collections.singletonList(new ReviewResult(charger.get().getChargerName()));
+        }
         return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 
@@ -112,16 +123,15 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
-        // 판단 값 boolean으로 함께 보내기!
-        Long reviewerId = review.getUser().getId();
-        if(!reviewerId.equals(userId)){
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
+        boolean userIdMatch = review.getUser().getId().equals(userId);
 
         review.getImgList().clear();
         imageImgUpload(review, multipartFiles);
 
-        return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
+        return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating(), userIdMatch);
     }
 
     private void imageImgUpload(Review review, List<MultipartFile> multipartFiles) throws IOException {

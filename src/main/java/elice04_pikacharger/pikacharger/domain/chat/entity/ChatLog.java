@@ -10,6 +10,7 @@ import lombok.*;
 @Entity
 @Data
 @Builder
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +29,12 @@ public class ChatLog extends BaseEntity {
     private User sender;
 
     private String messageContents;
+
+    public User getSender() {
+        return this.sender;
+    }
+
+    public String getMessageContents() {
+        return this.messageContents;
+    }
 }

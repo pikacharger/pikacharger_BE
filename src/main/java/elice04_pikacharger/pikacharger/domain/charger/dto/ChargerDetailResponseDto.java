@@ -31,8 +31,9 @@ public class ChargerDetailResponseDto {
     private List<Review> reviewList;
     private boolean favorite;
     private String chargerStatus;
+    private boolean myChargerCheck;
 
-    public static ChargerDetailResponseDto toDto(Charger charger, boolean favorite){
+    public static ChargerDetailResponseDto toDto(Charger charger, boolean favorite, boolean myChargerCheck){
         return ChargerDetailResponseDto.builder()
                 .chargerId(charger.getId())
                 .chargerLocation(charger.getChargerLocation())
@@ -51,6 +52,7 @@ public class ChargerDetailResponseDto {
                 .chargerStatus(charger.getChargerStatus())
                 .chargerImageList(charger.getChargerImages())
                 .reviewList(charger.getReviews())
+                .myChargerCheck(myChargerCheck)
                 .build();
     }
 
@@ -59,7 +61,7 @@ public class ChargerDetailResponseDto {
                                      double latitude, double longitude, String content, double memberPrice,
                                      double nonmemberPrice, double personalPrice, double avgRate, String chargerRole,
                                      boolean favorite, List<ChargerType> chargerTypeList, String chargerStatus,
-                                     List<ChargerImage> chargerImageList, List<Review> reviewList)
+                                     List<ChargerImage> chargerImageList, List<Review> reviewList, boolean myChargerCheck)
     {
         this.chargerId = chargerId;
         this.chargerLocation = chargerLocation;
@@ -78,5 +80,6 @@ public class ChargerDetailResponseDto {
         this.chargerStatus = chargerStatus;
         this.chargerImageList = chargerImageList;
         this.reviewList = reviewList;
+        this.myChargerCheck = myChargerCheck;
     }
 }

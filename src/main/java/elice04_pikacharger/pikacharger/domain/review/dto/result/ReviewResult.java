@@ -45,4 +45,8 @@ public class ReviewResult {
         this.imageUrls = imageUrls;
         this.createAt = createAt;
     }
+
+    public ReviewResult(String chargerName){
+        this.chargerName = chargerName;
+    }
 }

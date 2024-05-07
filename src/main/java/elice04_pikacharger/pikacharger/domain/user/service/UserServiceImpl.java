@@ -1,7 +1,10 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import elice04_pikacharger.pikacharger.domain.image.domain.ProfileImage;
+import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.Role;
@@ -14,12 +17,14 @@ import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -30,6 +35,11 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AmazonS3Client amazonS3Client;
+    private final S3UploaderService s3UploaderService;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Transactional
     @Override
@@ -61,8 +71,17 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload){
+    public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException {
         User user = userRepository.findById(userId).orElseThrow();
+        String imgUrl = "";
+        if(!profileImage.isEmpty() && profileImage != null){
+            imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");
+            ProfileImage image = ProfileImage.builder()
+                    .imageUrl(imgUrl)
+                    .user(user)
+                    .build();
+
+        }
         user.updateUser(payload);
         return user;
     }
@@ -179,6 +198,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public Boolean checkDuplicateNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public  Optional<User> findUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
 

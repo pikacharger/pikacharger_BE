@@ -7,7 +7,6 @@ import elice04_pikacharger.pikacharger.domain.user.dto.result.UserFindResponse;
 import elice04_pikacharger.pikacharger.domain.user.entity.CustomUserDetails;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
-import elice04_pikacharger.pikacharger.domain.user.service.TokenService;
 import elice04_pikacharger.pikacharger.domain.user.service.UserService;
 import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -40,7 +39,6 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
-    private final TokenService tokenService;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입 O")
@@ -169,6 +167,13 @@ public class UserController {
     @Operation(summary = "닉네임 중복체크")
     public ResponseEntity<Boolean> checkDuplicateNickname(@PathVariable("nickname") String nickname) {
         return new ResponseEntity<>(userService.checkDuplicateNickname(nickname), HttpStatus.OK);
+    }
+
+    @GetMapping("/info")
+    @Operation(summary = "토큰으로 유저 정보 받아오기")
+    public ResponseEntity<User> getUserByToken(@AuthenticationPrincipal CustomUserDetails tokenUser) {
+        User user = userRepository.findByEmail(tokenUser.getMyTokenPayload().getEmail()).orElseThrow();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 

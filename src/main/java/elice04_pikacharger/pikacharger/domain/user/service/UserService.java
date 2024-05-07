@@ -6,12 +6,15 @@ import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Optional;
+
 public interface UserService {
 
 
     AuthResponseDto save(SignUpPayload payload);
 
-    User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload);
+    User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException;
 
     AuthResponseDto signIn(SignInPayload payload);
 
@@ -38,4 +41,6 @@ public interface UserService {
     Long deleteByUserId(Long userId);
 
     Boolean checkDuplicateNickname(String nickname);
+
+    Optional<User> findUserByEmail(String email);
 }

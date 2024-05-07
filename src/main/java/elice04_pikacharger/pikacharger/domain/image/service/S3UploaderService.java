@@ -83,6 +83,7 @@ public class S3UploaderService {
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
+    // TODO 파일이 삭제 되었는지, 삭제되지 못했는지만 로그로 남기고 메서드는 삭제.
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");

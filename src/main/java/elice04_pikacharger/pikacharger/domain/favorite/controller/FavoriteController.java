@@ -37,9 +37,9 @@ public class FavoriteController {
     }
 
     @Operation(summary = "즐겨찾기 삭제", description = "즐겨찾기 id와 유저 id를 이용해 자신이 만든 즐겨찾기일 경우 삭제")
-    @DeleteMapping("/{favoriteId}")
-    public ResponseEntity<Void> deleteFavorite(@PathVariable Long favoriteId, @AuthenticationPrincipal Long userId) {
-        favoriteService.deleteFavorite(favoriteId, userId);
+    @DeleteMapping("/chargers/{chargerId}")
+    public ResponseEntity<Void> deleteFavorite(@PathVariable Long chargerId, @AuthenticationPrincipal Long userId) {
+        favoriteService.deleteFavorite(chargerId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

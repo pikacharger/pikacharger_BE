@@ -25,6 +25,7 @@ public class SignUpPayload {
     @NotBlank(message = "비밀번호는 필수 입력사항입니다.")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
     private String password;
+
     private String address;
     private String phoneNumber;
     private String chargerType;

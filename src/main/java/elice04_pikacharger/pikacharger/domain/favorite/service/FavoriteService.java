@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    void createFavorite(FavoriteCreateDto favoriteCreateDto);
+    void createFavorite(Long userId, FavoriteCreateDto favoriteCreateDto);
 
     List<GroupedFavoriteResponseDto> favoriteList(Long userId);
 

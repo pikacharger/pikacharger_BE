@@ -40,7 +40,7 @@ public class ChargerServiceImpl implements ChargerService {
 
     @Transactional
     @Override
-    public ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles, Long userId) throws IOException{
+    public ChargerResponseDto createCharger(Long userId, ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles) throws IOException{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
 

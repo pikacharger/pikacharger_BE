@@ -19,7 +19,7 @@ import java.util.*;
 @Table(name = "USERS")
 public class User extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 

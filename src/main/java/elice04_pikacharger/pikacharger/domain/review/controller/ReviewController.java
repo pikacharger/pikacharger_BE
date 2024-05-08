@@ -29,7 +29,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/api/review")
 @Tag(name = "(리뷰)", description = "리뷰 관련 api")
 public class ReviewController {
     private final ReviewService reviewService;

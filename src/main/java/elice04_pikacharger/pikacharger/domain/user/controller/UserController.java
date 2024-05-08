@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Tag(name = "(계정)", description = "계정 관련")
 public class UserController {

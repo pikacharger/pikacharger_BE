@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/chatlog")
+@RequestMapping("/api/chatlog")
 @RestController
 @RequiredArgsConstructor
 public class ChatLogController {

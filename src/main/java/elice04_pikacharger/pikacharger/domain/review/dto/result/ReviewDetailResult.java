@@ -24,6 +24,7 @@ public class ReviewDetailResult extends ReviewResult{
     public static ReviewDetailResult toDto(Review review, boolean userIdMatch) {
         ReviewDetailResult result = ReviewDetailResult.detailBuilder()
                 .reviewId(review.getId())
+                .chargerId(review.getCharger().getId())
                 .chargerName(review.getCharger().getChargerName())
                 .content(review.getContent())
                 .rating(review.getRating())
@@ -40,8 +41,8 @@ public class ReviewDetailResult extends ReviewResult{
 
     @Builder(builderMethodName = "detailBuilder")
     public ReviewDetailResult(Long reviewId, String chargerName, String content, Integer rating,
-                              List<String> imageUrls, String nickname, LocalDateTime createAt, String profileImage, Boolean userIdMatch) {
-        super(reviewId, chargerName, content, rating, imageUrls, createAt);
+                              List<String> imageUrls, String nickname, LocalDateTime createAt, Long chargerId, String profileImage, Boolean userIdMatch) {
+        super(reviewId, chargerName, content, rating, imageUrls, createAt, chargerId);
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.userIdMatch = userIdMatch;

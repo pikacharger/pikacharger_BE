@@ -30,8 +30,8 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Transactional
     @Override
-    public void createFavorite(FavoriteCreateDto favoriteCreateDto) {
-        User user = userRepository.findById(favoriteCreateDto.getUserId())
+    public void createFavorite(Long userId, FavoriteCreateDto favoriteCreateDto) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저를 찾을수 없습니다."));
 
         Charger charger = chargerRepository.findById(favoriteCreateDto.getChargerId())

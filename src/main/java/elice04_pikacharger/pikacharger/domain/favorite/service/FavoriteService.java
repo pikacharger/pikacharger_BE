@@ -12,5 +12,5 @@ public interface FavoriteService {
 
     List<GroupedFavoriteResponseDto> favoriteList(Long userId);
 
-    void deleteFavorite(Long favoriteId, Long userId);
+    void deleteFavorite(Long chargerId, Long userId);
 }

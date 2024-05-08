@@ -74,11 +74,11 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Transactional
     @Override
-    public void deleteFavorite(Long favoriteId, Long userId) {
-        if (!favoriteRepository.existsByIdAndUserId(favoriteId, userId)) {
+    public void deleteFavorite(Long chargerId, Long userId) {
+        if (!favoriteRepository.existsByChargerIdAndUserId(chargerId, userId)) {
             throw new IllegalStateException("즐겨찾기 삭제 권한이 없습니다.");
         }
-        Favorite favorite = favoriteRepository.findById(favoriteId)
+        Favorite favorite = favoriteRepository.findByChargerIdAndUserId(chargerId, userId)
                 .orElseThrow(()->new EntityNotFoundException("즐겨찾기를 찾을수 없습니다."));
 
         favoriteRepository.delete(favorite);

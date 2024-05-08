@@ -1,9 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.review.service.impl;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.payload.ChargerUpdateDto;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.charger.repository.ChargerRepository;
-import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.image.repository.ReviewImageRepository;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
@@ -18,13 +16,16 @@ import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +40,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Long saveReview(ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
+    public Long saveReview(Long userId, ReviewPayload reviewPayload, List<MultipartFile> multipartFiles) throws IOException {
 
-        User user = userRepository.findById(reviewPayload.getUserId()).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         Charger charger = chargerRepository.findById(reviewPayload.getChargerId()).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
+
+        int rating = reviewPayload.getRating();
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("평점은 1에서 5 사이의 정수여야 합니다.");
+        }
 
         Review review = reviewRepository.save(
                 Review.builder()
@@ -66,49 +72,49 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 평균 별점 계산 호출
         calculateAvgStar(review.getId(), charger.getId());
-
         return review.getId();
     }
 
-
     @Override
-    public ReviewResult findByReviewId(Long reviewId) {
+    public ReviewResult findByReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        return reviewResult.toDto(review);
+        boolean userIdMatch = review.getUser().getId().equals(userId);
+
+        return ReviewDetailResult.toDto(review, userIdMatch);
     }
 
     @Override
-    public ReviewDetailResult findByDetailToReviewId(Long reviewId) {
+    public ReviewDetailResult findByDetailToReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        return ReviewDetailResult.toDto(review);
+        boolean userIdMatch = review.getUser().getId().equals(userId);
+
+        return ReviewDetailResult.toDto(review, userIdMatch);
+    }
+
+    //TODO 유저 리뷰정보 반환 DTO 생성하기(리팩토링)
+    @Override
+    public List<ReviewResult> findByUserId(Long userId, PageRequest pageRequest) {
+        Page<Review> reviewsPage = reviewRepository.findByUserId(userId, pageRequest);
+        return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 
     @Override
-    public List<ReviewResult> findByUserId(Long userId) {
-        List<Review> reviews = reviewRepository.findByUserId(userId);
-        if (reviews.isEmpty()) {
-            // 해당 사용자의 리뷰가 없을 경우 빈 리스트 반환
-            return Collections.emptyList();
-        }
-        return reviews.stream()
-                .map(ReviewResult::toDto)
-                .collect(Collectors.toList());
-    }
+    public List<ReviewResult> findByChargerId(Long chargerId, PageRequest pageRequest) {
+        Optional<Charger> charger = chargerRepository.findById(chargerId);
+        Page<Review> reviewsPage = reviewRepository.findReviewByChargerId(chargerId, pageRequest);
 
-    @Override
-    public List<ReviewResult> findByChargerId(Long chargerId) {
-        List<Review> reviews = reviewRepository.findByChargerId(chargerId);
-        if (reviews.isEmpty()) {
-            // 해당 충전소의 리뷰가 없을 경우 빈 리스트 반환
-            return Collections.emptyList();
+        if(reviewsPage.isEmpty()){
+            return Collections.singletonList(new ReviewResult(charger.get().getChargerName()));
         }
-        return reviews.stream()
-                .map(ReviewResult::toDto)
-                .collect(Collectors.toList());
+        return reviewsPage.map(review -> ReviewResult.toDto(review)).getContent();
     }
 
     @Override
@@ -117,15 +123,15 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 
-        Long reviewerId = review.getUser().getId();
-        if(!reviewerId.equals(userId)){
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+
+        boolean userIdMatch = review.getUser().getId().equals(userId);
 
         review.getImgList().clear();
         imageImgUpload(review, multipartFiles);
 
-        return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating());
+        return review.update(reviewModifyPayload.getContent(), reviewModifyPayload.getRating(), userIdMatch);
     }
 
     private void imageImgUpload(Review review, List<MultipartFile> multipartFiles) throws IOException {
@@ -173,12 +179,27 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviewsForCharger = reviewRepository.findByChargerId(chargerId);
 
         int reviewCount = reviewsForCharger.size();
-        float totalStars = (float) reviewsForCharger.stream().mapToInt(Review::getRating).sum();
+        int totalStars = reviewsForCharger.stream().mapToInt(Review::getRating).sum();
 
-        float avgRate = reviewCount > 0 ? totalStars / reviewCount : 0;
+        double avgRate = reviewCount > 0 ? (double) totalStars / reviewCount : 0;
 
-        charger.updateAvgRate(avgRate);
+        BigDecimal avgRateDecimal = BigDecimal.valueOf(avgRate)
+                .setScale(1, RoundingMode.HALF_UP);
+        double roundedAvgRate = avgRateDecimal.doubleValue();
+
+        charger.updateAvgRate(roundedAvgRate);
     }
+
+    // 유저의 총 리뷰 개수 반환
+    public Long getTotalReviewsByUserId(Long userId) {
+        return reviewRepository.countByUserId(userId);
+    }
+
+    // 충전소의 총 리뷰 개수 반환
+    public Long getTotalReviewsByChargerId(Long chargerId) {
+        return reviewRepository.countByChargerId(chargerId);
+    }
+
 
 //    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 //    public void deleteImage(ReviewDeletedEvent event) {

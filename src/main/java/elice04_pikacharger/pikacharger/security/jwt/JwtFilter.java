@@ -1,15 +1,15 @@
 package elice04_pikacharger.pikacharger.security.jwt;
 
+import elice04_pikacharger.pikacharger.domain.user.entity.CustomUserDetails;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    private AuthenticationManager authenticationManager;
 
 
     @Override
@@ -39,38 +38,31 @@ public class JwtFilter extends OncePerRequestFilter {
     //내부적으로 JWT token에 대한 Filtering
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
-            String token = jwtUtil.extractJwtFromRequest(request);
 
-            if (token != null && jwtUtil.validateToken(token)) {
-                MyTokenAuthentication authenticationRequest = new MyTokenAuthentication(token);
-                Authentication authentication = authenticationManager.authenticate(authenticationRequest);
+        String token = jwtUtil.extractJwtFromRequest(request);
 
-                if (!authentication.isAuthenticated()) {
-                    throw new BadCredentialsException("Invalid username or password");
+        if (token != null && !StringUtils.isEmpty(token)) {
+            if (jwtUtil.validateToken(token)) {
+                MyTokenPayload myTokenPayload = jwtUtil.verify(token);
+                if (ObjectUtils.isNotEmpty(myTokenPayload)) {
+                    CustomUserDetails customUserDetails = new CustomUserDetails(myTokenPayload);
+
+                    SecurityContextHolder.getContext().setAuthentication(customUserDetails);
                 }
-
-                SecurityContextHolder.getContext().setAuthentication(authenticationRequest);
+            } else {
+                response.setStatus(401);
             }
-        } catch (ExpiredJwtException e) {
-            SecurityContextHolder.clearContext();
-            //401 error => Unauthorized
-            response.sendError(401, e.getMessage());
-            return ;
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            //400 error => BadRequest
-            response.setStatus(400);
-            return ;
         }
+
         //최종 목적지 도달: 필터 체인의 마지막 필터가 doFilter 메서드를 호출하면, 요청은 최종적으로 대상 서블릿이나 컨트롤러에 도달하게 됩니다. 이곳에서 실제 비즈니스 로직이 처리되고, 응답이 생성됩니다.
         filterChain.doFilter(request, response);
     }
 
+
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user ->{
-                    MyTokenPayload payload = new MyTokenPayload(user.getEmail(),user.getUsername(),user.getRole());
+                    MyTokenPayload payload = new MyTokenPayload(user.getId(),user.getEmail(),user.getUsername(),user.getRoles());
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
                     jwtUtil.sendAccessAndRefreshToken(response, jwtUtil.generateToken(payload),reIssuedRefreshToken);
                 });
@@ -102,7 +94,6 @@ public class JwtFilter extends OncePerRequestFilter {
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
                 .username(myUser.getEmail())
                 .password(password)
-                .roles(myUser.getRole().name())
                 .build();
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetailsUser, null, userDetailsUser.getAuthorities());

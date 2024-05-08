@@ -1,15 +1,20 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
 //import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Table(name="chatroom")
 @Entity
 @Data
 @Builder
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +23,19 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chatroom_id")
     private Long id;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChatLog> chatLogs;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private User receiver;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private User sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "charger_id")
+    private Charger charger;
 
     //TODO: 마지막 메시지 조회
 //    @OneToOne(fetch = FetchType.LAZY)

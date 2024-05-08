@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
         userRepository.findByEmail(payload.getEmail()).ifPresent(e->{
             throw new EntityExistsException();
         });
-
+        checkDuplicateNickname(payload.getNickname());
         User saved = userRepository.save(
                 User.builder()
                         .username(payload.getUsername())
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService{
                         .email(payload.getEmail())
                         .address(payload.getAddress())
                         .phoneNumber(payload.getPhoneNumber())
+                        .chargerType(payload.getChargerType())
                         .roles(Collections.singleton(Role.USER))
                         .build()
         );
@@ -93,6 +94,7 @@ public class UserServiceImpl implements UserService{
         if(!passwordEncoder.matches(payload.getPassword(), user.getPassword())){
             throw new IllegalArgumentException("입력된 정보를 확인해 주세요.");
         }
+
         return new AuthResponseDto(
                 user.getEmail(),
                 jwtUtil.generateToken(new MyTokenPayload(user.getId(),user.getEmail(), user.getUsername(),user.getRoles())),

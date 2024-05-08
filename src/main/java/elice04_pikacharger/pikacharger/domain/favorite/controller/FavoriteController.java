@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/favorites")
+@RequestMapping("/api/favorites")
 @Tag(name = "(즐겨찾기)", description = "즐겨찾기 관련 api")
 public class FavoriteController {
 

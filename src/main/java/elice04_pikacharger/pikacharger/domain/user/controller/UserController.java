@@ -30,9 +30,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Tag(name = "(계정)", description = "계정 관련")
 public class UserController {
@@ -171,8 +172,10 @@ public class UserController {
 
     @GetMapping("/info")
     @Operation(summary = "토큰으로 유저 정보 받아오기")
-    public ResponseEntity<User> getUserByToken(@AuthenticationPrincipal CustomUserDetails tokenUser) {
-        User user = userRepository.findByEmail(tokenUser.getMyTokenPayload().getEmail()).orElseThrow();
+    public ResponseEntity<User> getUserByToken(HttpServletRequest request) {
+        String token = jwtUtil.extractJwtFromRequest(request);
+        String email = jwtUtil.extractEmail(token).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

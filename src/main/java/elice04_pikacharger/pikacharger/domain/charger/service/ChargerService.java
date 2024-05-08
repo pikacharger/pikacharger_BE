@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ChargerService {
 
-    ChargerResponseDto createCharger(ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles, Long userId) throws IOException;
+    ChargerResponseDto createCharger(Long userId,ChargerCreateDto chargerCreateDto, List<MultipartFile> multipartFiles) throws IOException;
 
     ChargerResponseDto updateCharger(ChargerUpdateDto chargerUpdateDto,List<MultipartFile> multipartFiles, Long chargerId, Long userId) throws IOException;
 

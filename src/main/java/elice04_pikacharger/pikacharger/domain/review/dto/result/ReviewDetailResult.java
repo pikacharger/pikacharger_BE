@@ -30,7 +30,7 @@ public class ReviewDetailResult extends ReviewResult{
                 .rating(review.getRating())
                 .createAt(review.getCreateDate())
                 .nickname(review.getUser().getNickName())
-                .profileImage("https://pikacharger-bucket.s3.ap-northeast-2.amazonaws.com/images/4ee7db00-2f7d-4375-b393-8239a75f44f1_%EB%B0%B0%EB%84%88.png")
+                .profileImage("https://pikacharger-bucket.s3.ap-northeast-2.amazonaws.com/images/Group+45.png")
                 .imageUrls(review.getImgList().stream()
                         .map(ReviewImage::getImageUrl)
                         .collect(Collectors.toList()))

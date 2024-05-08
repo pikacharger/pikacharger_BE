@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chargers")
+@RequestMapping("/api/chargers")
 @Tag(name = "(충전소)", description = "충전소 관련 api")
 public class ChargerController {
 

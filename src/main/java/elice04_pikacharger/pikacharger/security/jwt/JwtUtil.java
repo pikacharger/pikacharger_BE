@@ -66,7 +66,8 @@ public class JwtUtil {
             "/webjars/**",
             "/api/login",
             "mailauthCheck",
-            "mailSend"
+            "mailSend",
+            "/api/**"
     };
 
     @PostConstruct

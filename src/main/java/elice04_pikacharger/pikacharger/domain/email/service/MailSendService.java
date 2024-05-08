@@ -55,17 +55,11 @@ public class MailSendService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        redisUtil.setDataExpire(Integer.toString(authNumber),toMail,60*5L);
     }
 
     public boolean CheckAuthNum(String email, String authNum){
-        if(redisUtil.getData(authNum) == null){
-            return false;
-        }
-        else if(redisUtil.getData(authNum).equals(email)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        String storedEmail = redisUtil.getData(authNum);
+        return storedEmail != null && storedEmail.equals(email);
     }
 }

@@ -142,15 +142,10 @@ public class JwtUtil {
     }
 
     public Optional<String> extractEmail(String accessToken){
-        try{
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret))
-                    .build()
-                    .verify(accessToken)
-                    .getClaim("email")
-                    .asString());
-        } catch (Exception e){
-            return Optional.empty();
-        }
+        Claims claims = Jwts.parser().setSigningKey(secretKey).build()
+                .parseClaimsJws(accessToken).getBody();
+
+        return claims.get("email", String.class).describeConstable();
     }
 
 

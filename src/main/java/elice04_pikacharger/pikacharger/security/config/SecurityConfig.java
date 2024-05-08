@@ -51,7 +51,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers(antMatcher("/oauth2/**")).permitAll()
                                 .requestMatchers(antMatcher("/login/oauth2/**")).permitAll()
                                 .requestMatchers(jwtUtil.allowedUrls).permitAll()
-                                .requestMatchers(antMatcher(HttpMethod.GET, "/chargers/{chargerId}/users/{userId}")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.GET, "/api/chargers/{chargerId}")).permitAll()
+                                .requestMatchers(antMatcher(HttpMethod.GET, "/api/chargers")).permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session을 사용하지 않음
@@ -63,7 +64,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:8080")
-                .allowedOrigins("http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8080","http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:3000", "http://localhost:3000")
+                .allowedOrigins("http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8080","http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:3000", "http://localhost:3000", "https://pikacharger.store")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),

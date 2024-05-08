@@ -53,19 +53,18 @@ public class JwtUtil {
     public final String[] allowedUrls = {
             "/hc",
             "/env",
-            "/review/detail/**",
-            "/review/charger/**",
-            "/chargers",
+            "/api/review/detail/**",
+            "/api/review/charger/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/",
-            "/user/**",
+            "/api/user/**",
             "/error",
             "/index.html",
             "/swagger-resources",
             "/swagger-resources/**",
             "/webjars/**",
-            "/login",
+            "/api/login",
             "mailauthCheck",
             "mailSend"
     };

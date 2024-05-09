@@ -28,10 +28,7 @@ public class ChatRoom extends BaseEntity {
     private List<ChatLog> chatLogs;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private User receiver;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private User sender;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "charger_id")
@@ -56,4 +53,10 @@ public class ChatRoom extends BaseEntity {
 //        this.lastChatLog = lastChatLog;
 //        return this.id;
 //    }
+
+    @Builder
+    public ChatRoom(User user,Charger charger){
+        this.user = user;
+        this.charger = charger;
+    }
 }

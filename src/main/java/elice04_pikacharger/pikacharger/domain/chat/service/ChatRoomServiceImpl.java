@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.chat.service;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
+import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.repository.ChatRoomRepository;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -35,35 +37,52 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
-        for (ChatRoom chatRoom : chatRooms) {
-            chatRoomResponseDto.add(new ChatRoomResponseDto(chatRoom));
-        }
+//        for (ChatRoom chatRoom : chatRooms) {
+//            chatRoomResponseDto.add(new ChatRoomResponseDto(chatRoom));
+//        }
         return chatRoomResponseDto;
     }
 
     // 채팅방 생성
+//    @Override
+//    @Transactional
+//    public ChatRoomResponseDto save(Long chargerId, Long senderId) {
+//        Charger charger = chargerRepository.findById(chargerId)
+//                .orElseThrow(() -> {
+//                    log.error("해당 충전기가 존재하지 않습니다");
+//                    return new IllegalArgumentException("해당 충전기가 존재하지 않습니다");
+//                });
+//
+//        User receiver = charger.getUser();
+//        User sender = userRepository.findById(senderId)
+//                .orElseThrow(() -> {
+//                    log.error("해당 유저가 존재하지 않습니다");
+//                    return new IllegalArgumentException("해당 유저가 존재하지 않습니다");
+//                });
+////        ChatRoom chatRoom = ChatRoom.builder()
+////                .charger(charger)
+////                .receiver(receiver)
+////                .sender(sender)
+////                .build();
+////        chatRoomRepository.save(chatRoom);
+////        return new ChatRoomResponseDto(chatRoom);
+//    }
+    /**
+     * ChatRoom 생성
+     */
     @Override
     @Transactional
-    public ChatRoomResponseDto save(Long chargerId, Long senderId) {
-        Charger charger = chargerRepository.findById(chargerId)
-                .orElseThrow(() -> {
-                    log.error("해당 충전기가 존재하지 않습니다");
-                    return new IllegalArgumentException("해당 충전기가 존재하지 않습니다");
-                });
-        User receiver = charger.getUser();
-        User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> {
-                    log.error("해당 유저가 존재하지 않습니다");
-                    return new IllegalArgumentException("해당 유저가 존재하지 않습니다");
-                });
-        ChatRoom chatRoom = ChatRoom.builder()
-                .charger(charger)
-                .receiver(receiver)
-                .sender(sender)
-                .build();
-        chatRoomRepository.save(chatRoom);
-        return new ChatRoomResponseDto(chatRoom);
+    public ChatRoomResponseDto save(Long chargerId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+        Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
+
+        Long receiverId = charger.getUser().getId();
+
+
+//        return this.chatRoomRepository.save(ChatRoomRequestDto.toEntity()).getId();
+        return null;
     }
+
 
     //TODO: 마지막 메시지 조회
 //    @Override

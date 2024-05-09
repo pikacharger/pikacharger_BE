@@ -10,10 +10,10 @@ import java.util.List;
 public interface ChatLogService {
 
     // 전체 메시지 조회
-    List<ChatLogResponseDto> getAllChatLog(Long chatRoomId);
+    List<ChatLogResponseDto> getAllChatLog(Long chatRoomId, Long userId);
 
     @Transactional
-    Long save(Long chatRoomId, ChatLogRequestDto requestDto);
+    Long save(Long userId, Long chatRoomId, ChatLogRequestDto requestDto);
 
 //    @Transactional
 //    void deleteChatLog(Long chatMessageId);

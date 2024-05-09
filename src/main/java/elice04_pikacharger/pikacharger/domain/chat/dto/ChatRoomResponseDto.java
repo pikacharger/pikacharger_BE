@@ -1,32 +1,36 @@
 package elice04_pikacharger.pikacharger.domain.chat.dto;
 
+import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Builder
-@Component
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class ChatRoomResponseDto {
-    private Long id;
-    private LocalDateTime createDate;
-    private LocalDateTime lastModifiedDate;
 
-    public ChatRoomResponseDto(Long id) {
-        this.id = id;
+    private Long chargerId;
+    private String userImgUrl;
+    private String nickname;
+    private LocalDateTime createDate;
+
+    public static ChatRoomResponseDto toEntity(User user, ChatRoom chatRoom) {
+        return ChatRoomResponseDto.builder()
+                .chargerId(chatRoom.getCharger().getId())
+                .userImgUrl(user.getProfileImage())
+                .nickname(user.getNickName())
+                .createDate(chatRoom.getCreateDate())
+                .build();
     }
 
-    public ChatRoomResponseDto(ChatRoom entity) {
-        this.id = entity.getId();
-        this.createDate = entity.getCreateDate();
-        this.lastModifiedDate = entity.getLastModifiedDate();
+    @Builder
+    public ChatRoomResponseDto(Long chargerId, String userImgUrl, String nickname, LocalDateTime createDate) {
+        this.chargerId = chargerId;
+        this.userImgUrl = userImgUrl;
+        this.nickname = nickname;
+        this.createDate = createDate;
     }
 }

@@ -1,7 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.chat.controller;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
+import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatLogService;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatRoomService;
@@ -18,6 +18,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -25,7 +28,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/chatroom")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatLogService chatLogService;
@@ -37,19 +40,7 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatRoomResponseDto.class))))
     })
     @GetMapping("/rooms")
-    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@RequestHeader("Authorization") String token){
-
-        // 토큰 유효기간 확인
-        try {
-            Date current = new Date(System.currentTimeMillis());
-            if(current.after(jwtUtil.extractExpirationDateFromToken(token))) {
-                throw new CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Long userId = jwtUtil.extractUserIdFromToken(token);
+    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@AuthenticationPrincipal Long userId){
         List<ChatRoomResponseDto> chatRooms = chatRoomService.findAllChatRoom(userId);
         return ApiUtils.success(chatRooms);
     }
@@ -60,32 +51,20 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatLogResponseDto.class))))
     })
     @GetMapping("/{chatRoomId}/logs")
-    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestHeader("Authorization") String token) {
-        Long userId = jwtUtil.extractUserIdFromToken(token);
-        List<ChatLogResponseDto> chatLogs = chatLogService.getAllChatLog(chatRoomId);
+    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @AuthenticationPrincipal Long userId) {
+        List<ChatLogResponseDto> chatLogs = chatLogService.getAllChatLog(chatRoomId, userId);
         return ApiUtils.success(chatLogs);
     }
 
-    // 채팅방 생성
-    @Operation(summary = "채팅방 생성", description = "유저가 게시글에 메시지를 보낸다", tags = { "Chat" })
+    // 채팅방 생성 (userId, chargerId)
+    @Operation(summary = "채팅방 생성", description = "유저가 게시글에 메시지를 보낸다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatRoomResponseDto.class)))
     })
     @PostMapping("")
-    public ApiResult<ChatRoomResponseDto> createChatRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto, @RequestHeader("Authorization") String token) {
-        // 토큰 유효기간 확인
-        try {
-            Date current = new Date(System.currentTimeMillis());
-            if(current.after(jwtUtil.extractExpirationDateFromToken(token))){
-                throw new CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Long chargerId = chatRoomRequestDto.getCharger().getId();
-        Long senderId = jwtUtil.extractUserIdFromToken(token);
-        ChatRoomResponseDto chatRoomResponseDto = chatRoomService.save(chargerId,senderId);
+    public ResponseEntity<ChatRoomRequestDto> createChatRoom(@RequestParam Long chargerId, @AuthenticationPrincipal Long userId) {
 
-        return ApiUtils.success(chatRoomResponseDto);
+        ChatRoomRequestDto chatroomId = chatRoomService.save(chargerId, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chatroomId);
     }
 }

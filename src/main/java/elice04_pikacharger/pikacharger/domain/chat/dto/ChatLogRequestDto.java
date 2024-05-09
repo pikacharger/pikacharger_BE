@@ -9,19 +9,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ChatLogRequestDto {
-    private User sender;
+
     private String messageContents;
-    private ChatRoom chatRoom;
 
-    public void setChatRoom(ChatRoom chatRoom) {
-        this.chatRoom = chatRoom;
-    }
-
-    public ChatLog toEntity() {
+    public ChatLog toEntity(ChatRoom chatRoom, User sender) {
         return ChatLog.builder()
-                .sender(this.sender)
+                .chatRoom(chatRoom)
                 .messageContents(this.messageContents)
-                .chatRoom(this.chatRoom)
+                .sender(sender)
                 .build();
     }
 }

@@ -28,20 +28,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChargerRepository chargerRepository;
 
     // 전체 채팅방 조회
-    @Override
-    @Transactional
-    public List<ChatRoomResponseDto> findAllChatRoom(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-
-        List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
-
-        List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
-//        for (ChatRoom chatRoom : chatRooms) {
-//            chatRoomResponseDto.add(new ChatRoomResponseDto(chatRoom));
-//        }
-        return chatRoomResponseDto;
-    }
+//    @Override
+//    @Transactional
+//    public List<ChatRoomResponseDto> findAllChatRoom(Long userId) {
+//        Optional<User> userOptional = userRepository.findById(userId);
+//        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+//
+//        List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
+//
+//        List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
+////        for (ChatRoom chatRoom : chatRooms) {
+////            chatRoomResponseDto.add(new ChatRoomResponseDto(chatRoom));
+////        }
+//        return chatRoomResponseDto;
+//    }
 
     // 채팅방 생성
 //    @Override
@@ -72,15 +72,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
      */
     @Override
     @Transactional
-    public ChatRoomResponseDto save(Long chargerId, Long userId) {
+    public ChatRoomRequestDto save(Long chargerId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Long receiverId = charger.getUser().getId();
 
+        ChatRoom chatRoom = ChatRoom.builder()
+                .charger(charger)
+                .user(user)
+                .build();
 
-//        return this.chatRoomRepository.save(ChatRoomRequestDto.toEntity()).getId();
-        return null;
+        return ChatRoomRequestDto.toDto(chatRoom);
     }
 
 

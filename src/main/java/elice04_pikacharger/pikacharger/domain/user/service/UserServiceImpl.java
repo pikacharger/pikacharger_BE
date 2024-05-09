@@ -2,6 +2,8 @@ package elice04_pikacharger.pikacharger.domain.user.service;
 
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import elice04_pikacharger.pikacharger.domain.image.domain.ProfileImage;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;

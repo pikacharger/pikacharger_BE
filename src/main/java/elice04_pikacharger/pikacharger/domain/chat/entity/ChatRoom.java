@@ -12,7 +12,6 @@ import java.util.List;
 
 @Table(name="chatroom")
 @Entity
-@Data
 @Builder
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -27,12 +26,17 @@ public class ChatRoom extends BaseEntity {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChatLog> chatLogs;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "charger_id")
     private Charger charger;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id")
+    private User receiverId;
 
     //TODO: 마지막 메시지 조회
 //    @OneToOne(fetch = FetchType.LAZY)
@@ -55,8 +59,9 @@ public class ChatRoom extends BaseEntity {
 //    }
 
     @Builder
-    public ChatRoom(User user,Charger charger){
+    public ChatRoom(User user,Charger charger, User receiverId){
         this.user = user;
         this.charger = charger;
+        this.receiverId = receiverId;
     }
 }

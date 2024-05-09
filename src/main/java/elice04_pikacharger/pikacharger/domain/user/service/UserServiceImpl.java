@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import elice04_pikacharger.pikacharger.domain.image.domain.ProfileImage;
@@ -73,7 +74,8 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         String imgUrl = "";
         if(!profileImage.isEmpty() && profileImage != null){
             imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");

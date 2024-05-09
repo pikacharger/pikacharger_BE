@@ -13,7 +13,7 @@ public interface ChatLogService {
     List<ChatLogResponseDto> getAllChatLog(Long chatRoomId);
 
     @Transactional
-    Long save(Long chatRoomId, ChatLogRequestDto requestDto);
+    Long save(Long userId, Long chatRoomId, ChatLogRequestDto requestDto);
 
 //    @Transactional
 //    void deleteChatLog(Long chatMessageId);

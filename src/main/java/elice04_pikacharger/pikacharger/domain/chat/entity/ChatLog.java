@@ -9,7 +9,6 @@ import lombok.*;
 @Table(name="chatlog")
 @Entity
 @Data
-@Builder
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -24,7 +23,7 @@ public class ChatLog extends BaseEntity {
     @JoinColumn(name = "chatroom_id", insertable = false, updatable = false)
     private ChatRoom chatRoom;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User sender;
 
@@ -36,5 +35,12 @@ public class ChatLog extends BaseEntity {
 
     public String getMessageContents() {
         return this.messageContents;
+    }
+
+    @Builder
+    public ChatLog(ChatRoom chatRoom, User sender, String messageContents) {
+        this.chatRoom = chatRoom;
+        this.sender = sender;
+        this.messageContents = messageContents;
     }
 }

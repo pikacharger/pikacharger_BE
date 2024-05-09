@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/chatlog")
@@ -26,8 +27,8 @@ public class ChatLogController {
             @ApiResponse(responseCode = "200", description = "successful operation")
     })
     @PostMapping("/{chatRoomId}/chatlogs")
-    public ApiResult<Long> createChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {
-        Long createdChatLogId = chatLogService.save(chatRoomId, chatLogRequestDto);
+    public ApiResult<Long> createChatLog(@AuthenticationPrincipal Long userId, @PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatLogRequestDto chatLogRequestDto) {
+        Long createdChatLogId = chatLogService.save(userId, chatRoomId, chatLogRequestDto);
         return ApiUtils.success(createdChatLogId);
     }
 }

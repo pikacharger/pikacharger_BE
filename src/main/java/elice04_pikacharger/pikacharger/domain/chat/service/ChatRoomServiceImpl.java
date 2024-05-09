@@ -36,7 +36,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
         for (ChatRoom chatRoom : senderChatRooms) {
-            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getReceiver(), chatRoom));
+            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getReceiverId(), chatRoom));
         }
         for (ChatRoom chatRoom : receiverChatRooms) {
             chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getUser(), chatRoom));

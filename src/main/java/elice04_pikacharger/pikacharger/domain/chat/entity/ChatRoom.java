@@ -30,10 +30,6 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(name = "receiver_id")
-    private User receiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "charger_id")

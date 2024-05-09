@@ -33,8 +33,6 @@ import java.util.List;
 @Tag(name = "(리뷰)", description = "리뷰 관련 api")
 public class ReviewController {
     private final ReviewService reviewService;
-    private final S3UploaderService s3UploaderService;
-    private final ReviewRepository reviewRepository;
 
     //TODO 응답 코드 작성.
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록합니다.")

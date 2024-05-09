@@ -35,8 +35,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ChargerRepository chargerRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final S3UploaderService s3UploaderService;
-    private final ReviewResult reviewResult;
-
 
     @Override
     @Transactional

@@ -28,6 +28,7 @@ public class S3UploaderService {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
     }
+
     public String uploadSingleFile(MultipartFile multipartFile, String dirName) throws IOException {
         // 파일 이름에서 공백을 제거한 새로운 파일 이름 생성
         String originalFileName = multipartFile.getOriginalFilename();
@@ -57,7 +58,6 @@ public class S3UploaderService {
             return uploadedImageUrls;
         }
     }
-
 
     private File convert(MultipartFile file) throws IOException {
         String originalFileName = file.getOriginalFilename();
@@ -102,6 +102,7 @@ public class S3UploaderService {
             log.error("Error while decoding the file name: {}", e.getMessage());
         }
     }
+
     public List<String> updateFiles(List<MultipartFile> newFiles, List<String> oldFileNames, String dirName) throws IOException {
         List<String> updatedImageUrls = new ArrayList<>();
         for (int i = 0; i < newFiles.size(); i++) {
@@ -116,5 +117,4 @@ public class S3UploaderService {
         }
         return updatedImageUrls;
     }
-
 }

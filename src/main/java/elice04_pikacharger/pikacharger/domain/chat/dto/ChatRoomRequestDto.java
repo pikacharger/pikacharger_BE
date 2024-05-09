@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ChatRoomRequestDto { //list 반환
     private Long chargerId;
-    private Long senderuserId;
-    private Long myuserId;
+    private Long senderId;
+    private Long userId;
     private String chargerName;
     private String nickName;
     private String imgUrl;
@@ -30,8 +30,8 @@ public class ChatRoomRequestDto { //list 반환
     public static ChatRoomRequestDto toDto(ChatRoom chatRoom){
         ChatRoomRequestDto result = ChatRoomRequestDto.builder()
                 .chargerId(chatRoom.getCharger().getId())
-                .myuserId(chatRoom.getUser().getId())
-                .senderuserId(chatRoom.getCharger().getUser().getId())
+                .userId(chatRoom.getUser().getId())
+                .senderId(chatRoom.getCharger().getUser().getId())
                 .imgUrl(chatRoom.getUser().getProfileImage())
                 .chargerName(chatRoom.getCharger().getChargerName())
                 .nickName(chatRoom.getCharger().getUser().getNickName())
@@ -41,13 +41,13 @@ public class ChatRoomRequestDto { //list 반환
     }
 
     @Builder
-    protected ChatRoomRequestDto(Long chargerId, Long senderuserId, String chargerName, LocalDateTime createAt, String nickName, String imgUrl, Long myuserId){
+    protected ChatRoomRequestDto(Long chargerId, Long senderId, String chargerName, LocalDateTime createAt, String nickName, String imgUrl, Long userId){
         this.chargerId = chargerId;
-        this.senderuserId = senderuserId;
+        this.senderId = senderId;
         this.chargerName = chargerName;
         this.nickName = nickName;
         this.imgUrl = imgUrl;
         this.createAt = createAt;
-        this.myuserId = myuserId;
+        this.userId = userId;
     }
 }

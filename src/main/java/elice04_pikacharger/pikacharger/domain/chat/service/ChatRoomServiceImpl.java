@@ -77,12 +77,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
-        Long receiverId = charger.getUser().getId();
-
         ChatRoom chatRoom = ChatRoom.builder()
                 .charger(charger)
                 .user(user)
+                .receiverId(charger.getUser()) // 채팅방에 대상 사용자 추가
                 .build();
+
+        chatRoomRepository.save(chatRoom); // 채팅방 저장
 
         return ChatRoomRequestDto.toDto(chatRoom);
     }

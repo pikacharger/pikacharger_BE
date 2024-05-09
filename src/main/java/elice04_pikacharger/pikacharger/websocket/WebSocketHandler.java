@@ -1,8 +1,9 @@
 package elice04_pikacharger.pikacharger.websocket;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogDto;
+import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,45 +31,55 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("{} 연결되었습니다.", session.getId());
         sessions.add(session);
+
+        //프론트에 알림 보내기
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("type", "connection");
+        payload.put("message", "웹소켓에 연결되었습니다.");
+        sendMessage(session, payload);
     }
 
     // 메시지 전송 부분
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         log.info("payload {}", payload);
 
-        ChatLogDto chatLogDto = mapper.readValue(payload, ChatLogDto.class);
-        log.info("session {}", chatLogDto.toString());
+        ChatLogResponseDto chatLogResponseDto = mapper.readValue(payload, ChatLogResponseDto.class);
+        log.info("session {}", chatLogResponseDto.toString());
 
-        Long chatRoomId = chatLogDto.getChatRoomId();
+        Long chatRoomId = chatLogResponseDto.getChatRoom().getId();
+
         if(!chatRoomSessionMap.containsKey(chatRoomId)){
             chatRoomSessionMap.put(chatRoomId,new HashSet<>());
         }
         Set<WebSocketSession> chatRoomSession = chatRoomSessionMap.get(chatRoomId);
 
-        if (chatLogDto.getMessageType().equals(ChatLogDto.MessageType.ENTER)) {
-            chatRoomSession.add(session);
-        }
         if (chatRoomSession.size()>=3) {
             removeClosedSession(chatRoomSession);
         }
-        sendLogToChatRoom(chatLogDto, chatRoomSession);
+        sendLogToChatRoom(chatLogResponseDto, chatRoomSession);
     }
 
     // 소켓 종료 확인하기
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         log.info("{} 연결이 끊겼습니다.", session.getId());
         sessions.remove(session);
+
+        //프론트에 알림 보내기
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("type", "connection");
+        payload.put("message", "웹소켓 연결이 끊겼습니다.");
+        sendMessage(session, payload);
     }
 
     private void removeClosedSession(Set<WebSocketSession> chatRoomSession) {
         chatRoomSession.removeIf(sess -> !sessions.contains(sess));
     }
 
-    private void sendLogToChatRoom(ChatLogDto chatLogDto, Set<WebSocketSession> chatRoomSession) {
-        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, chatLogDto));//2
+    private void sendLogToChatRoom(ChatLogResponseDto chatLogResponseDto, Set<WebSocketSession> chatRoomSession) {
+        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, chatLogResponseDto));//2
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {

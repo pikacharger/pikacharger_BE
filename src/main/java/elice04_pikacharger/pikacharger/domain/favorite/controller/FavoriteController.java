@@ -1,37 +1,45 @@
 package elice04_pikacharger.pikacharger.domain.favorite.controller;
 
+import elice04_pikacharger.pikacharger.domain.favorite.dto.GroupedFavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteCreateDto;
-import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.FavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.service.FavoriteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/favorite")
+@RequestMapping("/api/favorites")
+@Tag(name = "(즐겨찾기)", description = "즐겨찾기 관련 api")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createFavorite(@RequestBody FavoriteCreateDto favoriteCreateDto) {
-        favoriteService.createFavorite(favoriteCreateDto);
+    @Operation(summary = "즐겨찾기 생성", description = "즐겨찾기 생성")
+    @PostMapping("")
+    public ResponseEntity<Void> createFavorite(@AuthenticationPrincipal Long userId, @RequestBody FavoriteCreateDto favoriteCreateDto) {
+        favoriteService.createFavorite(userId, favoriteCreateDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<FavoriteResponseDto>> favoriteList(@PathVariable Long userId) {
-        List<FavoriteResponseDto> favoriteResponseDtoList = favoriteService.favoriteList(userId);
-        return new ResponseEntity<>(favoriteResponseDtoList, HttpStatus.OK);
+    @Operation(summary = "즐겨찾기 조회", description = "유저 id를 이용해 자신이 등록한 즐겨찾기 목록 조회")
+    @GetMapping("")
+    public ResponseEntity<List<GroupedFavoriteResponseDto>> favoriteList(@AuthenticationPrincipal Long userId) {
+        List<GroupedFavoriteResponseDto> groupedFavoriteResponseDtoList = favoriteService.favoriteList(userId);
+        return new ResponseEntity<>(groupedFavoriteResponseDtoList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{favoriteId}")
-    public ResponseEntity<?> deleteFavorite(@PathVariable Long favoriteId) {
-        favoriteService.deleteFavorite(favoriteId);
+    @Operation(summary = "즐겨찾기 삭제", description = "즐겨찾기 id와 유저 id를 이용해 자신이 만든 즐겨찾기일 경우 삭제")
+    @DeleteMapping("/chargers/{chargerId}")
+    public ResponseEntity<Void> deleteFavorite(@PathVariable Long chargerId, @AuthenticationPrincipal Long userId) {
+        favoriteService.deleteFavorite(chargerId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

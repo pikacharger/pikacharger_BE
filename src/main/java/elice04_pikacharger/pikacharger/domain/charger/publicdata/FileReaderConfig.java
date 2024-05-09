@@ -20,13 +20,14 @@ public class FileReaderConfig {
     private final SQLWriter sqlWriter;
     private final SQLReader sqlReader;
 
-    @Bean
-    public Job publicChargerDataLoadJob(JobRepository jobRepository, Step publicChargerDataLoadStep, Step executeSqlScriptStep){
-        return new JobBuilder("publicChargerDataLoadJob", jobRepository)
-                .start(publicChargerDataLoadStep)
-                .next(executeSqlScriptStep)
-                .build();
-    }
+//     배치 연결 끊기
+//    @Bean
+//    public Job publicChargerDataLoadJob(JobRepository jobRepository, Step publicChargerDataLoadStep, Step executeSqlScriptStep){
+//        return new JobBuilder("publicChargerDataLoadJob", jobRepository)
+//                .start(publicChargerDataLoadStep)
+//                .next(executeSqlScriptStep)
+//                .build();
+//    }
 
     @Bean
     public Step publicChargerDataLoadStep(JobRepository jobRepository, PlatformTransactionManager ptm){

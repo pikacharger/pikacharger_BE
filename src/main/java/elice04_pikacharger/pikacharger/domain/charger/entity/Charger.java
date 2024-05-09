@@ -4,9 +4,13 @@ import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +54,9 @@ public class Charger extends BaseEntity {
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
 
+    @OneToMany(mappedBy = "charger")
+    private List<Review> Reviews = new ArrayList<>();
+
     @Builder(builderMethodName = "publicChargerBuilder", builderClassName = "publicChargerBuilder")
     public static Charger publicCharger(String chargerLocation, String chargerName, String chargingSpeed, String companyName, String chargerStatus, double latitude, double longitude){
         return new Charger(chargerLocation, chargerName, chargingSpeed, companyName, chargerStatus, latitude, longitude);
@@ -92,6 +99,10 @@ public class Charger extends BaseEntity {
         this.chargerRole = ChargerRole.PERSONALCHARGER;
         this.user = user;
         this.chargerStatus = "이용가능";
+    }
+
+    public void updateAvgRate(double avgRate){
+        this.avgRate = avgRate;
     }
 
 }

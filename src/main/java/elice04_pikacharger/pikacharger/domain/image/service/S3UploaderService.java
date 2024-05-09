@@ -28,6 +28,7 @@ public class S3UploaderService {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
     }
+
     public String uploadSingleFile(MultipartFile multipartFile, String dirName) throws IOException {
         // 파일 이름에서 공백을 제거한 새로운 파일 이름 생성
         String originalFileName = multipartFile.getOriginalFilename();
@@ -58,7 +59,6 @@ public class S3UploaderService {
         }
     }
 
-
     private File convert(MultipartFile file) throws IOException {
         String originalFileName = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
@@ -83,6 +83,7 @@ public class S3UploaderService {
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
+    // TODO 파일이 삭제 되었는지, 삭제되지 못했는지만 로그로 남기고 메서드는 삭제.
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
@@ -96,7 +97,7 @@ public class S3UploaderService {
             // URL 디코딩을 통해 원래의 파일 이름을 가져옴
             String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
             log.info("Deleting file from S3: " + decodedFileName);
-            amazonS3.deleteObject(bucket, decodedFileName);
+            amazonS3.deleteObject(this.bucket, decodedFileName.substring(59));
         } catch (UnsupportedEncodingException e) {
             log.error("Error while decoding the file name: {}", e.getMessage());
         }
@@ -116,5 +117,4 @@ public class S3UploaderService {
         }
         return updatedImageUrls;
     }
-
 }

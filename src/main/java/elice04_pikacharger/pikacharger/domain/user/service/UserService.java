@@ -1,19 +1,22 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.DuplicateCheckDto;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignInPayload;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.SignUpPayload;
-import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
+import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 public interface UserService {
 
-    Long save(SignUpPayload payload);
 
-    Long updateUser(String email,UserEditPayload payload);
+    AuthResponseDto save(SignUpPayload payload);
 
-    String signIn(SignInPayload payload);
+    User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException;
+
+    AuthResponseDto signIn(SignInPayload payload);
 
     Boolean loginCheck(HttpServletRequest request);
 
@@ -22,4 +25,22 @@ public interface UserService {
     UserResult findOneById(Long id);
 
     void updatePassword(String email, String currentPassword, String newPassword);
+
+    User findUser(Long id);
+
+    String deleteUser(Long id);
+
+    String retrieveUserEmail(String phoneNumber);
+
+    UserResponseDto findUserById(Long id);
+    public String logoutUser(String refreshToken);
+
+
+    String createAccessByRefresh(String refreshToken);
+
+    Long deleteByUserId(Long userId);
+
+    Boolean checkDuplicateNickname(String nickname);
+
+    Optional<User> findUserByEmail(String email);
 }

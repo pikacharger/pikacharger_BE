@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -15,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+//@Service
 @Slf4j
 public class GeocodingAPI {
 
@@ -38,9 +37,9 @@ public class GeocodingAPI {
 
         int responseCode = con.getResponseCode();
         BufferedReader br;
-        if(responseCode==200) { // 정상 호출
+        if(responseCode==200) {
             br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-        } else {  // 에러 발생
+        } else {
             br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
         }
         String inputLine;
@@ -54,16 +53,15 @@ public class GeocodingAPI {
         JSONArray addresses = responseObject.getJSONArray("addresses");
         List<String> locations = new ArrayList<>();
 
-        if (addresses.length() > 0) {
-            JSONObject firstAddress = addresses.getJSONObject(0);
-            String x = firstAddress.getString("x"); // 경도
-            String y = firstAddress.getString("y"); // 위도
-            locations.add(y);
-            locations.add(x);
-
-        } else {
+        if (addresses.length() == 0) {
             log.debug("주소 정보를 찾을 수 없습니다.");
+            return locations;
         }
+        JSONObject firstAddress = addresses.getJSONObject(0);
+        String x = firstAddress.getString("x"); // 경도
+        String y = firstAddress.getString("y"); // 위도
+        locations.add(y);
+        locations.add(x);
 
         return locations;
     }

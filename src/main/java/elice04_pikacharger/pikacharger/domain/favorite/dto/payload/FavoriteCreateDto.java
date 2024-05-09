@@ -12,7 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FavoriteCreateDto {
 
-    private Long userId;
     private Long chargerId;
 
     public Favorite toDto(User user, Charger charger) {

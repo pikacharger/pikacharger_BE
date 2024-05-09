@@ -1,16 +1,16 @@
 package elice04_pikacharger.pikacharger.domain.favorite.service;
 
-import elice04_pikacharger.pikacharger.domain.charger.dto.ChargerResponseDto;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.GroupedFavoriteResponseDto;
 import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteCreateDto;
-import elice04_pikacharger.pikacharger.domain.favorite.dto.payload.FavoriteResponseDto;
+import elice04_pikacharger.pikacharger.domain.favorite.dto.FavoriteResponseDto;
 
 import java.util.List;
 
 public interface FavoriteService {
 
-    void createFavorite(FavoriteCreateDto favoriteCreateDto);
+    void createFavorite(Long userId, FavoriteCreateDto favoriteCreateDto);
 
-    List<FavoriteResponseDto> favoriteList(Long userId);
+    List<GroupedFavoriteResponseDto> favoriteList(Long userId);
 
-    void deleteFavorite(Long favoriteId);
+    void deleteFavorite(Long chargerId, Long userId);
 }

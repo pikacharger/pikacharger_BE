@@ -1,13 +1,17 @@
 package elice04_pikacharger.pikacharger.domain.charger.dto;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ChargerResponseDto {
 
+    private Long chargerId;
     private String chargerLocation;
     private String chargerName;
     private String chargingSpeed;
@@ -18,6 +22,7 @@ public class ChargerResponseDto {
 
     public static ChargerResponseDto toDto(Charger charger){
         return ChargerResponseDto.builder()
+                .chargerId(charger.getId())
                 .chargerLocation(charger.getChargerLocation())
                 .chargerName(charger.getChargerName())
                 .chargingSpeed(charger.getChargingSpeed())
@@ -29,7 +34,8 @@ public class ChargerResponseDto {
     }
 
     @Builder
-    private ChargerResponseDto(String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice){
+    private ChargerResponseDto(Long chargerId, String chargerLocation, String chargerName, String chargingSpeed, double latitude, double longitude, String content, double personalPrice){
+        this.chargerId = chargerId;
         this.chargerLocation = chargerLocation;
         this.chargerName = chargerName;
         this.chargingSpeed = chargingSpeed;

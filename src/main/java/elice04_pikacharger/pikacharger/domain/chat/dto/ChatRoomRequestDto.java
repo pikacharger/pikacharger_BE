@@ -1,23 +1,27 @@
 package elice04_pikacharger.pikacharger.domain.chat.dto;
 
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
-import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ChatRoomRequestDto {
-    private String id;
+    private Long id;
+    private Charger charger;
 
-    @Builder
-    public ChatRoomRequestDto(String roomId) {
-        this.id = roomId;
+    public void setCharger(Charger charger) {
+        this.charger = charger;
     }
 
     public ChatRoom toEntity() {
         return ChatRoom.builder()
-//                .id(this.id)
+                .id(this.id)
+                .charger(this.charger)
                 .build();
     }
 }

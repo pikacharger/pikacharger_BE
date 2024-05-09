@@ -1,24 +1,32 @@
 package elice04_pikacharger.pikacharger.domain.chat.dto;
 
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
-import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@Component
+@NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoomResponseDto extends BaseEntity{
+public class ChatRoomResponseDto {
     private Long id;
-    private String createdDate;
-    private String lastModifiedDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastModifiedDate;
 
-//    public ChatRoomResponseDto(ChatRoom entity) {
-//        this.id = entity.getId();
-//        this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-//        this.lastModifiedDate = entity.getlastModifiedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-//    }
+    public ChatRoomResponseDto(Long id) {
+        this.id = id;
+    }
+
+    public ChatRoomResponseDto(ChatRoom entity) {
+        this.id = entity.getId();
+        this.createDate = entity.getCreateDate();
+        this.lastModifiedDate = entity.getLastModifiedDate();
+    }
 }

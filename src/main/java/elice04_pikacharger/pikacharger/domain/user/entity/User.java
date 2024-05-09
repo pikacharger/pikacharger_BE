@@ -2,12 +2,12 @@ package elice04_pikacharger.pikacharger.domain.user.entity;
 
 
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String nickname;
 
     @Column(nullable = false)
@@ -39,26 +39,33 @@ public class User extends BaseEntity {
     @Column
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<UserRole> roles = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
 
-    @Column
-    private String role;
-
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String chargerType;
 
     @Column
     private String profileImage;
-
     private String resignReason;
     private Boolean resign;
+    private String refreshToken;
+    private ProviderType providerType;
+    private String socialId;
 
-    public void addRole(UserRole role){
-        List<UserRole> list = new ArrayList<>();
-        list.add(role);
-        this.roles = list;
-        this.role = role.getRole().getName();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
+
+    public User(String username, String email, String nickname, ProviderType providerType){
+        this.username = username;
+        this.email = email != null ? email : "NO_EMAIL";
+        this.nickname = nickname;
+        this.password = "NO_PASS";
+        this.profileImage = profileImage != null ? profileImage : "NO_IMAGE";
+        this.roles = new HashSet<>();
+        this.providerType = providerType;
+
     }
 
     public void editNickname(UserEditPayload payload){
@@ -69,9 +76,26 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public User update(String profileImage){
+    public User updateImage(String profileImage){
         this.profileImage = profileImage;
         return this;
+    }
+
+    public void updateUser(UserEditPayload userEditPayload, String imgUrl){
+        this.nickname = userEditPayload.getNickname();
+        this.profileImage = imgUrl;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
+    }
+
+    public String getNickName() {
+        return nickname;
     }
 
 

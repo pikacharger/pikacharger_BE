@@ -2,16 +2,16 @@ package elice04_pikacharger.pikacharger.domain.chat.entity;
 
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table(name="chatlog")
-@Builder
 @Entity
 @Data
+@Builder
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatLog extends BaseEntity {
@@ -29,4 +29,12 @@ public class ChatLog extends BaseEntity {
     private User sender;
 
     private String messageContents;
+
+    public User getSender() {
+        return this.sender;
+    }
+
+    public String getMessageContents() {
+        return this.messageContents;
+    }
 }

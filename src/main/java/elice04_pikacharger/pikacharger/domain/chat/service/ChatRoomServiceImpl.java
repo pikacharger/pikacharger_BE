@@ -31,14 +31,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     @Transactional
     public List<ChatRoomResponseDto> findAllChatRoom(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
-
-        List<ChatRoom> chatRooms = chatRoomRepository.findBysenderAndReceiver(user, user);
+        List<ChatRoom> senderChatRooms = chatRoomRepository.findByUserId(userId);
+        List<ChatRoom> receiverChatRooms = chatRoomRepository.findByReceiverId(userId);
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
-        for (ChatRoom chatRoom : chatRooms) {
-            Long chargerId = chatRoom.getCharger().getUser().getId();
-            chatRoomResponseDto.add(new ChatRoomResponseDto(chargerId));
+        for (ChatRoom chatRoom : senderChatRooms) {
+            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getReceiver(), chatRoom));
+        }
+        for (ChatRoom chatRoom : receiverChatRooms) {
+            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getUser(), chatRoom));
         }
         return chatRoomResponseDto;
     }

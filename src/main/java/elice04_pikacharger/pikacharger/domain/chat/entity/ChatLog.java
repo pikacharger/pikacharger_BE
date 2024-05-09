@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 
@@ -19,12 +20,14 @@ public class ChatLog extends BaseEntity {
     @Column(name = "chatlog_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatroom_id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "chatroom_id", updatable = false)
+    @JsonBackReference
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", updatable = false)
+    @JsonBackReference
     private User sender;
 
     private String messageContents;

@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
 //import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
@@ -26,17 +27,20 @@ public class ChatRoom extends BaseEntity {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChatLog> chatLogs;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "charger_id")
+    @JsonBackReference
     private Charger charger;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "receiver_id")
+    @JsonBackReference
     private User receiverId;
 
     //TODO: 마지막 메시지 조회

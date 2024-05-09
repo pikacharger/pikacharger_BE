@@ -32,7 +32,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     public List<ChatRoomResponseDto> findAllChatRoom(Long userId) {
         List<ChatRoom> senderChatRooms = chatRoomRepository.findByUserId(userId);
-        List<ChatRoom> receiverChatRooms = chatRoomRepository.findByReceiverId(userId);
+        List<ChatRoom> receiverChatRooms = chatRoomRepository.findByReceiverIdId(userId);
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
         for (ChatRoom chatRoom : senderChatRooms) {
@@ -44,33 +44,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return chatRoomResponseDto;
     }
 
-    // 채팅방 생성
-//    @Override
-//    @Transactional
-//    public ChatRoomResponseDto save(Long chargerId, Long senderId) {
-//        Charger charger = chargerRepository.findById(chargerId)
-//                .orElseThrow(() -> {
-//                    log.error("해당 충전기가 존재하지 않습니다");
-//                    return new IllegalArgumentException("해당 충전기가 존재하지 않습니다");
-//                });
-//
-//        User receiver = charger.getUser();
-//        User sender = userRepository.findById(senderId)
-//                .orElseThrow(() -> {
-//                    log.error("해당 유저가 존재하지 않습니다");
-//                    return new IllegalArgumentException("해당 유저가 존재하지 않습니다");
-//                });
-////        ChatRoom chatRoom = ChatRoom.builder()
-////                .charger(charger)
-////                .receiver(receiver)
-////                .sender(sender)
-////                .build();
-////        chatRoomRepository.save(chatRoom);
-////        return new ChatRoomResponseDto(chatRoom);
-//    }
-    /**
-     * ChatRoom 생성
-     */
+
     @Override
     @Transactional
     public ChatRoomRequestDto save(Long chargerId, Long userId) {

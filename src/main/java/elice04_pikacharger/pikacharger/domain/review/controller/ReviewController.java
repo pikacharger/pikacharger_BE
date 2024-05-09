@@ -1,20 +1,17 @@
 package elice04_pikacharger.pikacharger.domain.review.controller;
 
-import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewModifyPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewPayload;
 import elice04_pikacharger.pikacharger.domain.review.dto.payload.ReviewSortFiled;
+import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewDetailResult;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResult;
 import elice04_pikacharger.pikacharger.domain.review.dto.result.ReviewResultToUser;
-import elice04_pikacharger.pikacharger.domain.review.repository.ReviewRepository;
 import elice04_pikacharger.pikacharger.domain.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.bytecode.internal.bytebuddy.PrivateAccessorException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,8 +52,8 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 상세페이지 정보 조회", description = "리뷰 상세 페이지를 출력할 때 필요한 정보를 조회하는 api.")
     @GetMapping("/detail/{reviewId}")
-    public ResponseEntity<ReviewResult> getReviewDetailById(@PathVariable Long reviewId, @AuthenticationPrincipal Long userId) {
-        ReviewResult reviewResult = reviewService.findByDetailToReviewId(reviewId, userId);
+    public ResponseEntity<ReviewDetailResult> getReviewDetailById(@PathVariable Long reviewId) {
+        ReviewDetailResult reviewResult = reviewService.findByDetailToReviewId(reviewId);
         return ResponseEntity.ok(reviewResult);
     }
 

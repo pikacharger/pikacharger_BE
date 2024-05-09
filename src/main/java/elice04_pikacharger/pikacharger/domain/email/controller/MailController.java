@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.email.controller;
 import elice04_pikacharger.pikacharger.domain.email.dto.EmailCheckDto;
 import elice04_pikacharger.pikacharger.domain.email.dto.EmailRequestDto;
 import elice04_pikacharger.pikacharger.domain.email.service.MailSendService;
+import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,9 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "(메일)", description = "메일 관련")
 public class MailController {
     private final MailSendService mailSendService;
+    private final UserRepository userRepository;
+
     @PostMapping("/mailSend")
     @Operation(summary = "인증 메일 보내기", description = "인증 메일 보내기")
     public ResponseEntity<String> mailSend(@RequestBody @Valid EmailRequestDto dto){
+        Boolean checked = dto.getEmail().equals(userRepository.findByEmail(dto.getEmail()));
+        if(checked){
+            return new ResponseEntity<>(HttpStatus.IM_USED);
+        }
         mailSendService.joinEmail(dto.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }

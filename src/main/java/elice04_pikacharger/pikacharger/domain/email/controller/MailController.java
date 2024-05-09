@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +22,9 @@ public class MailController {
     private final MailSendService mailSendService;
     @PostMapping("/mailSend")
     @Operation(summary = "인증 메일 보내기", description = "인증 메일 보내기")
-    public String mailSend(@RequestBody @Valid EmailRequestDto dto){
-        System.out.println("이메일 인증 이메일 : " + dto.getEmail());
-        return mailSendService.joinEmail(dto.getEmail());
+    public ResponseEntity<String> mailSend(@RequestBody @Valid EmailRequestDto dto){
+        mailSendService.joinEmail(dto.getEmail());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/mailauthCheck")

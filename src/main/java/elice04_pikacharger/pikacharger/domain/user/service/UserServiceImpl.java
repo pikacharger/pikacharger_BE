@@ -1,10 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import elice04_pikacharger.pikacharger.domain.image.domain.ProfileImage;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
@@ -36,11 +33,8 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final AmazonS3Client amazonS3Client;
     private final S3UploaderService s3UploaderService;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
 
     @Transactional
     @Override
@@ -74,18 +68,12 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        String imgUrl = "";
+        User user = userRepository.findById(userId).orElseThrow();
+        String imgUrl = "NO_IMAGE";
         if(!profileImage.isEmpty() && profileImage != null){
             imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");
-            ProfileImage image = ProfileImage.builder()
-                    .imageUrl(imgUrl)
-                    .user(user)
-                    .build();
-
         }
-        user.updateUser(payload);
+        user.updateUser(payload, imgUrl);
         return user;
     }
 

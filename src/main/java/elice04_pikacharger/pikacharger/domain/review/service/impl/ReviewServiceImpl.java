@@ -80,7 +80,10 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        boolean userIdMatch = review.getUser().getId().equals(userId);
+        boolean userIdMatch = false;
+        if (userId != null) {
+            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+        }
 
         return ReviewDetailResult.toDto(review, userIdMatch);
     }
@@ -94,7 +97,10 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        boolean userIdMatch = review.getUser().getId().equals(userId);
+        boolean userIdMatch = false;
+        if (userId != null) {
+            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+        }
 
         return ReviewDetailResult.toDto(review, userIdMatch);
     }
@@ -126,7 +132,10 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        boolean userIdMatch = review.getUser().getId().equals(userId);
+        boolean userIdMatch = false;
+        if (userId != null) {
+            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+        }
 
         review.getImgList().clear();
         imageImgUpload(review, multipartFiles);

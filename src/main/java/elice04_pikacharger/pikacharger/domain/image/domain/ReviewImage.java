@@ -22,7 +22,6 @@ public class ReviewImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 이 부분 없애고!
     @ManyToOne
     @JoinColumn(name = "review_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

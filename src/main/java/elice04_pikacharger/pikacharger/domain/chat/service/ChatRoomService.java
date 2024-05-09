@@ -15,8 +15,8 @@ public interface ChatRoomService {
     ChatRoomRequestDto save(Long chaegerId, Long senderId);
 
     // 전체 채팅방 조회
-//    @Transactional
-//    List<ChatRoomResponseDto> findAllChatRoom(Long userId);
+    @Transactional
+    List<ChatRoomResponseDto> findAllChatRoom(Long userId);
 
     //TODO: 채팅방 삭제
 //    void delete(Long id);

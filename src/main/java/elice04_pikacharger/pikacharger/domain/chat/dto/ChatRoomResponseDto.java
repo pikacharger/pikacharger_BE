@@ -10,4 +10,8 @@ import java.time.LocalDateTime;
 @Data
 public class ChatRoomResponseDto {
     private Long chargerId;
+
+    public ChatRoomResponseDto(Long chargerId) {
+        this.chargerId = chargerId;
+    }
 }

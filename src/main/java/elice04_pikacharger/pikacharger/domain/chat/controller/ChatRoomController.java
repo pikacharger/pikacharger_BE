@@ -35,15 +35,15 @@ public class ChatRoomController {
     private final JwtUtil jwtUtil;
 
     //채팅방 목록 받기
-//    @Operation(summary = "채팅방 목록 조회", description = "사용자의 채팅방 목록을 조회한다", tags = { "Chat" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatRoomResponseDto.class))))
-//    })
-//    @GetMapping("/rooms")
-//    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@AuthenticationPrincipal Long userId){
-//        List<ChatRoomResponseDto> chatRooms = chatRoomService.findAllChatRoom(userId);
-//        return ApiUtils.success(chatRooms);
-//    }
+    @Operation(summary = "채팅방 목록 조회", description = "사용자의 채팅방 목록을 조회한다", tags = { "Chat" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatRoomResponseDto.class))))
+    })
+    @GetMapping("/rooms")
+    public ApiResult<List<ChatRoomResponseDto>> findAllChatRoom(@AuthenticationPrincipal Long userId){
+        List<ChatRoomResponseDto> chatRooms = chatRoomService.findAllChatRoom(userId);
+        return ApiUtils.success(chatRooms);
+    }
 
     // 채팅방에서의 모든 채팅 받기
     @Operation(summary = "채팅방 메시지 조회", description = "채팅방의 모든 메시지를 조회한다", tags = { "Chat" })

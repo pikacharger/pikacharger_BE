@@ -77,10 +77,7 @@ public class UserServiceImpl implements UserService{
         String imgUrl = "";
         if(!profileImage.isEmpty() && profileImage != null){
             imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");
-            ProfileImage image = ProfileImage.builder()
-                    .imageUrl(imgUrl)
-                    .user(user)
-                    .build();
+            payload.setProfileImage(imgUrl);
 
         }
         user.updateUser(payload);

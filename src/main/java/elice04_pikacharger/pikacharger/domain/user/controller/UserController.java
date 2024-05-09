@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -140,10 +141,10 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PatchMapping("/updateUser")
+    @PatchMapping(value = "/updateUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "사용자 정보 업데이트")
-    public ResponseEntity<UserResponseDto> updateUser(@RequestPart(value = "file", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateDto") UserEditPayload updateDto, @AuthenticationPrincipal CustomUserDetails tokenUser) throws IOException{
-        User user = userService.updateUser(tokenUser.getMyTokenPayload().getUserId(),multipartFile ,updateDto);
+    public ResponseEntity<UserResponseDto> updateUser(@RequestPart(value = "file", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateDto") UserEditPayload updateDto, @AuthenticationPrincipal Long userId) throws IOException{
+        User user = userService.updateUser(userId, multipartFile ,updateDto);
         return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
     }
 

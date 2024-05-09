@@ -50,9 +50,8 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ChatLogResponseDto.class))))
     })
     @GetMapping("/{chatRoomId}/logs")
-    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @RequestHeader("Authorization") String token) {
-        Long userId = jwtUtil.extractUserIdFromToken(token);
-        List<ChatLogResponseDto> chatLogs = chatLogService.getAllChatLog(chatRoomId);
+    public ApiResult<List<ChatLogResponseDto>> getAllChatLog(@PathVariable("chatRoomId") Long chatRoomId, @AuthenticationPrincipal Long userId) {
+        List<ChatLogResponseDto> chatLogs = chatLogService.getAllChatLog(chatRoomId, userId);
         return ApiUtils.success(chatLogs);
     }
 

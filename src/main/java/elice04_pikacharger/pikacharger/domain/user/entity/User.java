@@ -5,9 +5,7 @@ import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.context.annotation.Profile;
 
 import java.util.*;
 
@@ -83,9 +81,9 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public void updateUser(UserEditPayload userEditPayload){
+    public void updateUser(UserEditPayload userEditPayload, String imgUrl){
         this.nickname = userEditPayload.getNickname();
-        this.profileImage = userEditPayload.getProfileImage();
+        this.profileImage = imgUrl;
     }
 
     public Set<Role> getRoles() {

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class UserResult {
     private Long id;
-    private String name;
+    private String username;
     private String nickName;
     private String email;
 }

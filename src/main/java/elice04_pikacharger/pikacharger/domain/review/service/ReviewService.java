@@ -16,7 +16,7 @@ public interface ReviewService {
 
     ReviewResult findByReviewId(Long reviewId, Long userId);
 
-    ReviewDetailResult findByDetailToReviewId(Long reviewId);
+    ReviewDetailResult findByDetailToReviewId(Long reviewId, Long userId);
 
     List<ReviewResult> findByUserId(Long userId, PageRequest pageRequest);
 

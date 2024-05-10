@@ -44,25 +44,20 @@ public class ChatRoom extends BaseEntity {
     @JsonBackReference
     private User receiverId;
 
-    //TODO: 마지막 메시지 조회
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "last_chatlog_id")
-//    private ChatLog getLastChatLog;
-//
-//    public void updateLastChatLog(ChatLog chatLog) {
-//        this.lastChatLog = chatLog;
-//    }
-//
-//    @Builder
-//    public ChatRoom(Long id, ChatLog lastChatLog) {
-//        this.id = id;
-//        this.lastChatLog = lastChatLog;
-//    }
-//
-//    public Long update(ChatRoomRequestDto requestDto) {
-//        this.lastChatLog = lastChatLog;
-//        return this.id;
-//    }
+    public ChatLog getLastChatLog() {
+        if (chatLogs != null && !chatLogs.isEmpty()) {
+            // chatLogs 리스트가 비어있지 않은 경우에만 마지막 채팅 로그를 가져옴
+            return chatLogs.get(chatLogs.size() - 1);
+        } else {
+            return createDefaultChatLog();
+        }
+    }
+
+    private ChatLog createDefaultChatLog() {
+        ChatLog defaultChatLog = new ChatLog();
+        defaultChatLog.setMessageContents("대화를 기다리고 있어요. 무엇이든 물어보세요!");
+        return defaultChatLog;
+    }
 
     @Builder
     public ChatRoom(User user,Charger charger, User receiverId){

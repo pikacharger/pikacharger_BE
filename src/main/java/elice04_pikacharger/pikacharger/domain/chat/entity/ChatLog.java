@@ -41,6 +41,10 @@ public class ChatLog extends BaseEntity {
         return this.messageContents;
     }
 
+    public void setMessageContents(String message) {
+        this.messageContents = message;
+    }
+
     @Builder
     public ChatLog(ChatRoom chatRoom, User sender, String messageContents) {
         this.chatRoom = chatRoom;

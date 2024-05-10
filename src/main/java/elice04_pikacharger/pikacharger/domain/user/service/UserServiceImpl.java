@@ -69,9 +69,11 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException {
         User user = userRepository.findById(userId).orElseThrow();
-        String imgUrl = "NO_IMAGE";
+        String imgUrl = "";
         if(profileImage != null){
             imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");
+        } else{
+            imgUrl = user.getProfileImage();
         }
         if(payload.getNickname() == null){
             payload.setNickname(user.getNickName());

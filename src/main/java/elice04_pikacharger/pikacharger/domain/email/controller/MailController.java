@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.email.controller;
 import elice04_pikacharger.pikacharger.domain.email.dto.EmailCheckDto;
 import elice04_pikacharger.pikacharger.domain.email.dto.EmailRequestDto;
 import elice04_pikacharger.pikacharger.domain.email.service.MailSendService;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +27,7 @@ public class MailController {
     @PostMapping("/mailSend")
     @Operation(summary = "인증 메일 보내기", description = "인증 메일 보내기")
     public ResponseEntity<String> mailSend(@RequestBody @Valid EmailRequestDto dto){
-        Boolean checked = userRepository.findByEmail(dto.getEmail()).equals(userRepository.findByEmail(dto.getEmail()));
+        Boolean checked = userRepository.existsByEmail(dto.getEmail());
         if(checked){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("이 이메일 주소는 이미 사용 중입니다. 다른 이메일 주소를 입력해 주세요.");

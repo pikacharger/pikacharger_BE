@@ -33,10 +33,6 @@ public class ChatLog extends BaseEntity {
 
     private String messageContents;
 
-    public User getSender() {
-        return this.sender;
-    }
-
     public String getMessageContents() {
         return this.messageContents;
     }

@@ -1,6 +1,5 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
-//import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
@@ -32,7 +31,6 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
-
 
     @ManyToOne
     @JoinColumn(name = "charger_id")

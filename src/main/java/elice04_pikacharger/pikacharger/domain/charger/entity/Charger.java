@@ -54,7 +54,7 @@ public class Charger extends BaseEntity {
     @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "charger")
+    @OneToMany(mappedBy = "charger", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Review> Reviews = new ArrayList<>();
 
     @Builder(builderMethodName = "publicChargerBuilder", builderClassName = "publicChargerBuilder")

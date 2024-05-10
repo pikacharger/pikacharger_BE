@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     private ProviderType providerType;
     private String socialId;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     public User(String username, String email, String nickname, ProviderType providerType){

@@ -82,24 +82,20 @@ public class ReviewServiceImpl implements ReviewService {
 
         boolean userIdMatch = false;
         if (userId != null) {
-            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+            userIdMatch = reviewRepository.existsByIdAndUserId(reviewId, userId);
         }
 
         return ReviewDetailResult.toDto(review, userIdMatch);
     }
 
     @Override
-    public ReviewDetailResult findByDetailToReviewId(Long reviewId) {
+    public ReviewDetailResult findByDetailToReviewId(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다. Review ID: " + reviewId));
 
-        Long userId = review.getUser().getId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
-
         boolean userIdMatch = false;
         if (userId != null) {
-            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+            userIdMatch = reviewRepository.existsByIdAndUserId(reviewId, userId);
         }
 
         return ReviewDetailResult.toDto(review, userIdMatch);
@@ -134,7 +130,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         boolean userIdMatch = false;
         if (userId != null) {
-            userIdMatch = chargerRepository.existsByIdAndUserId(reviewId, userId);
+            userIdMatch = reviewRepository.existsByIdAndUserId(reviewId, userId);
         }
 
         review.getImgList().clear();

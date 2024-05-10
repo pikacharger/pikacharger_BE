@@ -67,6 +67,7 @@ public class JwtUtil {
             "/api/login",
             "/api/mailauthCheck",
             "/api/mailSend",
+            "/ws/chatlog"
     };
 
     @PostConstruct

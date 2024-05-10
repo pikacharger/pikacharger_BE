@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService{
                         .phoneNumber(payload.getPhoneNumber())
                         .chargerType(payload.getChargerType())
                         .roles(Collections.singleton(Role.USER))
+                        .profileImage("https://pikacharger-bucket.s3.ap-northeast-2.amazonaws.com/images/%EC%9C%A0%EC%A0%80.png")
                         .build()
         );
 

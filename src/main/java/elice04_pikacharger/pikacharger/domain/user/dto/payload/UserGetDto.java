@@ -17,9 +17,9 @@ import java.util.Set;
 public class UserGetDto {
 
     private Long id;
-    private String name;
+    private String username;
     private String email;
-    private String nickname;
+    private String nickName;
     private String address;
     private String phoneNumber;
     private Set<Role> roles = new HashSet<>();

@@ -62,7 +62,7 @@ public class User extends BaseEntity {
         this.email = email != null ? email : "NO_EMAIL";
         this.nickname = nickname;
         this.password = "NO_PASS";
-        this.profileImage = profileImage != null ? profileImage : "NO_IMAGE";
+        this.profileImage = "https://pikacharger-bucket.s3.ap-northeast-2.amazonaws.com/images/%EC%9C%A0%EC%A0%80.png";
         this.roles = new HashSet<>();
         this.providerType = providerType;
 

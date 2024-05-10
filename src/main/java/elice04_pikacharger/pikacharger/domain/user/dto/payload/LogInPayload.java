@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.user.dto.payload;
 
+import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class LogInPayload {
     private String token;
     private String refreshToken;
-    private User user;
+    private UserResult userResult;
 }

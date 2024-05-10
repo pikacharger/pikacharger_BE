@@ -4,6 +4,7 @@ package elice04_pikacharger.pikacharger.domain.user.controller;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserCheckResult;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserFindResponse;
+import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.CustomUserDetails;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
@@ -59,7 +60,8 @@ public class UserController {
         AuthResponseDto authResponseDto = userService.signIn(payload);
 
         User user = userRepository.findByEmail(authResponseDto.getEmail()).orElseThrow();
-        LogInPayload logInPayload = new LogInPayload(authResponseDto.getJwtToken(), authResponseDto.getRefreshToken(), user);
+        UserResult userResult = new UserResult(user.getId(), user.getUsername(), user.getNickName(), user.getEmail());
+        LogInPayload logInPayload = new LogInPayload(authResponseDto.getJwtToken(), authResponseDto.getRefreshToken(), userResult);
         response.setHeader("Authorization",logInPayload.getToken());
         return  ResponseEntity
                 .status(HttpStatus.ACCEPTED)
@@ -145,7 +147,8 @@ public class UserController {
     @Operation(summary = "사용자 정보 업데이트")
     public ResponseEntity<UserResponseDto> updateUser(@RequestPart(value = "file", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateDto") UserEditPayload updateDto, @AuthenticationPrincipal Long userId) throws IOException{
         User user = userService.updateUser(userId, multipartFile ,updateDto);
-        return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
+        UserResult userResult = new UserResult(user.getId(), user.getUsername(), user.getNickName(), user.getEmail());
+        return new ResponseEntity<>(new UserResponseDto(userResult), HttpStatus.OK);
     }
 
     private void setRefreshCookie(HttpServletResponse response, String token) {
@@ -173,11 +176,13 @@ public class UserController {
 
     @GetMapping("/info")
     @Operation(summary = "토큰으로 유저 정보 받아오기")
-    public ResponseEntity<User> getUserByToken(HttpServletRequest request) {
+    public ResponseEntity<UserGetDto> getUserByToken(HttpServletRequest request) {
         String token = jwtUtil.extractJwtFromRequest(request);
         String email = jwtUtil.extractEmail(token).orElseThrow();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        UserGetDto userGetDto = new UserGetDto(user.getId(), user.getUsername(),user.getEmail(), user.getNickName(), user.getAddress(), user.getPhoneNumber(), user.getRoles(), user.getChargerType(), user.getProfileImage(),user.getFavorites());
+
+        return new ResponseEntity<>(userGetDto, HttpStatus.OK);
     }
 
 

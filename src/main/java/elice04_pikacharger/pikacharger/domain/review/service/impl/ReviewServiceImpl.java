@@ -122,6 +122,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Long modifiedReview(Long reviewId, ReviewModifyPayload reviewModifyPayload, Long userId, List<MultipartFile> multipartFiles) throws IOException {
+//        if(reviewModifyPayload.getContent().length() > 500){
+//            throw new IllegalArgumentException("리뷰는 500자 이하로만 작성할 수 있습니다.");
+//        }
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException("리뷰를 찾을 수 없습니다."));
 

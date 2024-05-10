@@ -36,14 +36,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         List<ChatRoomResponseDto> chatRoomResponseDto = new ArrayList<>();
         for (ChatRoom chatRoom : senderChatRooms) {
-            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getReceiverId(), chatRoom));
+            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getId(), chatRoom.getReceiverId(), chatRoom));
         }
         for (ChatRoom chatRoom : receiverChatRooms) {
-            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getUser(), chatRoom));
+            chatRoomResponseDto.add(ChatRoomResponseDto.toEntity(chatRoom.getId(), chatRoom.getUser(), chatRoom));
         }
         return chatRoomResponseDto;
     }
-
 
     @Override
     @Transactional
@@ -51,15 +50,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
-        ChatRoom chatRoom = ChatRoom.builder()
-                .charger(charger)
-                .user(user)
-                .receiverId(charger.getUser()) // 채팅방에 대상 사용자 추가
-                .build();
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByChargerIdAndUserId(chargerId, userId);
 
-        chatRoomRepository.save(chatRoom); // 채팅방 저장
+        if (existingChatRoom.isPresent()) {
+            return ChatRoomRequestDto.toDto(existingChatRoom.get()); // 이미 존재하는 채팅방 반환
+        } else {
+            ChatRoom chatRoom = ChatRoom.builder()
+                    .charger(charger)
+                    .user(user)
+                    .receiverId(charger.getUser()) // 채팅방에 대상 사용자 추가
+                    .build();
 
-        return ChatRoomRequestDto.toDto(chatRoom);
+            chatRoomRepository.save(chatRoom); // 채팅방 저장
+
+            return ChatRoomRequestDto.toDto(chatRoom);
+        }
     }
 
 

@@ -5,8 +5,6 @@ import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatLogService;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatRoomService;
-import elice04_pikacharger.pikacharger.exceptional.CustomException;
-import elice04_pikacharger.pikacharger.exceptional.ErrorCode;
 import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
 import elice04_pikacharger.pikacharger.util.ApiResult;
 import elice04_pikacharger.pikacharger.util.ApiUtils;
@@ -23,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

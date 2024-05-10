@@ -1,9 +1,9 @@
 package elice04_pikacharger.pikacharger.domain.chat.dto;
+
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

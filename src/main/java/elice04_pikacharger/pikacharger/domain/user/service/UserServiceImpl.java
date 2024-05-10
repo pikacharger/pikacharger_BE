@@ -159,7 +159,8 @@ public class UserServiceImpl implements UserService{
 
     public UserResponseDto findUserById(Long id){
         User findUser = userRepository.findById(id).orElseThrow();
-        return new UserResponseDto(findUser);
+        UserResult userResult = new UserResult(findUser.getId(), findUser.getUsername(), findUser.getNickName(), findUser.getEmail());
+        return new UserResponseDto(userResult);
     }
 
     @Transactional

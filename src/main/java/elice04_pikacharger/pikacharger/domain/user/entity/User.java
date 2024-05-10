@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
@@ -104,15 +105,19 @@ public class User extends BaseEntity {
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Favorite> favorites = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Charger> chargers = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ChatLog> chatLogs = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
 

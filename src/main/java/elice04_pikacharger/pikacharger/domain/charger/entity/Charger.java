@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.charger.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
@@ -43,6 +44,7 @@ public class Charger extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "charger", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)

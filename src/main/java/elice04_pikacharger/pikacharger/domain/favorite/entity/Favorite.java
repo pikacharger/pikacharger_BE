@@ -26,6 +26,7 @@ public class Favorite{
 
     @ManyToOne
     @JoinColumn(name = "charger_id")
+    @JsonBackReference
     private Charger charger;
 
     @Builder

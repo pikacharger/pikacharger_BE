@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.user.entity;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
+import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
@@ -112,10 +113,8 @@ public class User extends BaseEntity {
     private List<ChatLog> chatLogs = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Charger> chatRooms = new ArrayList<>();
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Charger> receivers = new ArrayList<>();
 
 
 }

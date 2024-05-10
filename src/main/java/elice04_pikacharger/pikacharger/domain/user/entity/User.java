@@ -1,7 +1,9 @@
 package elice04_pikacharger.pikacharger.domain.user.entity;
 
 
+import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;
 import jakarta.persistence.*;
@@ -99,6 +101,10 @@ public class User extends BaseEntity {
     }
 
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Favorite> favorites = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorite> favorites = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Charger> chargers = new ArrayList<>();
+
 }

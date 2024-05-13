@@ -26,8 +26,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try{
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-            MyTokenPayload payload = new MyTokenPayload(oAuth2User.getEmail(), oAuth2User.getName(), oAuth2User.getRole());
-            if(oAuth2User.getRole() == Role.GUEST){
+            MyTokenPayload payload = new MyTokenPayload(oAuth2User.getUserId(),oAuth2User.getEmail(), oAuth2User.getName(), oAuth2User.getRoles());
+            if(oAuth2User.getRoles().contains(Role.GUEST)){
                 String accessToken = jwtUtil.generateToken(payload);
                 response.addHeader(jwtUtil.getAccessHeader(),"Bearer " + accessToken);
                 //response.sendRedirect("oauth/sign-up");
@@ -42,7 +42,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException, ServletException {
-        MyTokenPayload payload = new MyTokenPayload(oAuth2User.getEmail(), oAuth2User.getName(), oAuth2User.getRole());
+        MyTokenPayload payload = new MyTokenPayload(oAuth2User.getUserId(),oAuth2User.getEmail(), oAuth2User.getName(), oAuth2User.getRoles());
         String accessToken = jwtUtil.generateToken(payload);
         String refreshToken = jwtUtil.generateRefreshToken();
         response.addHeader(jwtUtil.getAccessHeader(), "Bearer " + accessToken);

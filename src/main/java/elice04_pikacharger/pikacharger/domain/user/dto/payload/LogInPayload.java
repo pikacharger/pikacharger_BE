@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LogInPayload {
     private String token;
+    private String refreshToken;
     private User user;
 }

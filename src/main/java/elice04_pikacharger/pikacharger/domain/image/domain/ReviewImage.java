@@ -22,7 +22,7 @@ public class ReviewImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "review_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
@@ -36,13 +36,13 @@ public class ReviewImage extends BaseEntity {
         this.review = review;
     }
 
-    public String getImageUrl(){
-        return this.imageUrl;
-    }
-
     @Builder
     public ReviewImage(Review review, String imageUrl){
         this.review = review;
         this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl(){
+        return this.imageUrl;
     }
 }

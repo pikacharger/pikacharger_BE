@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChargerRepository extends JpaRepository<Charger, Long> {
@@ -17,7 +18,7 @@ public interface ChargerRepository extends JpaRepository<Charger, Long> {
             "        point(:longitude, :latitude)" +
             "    ) / 1000) AS distance " +
             "FROM charger " +
-            "HAVING distance < 2 " +
+            "HAVING distance < 1 " +
             "ORDER BY distance ASC",
             nativeQuery = true)
     List<Charger> findChargersNearby(@Param("latitude") double latitude, @Param("longitude") double longitude);
@@ -26,4 +27,5 @@ public interface ChargerRepository extends JpaRepository<Charger, Long> {
 
     List<Charger> findByUserId(Long userId);
 
+    Optional<Charger> findById(Long id);
 }

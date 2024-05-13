@@ -43,7 +43,7 @@
 
 ## DB 모델링
 
-(사진첨부)
+(사진첨부예정)
 
 <br>
 
@@ -81,20 +81,21 @@
 
 ## 백엔드 기술 스택
 
-- spring, jpa, mysql, Oauth2.0, jwt, aws s3, web socket
-- 서버 배포 : NGINX, Docker, AWS EC2
+- 백엔드 : Java 17, spring boot 3.2.4, jpa, Oauth2.0, jwt, aws s3, web socket
+- 데이터베이스 : AWS RDS(MySQL)
+- 서버 배포 : NGINX, Docker, AWS EC2, Redis
 
 <br>
 
 ## 프로젝트 사이트
 
-- Youtube 시연영상 : 영상주소
-- (프로젝트 이름) 배포 주소 : 사이트주소
+- Youtube 시연영상 : 영상주소 추가예정
+- 피카충전 주소 : [피카충전 링크](https://pikacharger.store/)
 
-(사이트 움짤 or 사진)
+(사이트 움짤 or 사진 추가예정)
 
 <br>
 
 ## API 명세서
 
-(명세서 주소)
+[스웨거 링크](http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/(%EC%B6%A9%EC%A0%84%EC%86%8C)/createCharger)

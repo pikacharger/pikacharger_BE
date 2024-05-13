@@ -1,6 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.chat.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 
@@ -32,12 +33,12 @@ public class ChatLog extends BaseEntity {
 
     private String messageContents;
 
-    public User getSender() {
-        return this.sender;
-    }
-
     public String getMessageContents() {
         return this.messageContents;
+    }
+
+    public void setMessageContents(String message) {
+        this.messageContents = message;
     }
 
     @Builder

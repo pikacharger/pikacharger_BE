@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService{
                         .phoneNumber(payload.getPhoneNumber())
                         .chargerType(payload.getChargerType())
                         .roles(Collections.singleton(Role.USER))
+                        .profileImage("https://pikacharger-bucket.s3.ap-northeast-2.amazonaws.com/images/%EC%9C%A0%EC%A0%80.png")
                         .build()
         );
 
@@ -69,9 +70,14 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public User updateUser(Long userId, MultipartFile profileImage, UserEditPayload payload) throws IOException {
         User user = userRepository.findById(userId).orElseThrow();
-        String imgUrl = "NO_IMAGE";
-        if(!profileImage.isEmpty() && profileImage != null){
+        String imgUrl = "";
+        if(profileImage != null){
             imgUrl = s3UploaderService.uploadSingleFile(profileImage,"images");
+        } else{
+            imgUrl = user.getProfileImage();
+        }
+        if(payload.getNickname() == null){
+            payload.setNickname(user.getNickName());
         }
         user.updateUser(payload, imgUrl);
         return user;
@@ -154,7 +160,8 @@ public class UserServiceImpl implements UserService{
 
     public UserResponseDto findUserById(Long id){
         User findUser = userRepository.findById(id).orElseThrow();
-        return new UserResponseDto(findUser);
+        UserResult userResult = new UserResult(findUser.getId(), findUser.getUsername(), findUser.getNickName(), findUser.getEmail());
+        return new UserResponseDto(userResult);
     }
 
     @Transactional

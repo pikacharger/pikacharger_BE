@@ -48,7 +48,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         ChatLogResponseDto chatLogResponseDto = mapper.readValue(payload, ChatLogResponseDto.class);
         log.info("session {}", chatLogResponseDto.toString());
 
-        Long chatRoomId = chatLogResponseDto.getChatRoom().getId();
+        Long chatRoomId = chatLogResponseDto.getChatRoomId();
 
         if(!chatRoomSessionMap.containsKey(chatRoomId)){
             chatRoomSessionMap.put(chatRoomId,new HashSet<>());

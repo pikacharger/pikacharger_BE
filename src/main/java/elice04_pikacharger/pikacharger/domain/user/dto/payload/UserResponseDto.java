@@ -1,5 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.user.dto.payload;
 
+import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +16,10 @@ public class UserResponseDto {
     private String email;
 
     @Builder
-    public UserResponseDto(User user) {
-        this.id = user.getId();
-        this.userName = user.getUsername();
-        this.email = user.getEmail();
+    public UserResponseDto(UserResult userResult) {
+        this.id = userResult.getId();
+        this.userName = userResult.getUsername();
+        this.email = userResult.getEmail();
     }
 }
 

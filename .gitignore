@@ -17,7 +17,7 @@ application-secret.yml
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-*.yml
+
 
 ### IntelliJ IDEA ###
 .idea

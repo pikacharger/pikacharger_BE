@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.config;
+package elice04_pikacharger.pikacharger.domain.image.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

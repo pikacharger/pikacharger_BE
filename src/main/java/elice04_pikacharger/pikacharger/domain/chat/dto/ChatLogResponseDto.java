@@ -22,7 +22,7 @@ public class ChatLogResponseDto{
     private Long senderId;
     private String senderNickName;
     private String senderProfileImg;
-    private Long userId;
+    private Long receiverId;
     private String receiverNickName;
     private String receiverProfileImg;
     private Long chatRoomId;
@@ -44,7 +44,7 @@ public class ChatLogResponseDto{
                 .senderId(chatLog.getSender().getId())
                 .senderNickName(chatLog.getSender().getNickName())
                 .senderProfileImg(chatLog.getSender().getProfileImage())
-                .userId(chatLog.getChatRoom().getUser().getId())
+                .receiverId(chatLog.getChatRoom().getUser().getId())
                 .receiverNickName(chatLog.getChatRoom().getUser().getNickName())
                 .receiverProfileImg(chatLog.getChatRoom().getUser().getProfileImage())
                 .chatRoomId(chatLog.getChatRoom().getId())
@@ -53,7 +53,7 @@ public class ChatLogResponseDto{
     }
 
     @Builder
-    public ChatLogResponseDto(Long chatLogId, String messageContents, Long chargerId, String chargerName, String chargerImg, String chargerLocation, Long senderId, String senderNickName, String senderProfileImg, Long userId, String receiverNickName, String receiverProfileImg,  Long chatRoomId, LocalDateTime createDate) {
+    public ChatLogResponseDto(Long chatLogId, String messageContents, Long chargerId, String chargerName, String chargerImg, String chargerLocation, Long senderId, String senderNickName, String senderProfileImg, Long receiverId, String receiverNickName, String receiverProfileImg, Long chatRoomId, LocalDateTime createDate) {
         this.chatLogId = chatLogId;
         this.messageContents = messageContents;
         this.chargerId = chargerId;
@@ -63,7 +63,7 @@ public class ChatLogResponseDto{
         this.senderId = senderId;
         this.senderNickName = senderNickName;
         this.senderProfileImg = senderProfileImg;
-        this.userId = userId;
+        this.receiverId = receiverId;
         this.receiverNickName = receiverNickName;
         this.receiverProfileImg = receiverProfileImg;
         this.chatRoomId = chatRoomId;

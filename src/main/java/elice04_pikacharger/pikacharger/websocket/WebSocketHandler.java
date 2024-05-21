@@ -30,13 +30,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("{} 연결되었습니다.", session.getId());
+        System.out.printf("%s 연결되었습니다.\n", session.getId());
         sessions.add(session);
-
-        //프론트에 알림 보내기
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("type", "connection");
-        payload.put("message", "웹소켓에 연결되었습니다.");
-        sendMessage(session, payload);
     }
 
     // 메시지 전송 부분
@@ -65,13 +60,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         log.info("{} 연결이 끊겼습니다.", session.getId());
+        System.out.printf("%s 연결이 끊겼습니다.\n", session.getId());
         sessions.remove(session);
-
-        //프론트에 알림 보내기
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("type", "connection");
-        payload.put("message", "웹소켓 연결이 끊겼습니다.");
-        sendMessage(session, payload);
     }
 
     private void removeClosedSession(Set<WebSocketSession> chatRoomSession) {

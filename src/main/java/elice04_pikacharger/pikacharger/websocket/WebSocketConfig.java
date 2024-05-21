@@ -14,8 +14,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws/chatlog")
+        registry.addHandler(webSocketHandler, "/pikachat")
                 .setAllowedOrigins("*");
-//                .withSockJS();
     }
 }

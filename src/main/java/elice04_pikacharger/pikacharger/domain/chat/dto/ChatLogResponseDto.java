@@ -20,9 +20,11 @@ public class ChatLogResponseDto{
     private String chargerImg;
     private String chargerLocation;
     private Long senderId;
-    private String nickName;
-    private String profileImg;
+    private String senderNickName;
+    private String senderProfileImg;
     private Long userId;
+    private String receiverNickName;
+    private String receiverProfileImg;
     private Long chatRoomId;
     private LocalDateTime createDate;
 
@@ -40,16 +42,18 @@ public class ChatLogResponseDto{
                 .chargerImg(firstChargerImg)
                 .chargerLocation(chatLog.getChatRoom().getCharger().getChargerLocation())
                 .senderId(chatLog.getSender().getId())
-                .nickName(chatLog.getSender().getNickName())
-                .profileImg(chatLog.getSender().getProfileImage())
+                .senderNickName(chatLog.getSender().getNickName())
+                .senderProfileImg(chatLog.getSender().getProfileImage())
                 .userId(chatLog.getChatRoom().getUser().getId())
+                .receiverNickName(chatLog.getChatRoom().getUser().getNickName())
+                .receiverProfileImg(chatLog.getChatRoom().getUser().getProfileImage())
                 .chatRoomId(chatLog.getChatRoom().getId())
                 .createDate(chatLog.getCreateDate())
                 .build();
     }
 
     @Builder
-    public ChatLogResponseDto(Long chatLogId, String messageContents, Long chargerId, String chargerName, String chargerImg, String chargerLocation, Long senderId, String nickName, String profileImg, Long userId, Long chatRoomId, LocalDateTime createDate) {
+    public ChatLogResponseDto(Long chatLogId, String messageContents, Long chargerId, String chargerName, String chargerImg, String chargerLocation, Long senderId, String senderNickName, String senderProfileImg, Long userId, String receiverNickName, String receiverProfileImg,  Long chatRoomId, LocalDateTime createDate) {
         this.chatLogId = chatLogId;
         this.messageContents = messageContents;
         this.chargerId = chargerId;
@@ -57,9 +61,11 @@ public class ChatLogResponseDto{
         this.chargerImg = chargerImg;
         this.chargerLocation = chargerLocation;
         this.senderId = senderId;
-        this.nickName = nickName;
-        this.profileImg = profileImg;
+        this.senderNickName = senderNickName;
+        this.senderProfileImg = senderProfileImg;
         this.userId = userId;
+        this.receiverNickName = receiverNickName;
+        this.receiverProfileImg = receiverProfileImg;
         this.chatRoomId = chatRoomId;
         this.createDate = createDate;
     }

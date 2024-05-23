@@ -180,7 +180,7 @@ public class ChargerServiceImpl implements ChargerService {
 
     @Override
     public List<MyChargerResponseDto> myChargers(Long userId) {
-        return chargerRepository.findByUserId(userId).stream()
+        return chargerRepository.findByUserIdOrderByCreateDateDesc(userId).stream()
                 .map(MyChargerResponseDto::toDto)
                 .collect(Collectors.toList());
     }

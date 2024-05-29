@@ -1,7 +1,6 @@
 package elice04_pikacharger.pikacharger.domain.chat.service;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.repository.ChatRoomRepository;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
@@ -46,14 +45,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional
-    public ChatRoomRequestDto save(Long chargerId, Long userId) {
+    public ChatRoomResponseDto save(Long chargerId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByChargerIdAndUserId(chargerId, userId);
 
         if (existingChatRoom.isPresent()) {
-            return ChatRoomRequestDto.toDto(existingChatRoom.get()); // 이미 존재하는 채팅방 반환
+            return ChatRoomResponseDto.toDto(existingChatRoom.get()); // 이미 존재하는 채팅방 반환
         } else {
             ChatRoom chatRoom = ChatRoom.builder()
                     .charger(charger)
@@ -63,7 +62,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
             chatRoomRepository.save(chatRoom); // 채팅방 저장
 
-            return ChatRoomRequestDto.toDto(chatRoom);
+            return ChatRoomResponseDto.toDto(chatRoom);
         }
     }
 

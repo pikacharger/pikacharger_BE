@@ -1,6 +1,5 @@
 package elice04_pikacharger.pikacharger.domain.chat.controller;
 
-import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomRequestDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatLogResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatLogService;
@@ -59,9 +58,9 @@ public class ChatRoomController {
             @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ChatRoomResponseDto.class)))
     })
     @PostMapping("")
-    public ResponseEntity<ChatRoomRequestDto> createChatRoom(@RequestParam Long chargerId, @AuthenticationPrincipal Long userId) {
+    public ResponseEntity<ChatRoomResponseDto> createChatRoom(@RequestParam Long chargerId, @AuthenticationPrincipal Long userId) {
 
-        ChatRoomRequestDto chatroomId = chatRoomService.save(chargerId, userId);
+        ChatRoomResponseDto chatroomId = chatRoomService.save(chargerId, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(chatroomId);
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ChatLogController {
     private final ChatLogService chatLogService;
 
-    @Operation(summary = "메시지 전송", description = "메시지를 해당 채팅방에 전송한다", tags = { "Chat" })
+    @Operation(summary = "메시지 저장", description = "웹소켓 메시지 정보를 DB에 저장한다", tags = { "Chat" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation")
     })

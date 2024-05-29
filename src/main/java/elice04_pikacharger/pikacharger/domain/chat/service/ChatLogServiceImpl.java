@@ -42,7 +42,7 @@ public class ChatLogServiceImpl implements ChatLogService {
         return chatLogResponseList;
     }
 
-    //메시지 생성
+    //메시지 저장
     @Override
     @Transactional
     public Long save(Long userId, final Long chatRoomId, final ChatLogRequestDto requestDto) {

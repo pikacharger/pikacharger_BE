@@ -12,6 +12,7 @@ public interface ChatLogService {
     // 전체 메시지 조회
     List<ChatLogResponseDto> getAllChatLog(Long chatRoomId, Long userId);
 
+    // 메시지 저장
     @Transactional
     Long save(Long userId, Long chatRoomId, ChatLogRequestDto requestDto);
 

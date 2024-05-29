@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatLogRequestDto {
 
+    private ChatRoom chatRoom;
+    private User user;
     private String messageContents;
 
     public ChatLog toEntity(ChatRoom chatRoom, User sender) {

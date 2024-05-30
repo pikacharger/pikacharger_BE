@@ -17,6 +17,18 @@ spring:
 server:
   port: 8080
   serverAddress: localhost
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /api/actuator
+  server:
+    port: 9090
 
 serverName: local_server
 ---
@@ -29,6 +41,18 @@ spring:
 server:
   port: 8080
   serverAddress: 43.203.7.98
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /api/actuator
+  server:
+    port: 9090
 
 serverName: blue_server
 
@@ -42,6 +66,18 @@ spring:
 server:
   port: 8081
   serverAddress: 43.203.7.98
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /api/actuator
+  server:
+    port: 9090
 
 serverName: green_server
 

@@ -67,7 +67,8 @@ public class JwtUtil {
             "/api/login",
             "/api/mailauthCheck",
             "/api/mailSend",
-            "/pikachat"
+            "/pikachat",
+            "/api/actuator/prometheus"
     };
 
     @PostConstruct

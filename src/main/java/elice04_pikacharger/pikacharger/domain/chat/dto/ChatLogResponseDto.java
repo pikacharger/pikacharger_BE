@@ -13,60 +13,35 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ChatLogResponseDto{
+    private Long chatRoomId;
     private Long chatLogId;
     private String messageContents;
-    private Long chargerId;
-    private String chargerName;
-    private String chargerImg;
-    private String chargerLocation;
-    private Long senderId;
-    private String senderNickName;
-    private String senderProfileImg;
-    private Long receiverId;
-    private String receiverNickName;
-    private String receiverProfileImg;
-    private Long chatRoomId;
     private LocalDateTime createDate;
+    private Long userId;
+    private String userProfileImg;
+    private String userNickName;
 
     public static ChatLogResponseDto toEntity(ChatLog chatLog) {
-        String firstChargerImg = "";
-//        if (chatLog.getChatRoom().getCharger().getChargerImages() != null && !chatLog.getChatRoom().getCharger().getChargerImages().isEmpty()) {
-//            firstChargerImg = chatLog.getChatRoom().getCharger().getChargerImages().get(0);
-//        }
 
         return ChatLogResponseDto.builder()
+                .chatRoomId(chatLog.getChatRoom().getId())
                 .chatLogId(chatLog.getId())
                 .messageContents(chatLog.getMessageContents())
-                .chargerId(chatLog.getChatRoom().getCharger().getId())
-                .chargerName(chatLog.getChatRoom().getCharger().getChargerName())
-                .chargerImg(firstChargerImg)
-                .chargerLocation(chatLog.getChatRoom().getCharger().getChargerLocation())
-                .senderId(chatLog.getSender().getId())
-                .senderNickName(chatLog.getSender().getNickName())
-                .senderProfileImg(chatLog.getSender().getProfileImage())
-                .receiverId(chatLog.getChatRoom().getUser().getId())
-                .receiverNickName(chatLog.getChatRoom().getUser().getNickName())
-                .receiverProfileImg(chatLog.getChatRoom().getUser().getProfileImage())
-                .chatRoomId(chatLog.getChatRoom().getId())
                 .createDate(chatLog.getCreateDate())
+                .userId(chatLog.getSender().getId())
+                .userProfileImg(chatLog.getSender().getProfileImage())
+                .userNickName(chatLog.getSender().getNickName())
                 .build();
     }
 
     @Builder
-    public ChatLogResponseDto(Long chatLogId, String messageContents, Long chargerId, String chargerName, String chargerImg, String chargerLocation, Long senderId, String senderNickName, String senderProfileImg, Long receiverId, String receiverNickName, String receiverProfileImg, Long chatRoomId, LocalDateTime createDate) {
+    public ChatLogResponseDto(Long chatLogId, String messageContents, LocalDateTime createDate, Long userId, String userNickName, String userProfileImg, Long chatRoomId) {
+        this.chatRoomId = chatRoomId;
         this.chatLogId = chatLogId;
         this.messageContents = messageContents;
-        this.chargerId = chargerId;
-        this.chargerName = chargerName;
-        this.chargerImg = chargerImg;
-        this.chargerLocation = chargerLocation;
-        this.senderId = senderId;
-        this.senderNickName = senderNickName;
-        this.senderProfileImg = senderProfileImg;
-        this.receiverId = receiverId;
-        this.receiverNickName = receiverNickName;
-        this.receiverProfileImg = receiverProfileImg;
-        this.chatRoomId = chatRoomId;
         this.createDate = createDate;
+        this.userId = userId;
+        this.userProfileImg = userProfileImg;
+        this.userNickName = userNickName;
     }
 }

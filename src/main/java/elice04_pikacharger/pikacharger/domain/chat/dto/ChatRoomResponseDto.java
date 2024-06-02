@@ -16,11 +16,6 @@ public class ChatRoomResponseDto {
     private LocalDateTime createDate;
     private String lastMessage;
 
-    public static ChatRoomResponseDto toDto(ChatRoom chatRoom) {
-        return ChatRoomResponseDto.builder()
-                .chatRoomId(chatRoom.getId())
-                .build();
-    }
 
     public static ChatRoomResponseDto toEntity(Long chatRoomId, User user, ChatRoom chatRoom, ChatLog lastChatLog) {
         return ChatRoomResponseDto.builder()

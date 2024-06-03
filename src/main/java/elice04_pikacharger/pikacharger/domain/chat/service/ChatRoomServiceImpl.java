@@ -2,6 +2,8 @@ package elice04_pikacharger.pikacharger.domain.chat.service;
 
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.dto.ChatRoomResponseDto;
+import elice04_pikacharger.pikacharger.domain.chat.dto.CreateChatRoomResponseDto;
+import elice04_pikacharger.pikacharger.domain.chat.dto.SingleChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.repository.ChatRoomRepository;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
@@ -26,6 +28,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final UserRepository userRepository;
     private final ChargerRepository chargerRepository;
 
+    // 단일 채팅방 조회
+    @Override
+    @Transactional
+    public SingleChatRoomResponseDto findById(final Long id) {
+        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 채팅방입니다. id = " + id));
+        return SingleChatRoomResponseDto.toEntity(entity);
+    }
+
     // 전체 채팅방 조회
     @Override
     @Transactional
@@ -45,14 +56,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional
-    public ChatRoomResponseDto save(Long chargerId, Long userId) {
+    public CreateChatRoomResponseDto save(Long chargerId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
         Charger charger = chargerRepository.findById(chargerId).orElseThrow(() -> new NoSuchElementException("해당하는 충전소가 존재하지 않습니다"));
 
         Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByChargerIdAndUserId(chargerId, userId);
 
         if (existingChatRoom.isPresent()) {
-            return ChatRoomResponseDto.toDto(existingChatRoom.get()); // 이미 존재하는 채팅방 반환
+            return CreateChatRoomResponseDto.toDto(existingChatRoom.get()); // 이미 존재하는 채팅방 반환
         } else {
             ChatRoom chatRoom = ChatRoom.builder()
                     .charger(charger)
@@ -62,32 +73,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
             chatRoomRepository.save(chatRoom); // 채팅방 저장
 
-            return ChatRoomResponseDto.toDto(chatRoom);
+            return CreateChatRoomResponseDto.toDto(chatRoom);
         }
     }
 
-
-    //TODO: 마지막 메시지 조회
-//    @Override
-//    @Transactional
-//    public ChatLog getLastChatLog(Long id) {
-//        ChatRoom chatRoom = chatRoomRepository.findByRoomId(id);
-//        if (chatRoom == null) {
-//            throw new IllegalArgumentException("채팅방이 존재하지 않습니다.");
-//        }
-//        return chatRoom.getLastChatLog();
-//    }
-
-    // 마지막 메시지를 채팅방에서 업데이트
-//    @Override
-//    @Transactional
-//    public Long update(final Long id, ChatRoomRequestDto requestDto) {
-//        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
-//        return entity.update(requestDto);
-//    }
-
-    //TODO: 채팅방 삭제 -> 이 로직은 전체 유저에게서 채팅방 삭제
+    // TODO : 채팅방 삭제 -> 이 로직은 전체 유저에게서 채팅방 삭제하고 있다
+    // TODO : 삭제를 요청한 유저의 채팅방에서만 삭제하기
 //    @Override
 //    public void delete(final Long id) {
 //        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(

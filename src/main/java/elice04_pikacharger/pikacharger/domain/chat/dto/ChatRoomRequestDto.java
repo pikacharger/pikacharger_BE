@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChatRoomRequestDto { //list 반환
+public class ChatRoomRequestDto {
     private Long chatRoomId;
     private Long chargerId;
     private Long senderId;

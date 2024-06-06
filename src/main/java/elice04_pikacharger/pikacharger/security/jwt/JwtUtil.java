@@ -68,8 +68,8 @@ public class JwtUtil {
             "/api/mailauthCheck",
             "/api/mailSend",
             "/pikachat",
-            "/api/actuator/**"
-            ,"/actuator/**"
+            "/api/actuator/**",
+            "/actuator/**"
     };
 
     @PostConstruct

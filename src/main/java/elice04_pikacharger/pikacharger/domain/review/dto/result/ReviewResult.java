@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Component
 @Getter
-@Setter
 @NoArgsConstructor
 public class ReviewResult {
     private Long reviewId;

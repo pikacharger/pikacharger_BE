@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.exceptional;
+package elice04_pikacharger.pikacharger.domain.common.exceptional;
 
 import org.springframework.http.HttpStatus;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum JwtErrorCode implements ErrorCode{
     EXPIRED_ACCESS_TOKEN (HttpStatus.UNAUTHORIZED, "만료된 jwt 토큰입니다.");
 
     private final HttpStatus status;

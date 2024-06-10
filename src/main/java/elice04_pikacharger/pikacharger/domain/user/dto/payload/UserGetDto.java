@@ -2,6 +2,7 @@ package elice04_pikacharger.pikacharger.domain.user.dto.payload;
 
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.user.entity.Role;
+import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -26,4 +27,12 @@ public class UserGetDto {
     private String chargerType;
     private String profileImage;
     private List<Favorite> favorites = new ArrayList<>();
+
+    public UserGetDto(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.nickName = user.getNickName();
+        this.profileImage = user.getProfileImage();
+    }
 }

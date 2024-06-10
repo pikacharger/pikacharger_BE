@@ -1,21 +1,19 @@
 package elice04_pikacharger.pikacharger.domain.user.service;
 
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import elice04_pikacharger.pikacharger.domain.image.service.S3UploaderService;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.*;
 import elice04_pikacharger.pikacharger.domain.user.dto.result.UserResult;
 import elice04_pikacharger.pikacharger.domain.user.entity.Role;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import elice04_pikacharger.pikacharger.domain.user.repository.UserRepository;
-import elice04_pikacharger.pikacharger.exceptional.InvalidPasswordException;
+import elice04_pikacharger.pikacharger.domain.common.exceptional.InvalidPasswordException;
 import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
 import elice04_pikacharger.pikacharger.security.jwt.MyTokenPayload;
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

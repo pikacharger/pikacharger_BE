@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.domain.common.dto.result;
+package elice04_pikacharger.pikacharger.domain.common.dto;
 
 
 import lombok.AllArgsConstructor;

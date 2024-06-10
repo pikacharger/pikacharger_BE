@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatLog;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
-import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.common.global.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.favorite.entity.Favorite;
 import elice04_pikacharger.pikacharger.domain.review.domain.Review;
 import elice04_pikacharger.pikacharger.domain.user.dto.payload.UserEditPayload;

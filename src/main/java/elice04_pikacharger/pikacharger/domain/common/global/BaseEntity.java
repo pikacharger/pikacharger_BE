@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.domain.common;
+package elice04_pikacharger.pikacharger.domain.common.global;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

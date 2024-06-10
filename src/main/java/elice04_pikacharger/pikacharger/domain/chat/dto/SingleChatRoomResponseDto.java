@@ -1,6 +1,8 @@
 package elice04_pikacharger.pikacharger.domain.chat.dto;
 
+import elice04_pikacharger.pikacharger.domain.chargertype.entity.ChargerType;
 import elice04_pikacharger.pikacharger.domain.chat.entity.ChatRoom;
+import elice04_pikacharger.pikacharger.domain.image.domain.ChargerImage;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,15 +10,16 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class SingleChatRoomResponseDto {
     private Long chargerId;
     private String chargerName;
-    private String chargerImg;
-    private String chargingSpeed;
-    private LocalDateTime createDate;
+    private List<String> chargerImg;
+    private String chargingType;
     private List<UserInfo> user;
+    private LocalDateTime createDate;
 
     @Data
     @Builder
@@ -25,11 +28,14 @@ public class SingleChatRoomResponseDto {
     }
 
     public static SingleChatRoomResponseDto toEntity(ChatRoom chatRoom) {
-        // TODO: 첫번째 충전기 사진만 보내고 없을 시 빈문자열 반환
-        String firstChargerImg = "";
-//        if (chatLog.getChatRoom().getCharger().getChargerImages() != null && !chatLog.getChatRoom().getCharger().getChargerImages().isEmpty()) {
-//            firstChargerImg = chatLog.getChatRoom().getCharger().getChargerImages().get(0);
-//        }
+
+        List<String> chargerImg = chatRoom.getCharger().getChargerImages().stream()
+                .map(ChargerImage::getImageUrl)
+                .collect(Collectors.toList());
+
+        String chargingType = chatRoom.getCharger().getChargerTypes().stream()
+                .map(ChargerType::getType)
+                .collect(Collectors.joining(","));
 
         List<UserInfo> user = Arrays.asList(
                 UserInfo.builder().id(chatRoom.getUser().getId()).build(),
@@ -39,20 +45,20 @@ public class SingleChatRoomResponseDto {
         return SingleChatRoomResponseDto.builder()
                 .chargerId(chatRoom.getCharger().getId())
                 .chargerName(chatRoom.getCharger().getChargerName())
-                .chargerImg(firstChargerImg)
-                .chargingSpeed(chatRoom.getCharger().getChargingSpeed())
-                .createDate(chatRoom.getCreateDate())
+                .chargerImg(chargerImg)
+                .chargingType(chargingType)
                 .user(user)
+                .createDate(chatRoom.getCreateDate())
                 .build();
     }
 
     @Builder
-    public SingleChatRoomResponseDto(Long chargerId, String chargerName, String chargerImg, String chargingSpeed, LocalDateTime createDate, List<UserInfo> user) {
+    public SingleChatRoomResponseDto(Long chargerId, String chargerName, List<String> chargerImg, String chargingType, List<UserInfo> user, LocalDateTime createDate) {
         this.chargerId = chargerId;
         this.chargerName = chargerName;
         this.chargerImg = chargerImg;
-        this.chargingSpeed = chargingSpeed;
-        this.createDate = createDate;
+        this.chargingType = chargingType;
         this.user = user;
+        this.createDate = createDate;
     }
 }

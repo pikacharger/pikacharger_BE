@@ -44,18 +44,18 @@ public class CommentController {
 //        return ;
     }
 
-    // 특정 리뷰 ID의 댓글 목록을 가져오는 엔드포인트
-    @GetMapping("/review/{reviewId}")
-    public ResponseEntity<List<CommentResponseDto>> getCommentsByReviewId(@PathVariable Long reviewId) {
-        List<CommentResponseDto> comments = commentService.findCommentsByReviewId(reviewId);
-        return ResponseEntity.ok(comments);
-    }
-
-    // 특정 댓글 ID로 댓글을 조회하는 엔드포인트
-    @GetMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> getCommentById(@PathVariable Long commentId) {
-        CommentResponseDto comment = commentService.findCommentById(commentId);
-        return ResponseEntity.ok(comment);
-    }
+//    // 특정 리뷰 ID의 댓글 목록을 가져오는 엔드포인트
+//    @GetMapping("/review/{reviewId}")
+//    public ResponseEntity<List<CommentResponseDto>> getCommentsByReviewId(@PathVariable Long reviewId) {
+//        List<CommentResponseDto> comments = commentService.findCommentsByReviewId(reviewId);
+//        return ResponseEntity.ok(comments);
+//    }
+//
+//    // 특정 댓글 ID로 댓글을 조회하는 엔드포인트
+//    @GetMapping("/{commentId}")
+//    public ResponseEntity<CommentResponseDto> getCommentById(@PathVariable Long commentId) {
+//        CommentResponseDto comment = commentService.findCommentById(commentId);
+//        return ResponseEntity.ok(comment);
+//    }
 
 }

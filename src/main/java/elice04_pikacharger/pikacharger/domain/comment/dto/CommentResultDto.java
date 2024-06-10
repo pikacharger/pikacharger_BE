@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CommentResultDto {
-    private Long userId;
-    private Long parentId;
     private String content;
+    private Long parentId;
 
-    public CommentResultDto(String content){
+    public CommentResultDto(String content, Long parentId){
         this.content = content;
+        this.parentId = parentId;
     }
-
 }

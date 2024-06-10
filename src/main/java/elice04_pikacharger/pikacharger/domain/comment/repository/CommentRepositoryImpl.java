@@ -3,6 +3,7 @@ package elice04_pikacharger.pikacharger.domain.comment.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import elice04_pikacharger.pikacharger.domain.comment.domain.Comment;
 import elice04_pikacharger.pikacharger.domain.comment.dto.CommentResponseDto;
+import elice04_pikacharger.pikacharger.domain.comment.repository.CommentCustomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import static elice04_pikacharger.pikacharger.domain.comment.domain.QComment.com
 
 @RequiredArgsConstructor
 @Repository
-public class CommentRepositoryImpl implements CommentCustomRepository{
+public class CommentRepositoryImpl implements CommentCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 

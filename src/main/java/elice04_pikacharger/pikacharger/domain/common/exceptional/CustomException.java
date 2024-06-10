@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.exceptional;
+package elice04_pikacharger.pikacharger.domain.common.exceptional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

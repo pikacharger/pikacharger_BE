@@ -2,7 +2,7 @@ package elice04_pikacharger.pikacharger.domain.review.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import elice04_pikacharger.pikacharger.domain.charger.entity.Charger;
-import elice04_pikacharger.pikacharger.domain.common.BaseEntity;
+import elice04_pikacharger.pikacharger.domain.common.global.BaseEntity;
 import elice04_pikacharger.pikacharger.domain.image.domain.ReviewImage;
 import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import jakarta.persistence.*;

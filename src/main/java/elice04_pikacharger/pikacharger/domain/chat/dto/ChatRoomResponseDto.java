@@ -7,18 +7,23 @@ import elice04_pikacharger.pikacharger.domain.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
+@Builder
 public class ChatRoomResponseDto {
     private Long chatRoomId;
-    private Long userId;
-    private String userProfileImg;
-    private String userNickname;
-    private Long receiverId;
-    private String receiverProfileImg;
-    private String receiverNickname;
+    private List<UserProfile> users;
     private LocalDateTime createDate;
     private String lastMessage;
+
+    @Data
+    @AllArgsConstructor
+    public static class UserProfile {
+        private Long userId;
+        private String userProfileImg;
+        private String userNickname;
+    }
 
     public static ChatRoomResponseDto toEntity(ChatRoom chatRoom) {
         ChatLog lastChatLog = chatRoom.getLastChatLog();
@@ -29,28 +34,22 @@ public class ChatRoomResponseDto {
             throw new IllegalArgumentException("User and Receiver cannot be null");
         }
 
+        List<UserProfile> userProfiles = List.of(
+                new UserProfile(user.getId(), user.getProfileImage(), user.getNickName()),
+                new UserProfile(receiver.getId(), receiver.getProfileImage(), receiver.getNickName())
+        );
+
         return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
-                .userId(user.getId())
-                .userProfileImg(user.getProfileImage())
-                .userNickname(user.getNickName())
-                .receiverId(receiver.getId())
-                .receiverProfileImg(receiver.getProfileImage())
-                .receiverNickname(receiver.getNickName())
+                .users(userProfiles)
                 .createDate(chatRoom.getCreateDate())
                 .lastMessage(lastChatLog != null ? lastChatLog.getMessageContents() : "대화를 기다리고 있어요. 무엇이든 물어보세요!")
                 .build();
     }
 
-    @Builder
-    public ChatRoomResponseDto(Long chatRoomId, Long userId, String userProfileImg, String userNickname, LocalDateTime createDate, String lastMessage, Long receiverId, String receiverProfileImg, String receiverNickname) {
+    public ChatRoomResponseDto(Long chatRoomId, List<UserProfile> users, LocalDateTime createDate, String lastMessage) {
         this.chatRoomId = chatRoomId;
-        this.userId = userId;
-        this.userProfileImg = userProfileImg;
-        this.userNickname = userNickname;
-        this.receiverId = receiverId;
-        this.receiverProfileImg = receiverProfileImg;
-        this.receiverNickname = receiverNickname;
+        this.users = users;
         this.createDate = createDate;
         this.lastMessage = lastMessage;
     }

@@ -29,12 +29,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
     // 소켓 연결 확인하기
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("{} 연결되었습니다.", session.getId());
-        System.out.printf("%s 연결되었습니다.\n", session.getId());
+        String uri = session.getUri().toString();
+        Long chatRoomId = extractChatRoomId(uri);
+        if (chatRoomId == null) {
+            session.close(CloseStatus.BAD_DATA);
+            return;
+        }
+
+        log.info("{} 연결되었습니다.", session.getId(), chatRoomId);
+        System.out.printf("%s 연결되었습니다.\n", session.getId(), chatRoomId);
         sessions.add(session);
+
+        chatRoomSessionMap.computeIfAbsent(chatRoomId, k -> new HashSet<>()).add(session);
     }
 
-    // 메시지 전송 부분
+    // 클라이언트로부터 수신된 메시지를 textMessage로 받아서 처리하고 변환
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
@@ -45,23 +54,25 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         Long chatRoomId = chatLogResponseDto.getChatRoomId();
 
-        if(!chatRoomSessionMap.containsKey(chatRoomId)){
-            chatRoomSessionMap.put(chatRoomId,new HashSet<>());
-        }
         Set<WebSocketSession> chatRoomSession = chatRoomSessionMap.get(chatRoomId);
-
-        if (chatRoomSession.size()>=3) {
-            removeClosedSession(chatRoomSession);
+        if (chatRoomSession == null) {
+            chatRoomSession = new HashSet<>();
+            chatRoomSessionMap.put(chatRoomId, chatRoomSession);
         }
+
+        removeClosedSession(chatRoomSession);
+
         sendLogToChatRoom(chatLogResponseDto, chatRoomSession);
     }
 
-    // 소켓 종료 확인하기
+// 소켓 종료 확인하기
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         log.info("{} 연결이 끊겼습니다.", session.getId());
         System.out.printf("%s 연결이 끊겼습니다.\n", session.getId());
         sessions.remove(session);
+
+        chatRoomSessionMap.values().forEach(chatRoomSession -> chatRoomSession.remove(session));
     }
 
     private void removeClosedSession(Set<WebSocketSession> chatRoomSession) {
@@ -69,14 +80,27 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private void sendLogToChatRoom(ChatLogResponseDto chatLogResponseDto, Set<WebSocketSession> chatRoomSession) {
-        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, chatLogResponseDto));//2
+        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, chatLogResponseDto));
     }
 
+    // 메시지 전송
     public <T> void sendMessage(WebSocketSession session, T message) {
         try{
             session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    // URI에서 chatRoomId 추출
+    private Long extractChatRoomId(String uri) {
+        try {
+            String[] parts = uri.split("/");
+            String chatRoomIdStr = parts[parts.length - 1];
+            return Long.parseLong(chatRoomIdStr);
+        } catch (Exception e) {
+            log.error("Failed to extract chatRoomId from URI: {}", uri, e);
+            return null;
         }
     }
 }

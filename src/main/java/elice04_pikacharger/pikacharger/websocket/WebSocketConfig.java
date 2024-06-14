@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/pikachat")
-                .setAllowedOrigins("*");
+        registry.addHandler(webSocketHandler, "/pikachat/chatroom/{chatroomId}")
+                .setAllowedOrigins("https://pikacharger.store");
     }
 }

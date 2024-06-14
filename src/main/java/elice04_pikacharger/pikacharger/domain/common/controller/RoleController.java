@@ -1,8 +1,7 @@
 package elice04_pikacharger.pikacharger.domain.common.controller;
 
-import elice04_pikacharger.pikacharger.domain.common.Role;
 import elice04_pikacharger.pikacharger.domain.common.RoleService;
-import elice04_pikacharger.pikacharger.domain.common.dto.result.RoleResult;
+import elice04_pikacharger.pikacharger.domain.common.dto.RoleResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

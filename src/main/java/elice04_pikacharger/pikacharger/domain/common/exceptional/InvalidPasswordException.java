@@ -1,4 +1,4 @@
-package elice04_pikacharger.pikacharger.exceptional;
+package elice04_pikacharger.pikacharger.domain.common.exceptional;
 
 public class InvalidPasswordException extends RuntimeException {
 

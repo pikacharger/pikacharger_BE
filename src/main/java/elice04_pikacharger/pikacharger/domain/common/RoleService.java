@@ -4,7 +4,7 @@ import elice04_pikacharger.pikacharger.domain.common.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import elice04_pikacharger.pikacharger.domain.common.dto.result.RoleResult;
+import elice04_pikacharger.pikacharger.domain.common.dto.RoleResult;
 import java.util.List;
 
 @Service

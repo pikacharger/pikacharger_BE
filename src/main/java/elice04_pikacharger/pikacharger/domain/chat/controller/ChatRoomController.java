@@ -6,7 +6,6 @@ import elice04_pikacharger.pikacharger.domain.chat.dto.CreateChatRoomResponseDto
 import elice04_pikacharger.pikacharger.domain.chat.dto.SingleChatRoomResponseDto;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatLogService;
 import elice04_pikacharger.pikacharger.domain.chat.service.ChatRoomService;
-import elice04_pikacharger.pikacharger.security.jwt.JwtUtil;
 import elice04_pikacharger.pikacharger.util.ApiResult;
 import elice04_pikacharger.pikacharger.util.ApiUtils;
 
@@ -31,7 +30,6 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatLogService chatLogService;
-    private final JwtUtil jwtUtil;
 
     // 단일 채팅방 조회
     @Operation(summary = "단일 채팅방 조회", description = "요천한 하나의 채팅방을 조회한다", tags = { "Chat" })

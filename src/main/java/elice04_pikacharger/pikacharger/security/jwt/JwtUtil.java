@@ -67,7 +67,7 @@ public class JwtUtil {
             "/api/login",
             "/api/mailauthCheck",
             "/api/mailSend",
-            "/pikachat",
+            "/pikachat/chatroom/**",
             "/api/actuator/**",
             "/actuator/**"
     };

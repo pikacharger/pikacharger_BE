@@ -98,4 +98,5 @@
 
 ## API 명세서
 
-[스웨거 링크](http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/(%EC%B6%A9%EC%A0%84%EC%86%8C)/createCharger)
+[스웨거 링크 1](http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/(%EC%B6%A9%EC%A0%84%EC%86%8C)/createCharger)
+[스웨거 링크 2](http://ec2-43-203-7-98.ap-northeast-2.compute.amazonaws.com:8081/swagger-ui/index.html#/(%EC%B6%A9%EC%A0%84%EC%86%8C)/createCharger)
